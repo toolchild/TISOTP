@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.util.LinkedList;
 
 import org.toolchild.suffering.entity.Entity;
+import org.toolchild.suffering.entity.Player;
 import org.toolchild.suffering.tile.Tile;
 import org.toolchild.suffering.tile.Wall;
 
@@ -52,6 +53,10 @@ public class Handler {
    for (int i = 0; i < Game.WIDTH*Game.SCALE/64+1; i++) {
      addTile(new Wall(i*64, Game.HEIGHT*Game.SCALE-64,64,64,true,Id.wall,this));
      addTile(new Wall(i*64, 100,64,64,true,Id.wall,this));
+     addTile(new Wall(400, 400, 64, 64, true, Id.wall, this));
+     addEntity(new Player(400, 200, 64, 64, true, Id.player, this));
+
+
    }
   }
 }

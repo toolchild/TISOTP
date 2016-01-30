@@ -9,37 +9,41 @@ import java.awt.image.BufferStrategy;
 import javax.swing.JFrame;
 
 import org.apache.log4j.Logger;
-import org.toolchild.suffering.entity.Player;
+import org.toolchild.suffering.gfx.Sprite;
+import org.toolchild.suffering.gfx.SpriteSheet;
 import org.toolchild.suffering.input.KeyInput;
-import org.toolchild.suffering.tile.Wall;
 
 public class Game extends Canvas implements Runnable {
 
-  private static final Logger log = Logger.getLogger(Game.class);
+  private static final Logger   log              = Logger.getLogger(Game.class);
 
-  private static final long serialVersionUID = 5680154129348532365L;
-  public static final int WIDTH = 270;
-  public static final int HEIGHT = WIDTH / 16 * 9;
-  public static final int SCALE = 4;
-  
-  public static final Dimension SIZE = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
-  
-  public static final String TITLE = "The Intolerable Suffering of the Programmer called Machine.";
-  private Thread thread;
-  private boolean isRunning;
-  
-  public static Handler handler;
+  private static final long     serialVersionUID = 5680154129348532365L;
+  public static final int       WIDTH            = 270;
+  public static final int       HEIGHT           = WIDTH / 16 * 9;
+  public static final int       SCALE            = 4;
+
+  public static final Dimension SIZE             = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
+
+  public static final String    TITLE            = "The Intolerable Suffering of the Programmer called Machine";
+  private Thread                thread;
+  private boolean               isRunning;
+
+  public static Handler         handler;
+  public static SpriteSheet     spriteSheet;
+
+  public static Sprite          player;
+  public static Sprite          grass;
 
   public Game() {
     setPreferredSize(SIZE);
     setMaximumSize(SIZE);
     setMinimumSize(SIZE);
   }
-  
+
   public static void main(String[] args) {
     Game game = new Game();
-    JFrame frame = new JFrame();
-//    frame.setUndecorated(true);
+    JFrame frame = new JFrame(TITLE);
+    // frame.setUndecorated(true);
     frame.add(game);
     frame.pack();
     frame.setResizable(false);
@@ -47,50 +51,54 @@ public class Game extends Canvas implements Runnable {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setVisible(true);
     game.start();
-    // System.exit(0);
   }
 
-  private void init() {
+  private boolean init() {
     handler = new Handler();
+    spriteSheet = new SpriteSheet("/spriteSheet.png");
+    player = new Sprite(spriteSheet, 0, 0);
+    grass = new Sprite(spriteSheet, 1, 0);
     addKeyListener(new KeyInput());
-    handler.addEntity(new Player(400, 200, 64, 64, true, Id.player, handler));
-    handler.addTile(new Wall(400,400,64,64, true, Id.wall, handler));
+    return true;
   }
 
-  public synchronized void start() {
+  public synchronized boolean start() {
+    boolean hasStarted = false;
     if (isRunning) {
-      return;
+      hasStarted = false;
     } else {
       isRunning = true;
       thread = new Thread(this, "Game Thread");
       thread.start();
+      hasStarted = true;
     }
-
+    return hasStarted;
   }
 
-  public synchronized void stop() {
-    if (!isRunning) {
-      return;
-    } else {
+  public synchronized boolean stop() {
+    boolean hasStopped = false;
+    if (isRunning) {
       isRunning = false;
       try {
         thread.join();
-      } catch (InterruptedException e) {
-        log.error("The Game Thread did non stop properly");
+      }
+      catch (InterruptedException e) {
+        log.error("The " + thread.getName() + " did non stop properly.");
         e.printStackTrace();
       }
+      hasStopped = true;
     }
-
+    return hasStopped;
   }
 
   @Override
   public void run() {
-    init();
+    log.debug("init: " + init());
     requestFocus();
     long lastTime = System.nanoTime();
     long timer = System.currentTimeMillis();
     double delta = 0.0;
-    double ns = 1000000000.0 / 60.0;
+    double ns = 1000000000.0 / 30.0;
     int frames = 0;
     int ticks = 0;
 
@@ -100,12 +108,15 @@ public class Game extends Canvas implements Runnable {
       delta = delta + (nowTime - lastTime) / ns;
       lastTime = nowTime;
       while (delta >= 1) {
+        delta--;
+        render();
+        frames++;
         tick();
         ticks++;
-        delta--;
       }
-      render();
-      frames++;
+      
+
+      
       if (System.currentTimeMillis() - timer >= 1000) {
         timer = timer + 1000;
         log.info("FPS: " + frames + " Ticks: " + ticks);
@@ -113,8 +124,7 @@ public class Game extends Canvas implements Runnable {
         ticks = 0;
       }
     }
-    stop();
-
+    log.debug("stop: " + stop());
   }
 
   public void render() {
@@ -124,7 +134,7 @@ public class Game extends Canvas implements Runnable {
       return;
     }
     Graphics graphics = bufferStrategy.getDrawGraphics();
-    graphics.setColor(Color.BLACK);
+    graphics.setColor(Color.GRAY);
     graphics.fillRect(0, 0, getWidth(), getHeight());
     handler.render(graphics);
     bufferStrategy.show();

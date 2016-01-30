@@ -17,8 +17,8 @@ public class KeyInput implements KeyListener {
 
       switch (key) {
       case KeyEvent.VK_W: {
-        log.debug("Jump!");
-        if (!entity.isJumping) {
+        if (!entity.isJumping && entity.gravity < 1.0) {
+          log.debug("Jump!");
           entity.isJumping = true;
           entity.gravity = -10.0;
         }

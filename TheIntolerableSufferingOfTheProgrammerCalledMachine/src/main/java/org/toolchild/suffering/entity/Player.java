@@ -19,9 +19,11 @@ public class Player extends Entity {
 
   @Override
   public void tick() {
+    Game.keyInput.updateKeyEvents(this);
+    log.trace("handle gravity and movement " + handleGravityAndMovement());
     log.trace("update position: " + updatePosition());
     log.trace("handle all tile interaction: " + handleAllTileInteraction());
-    log.trace("handle gravity and movement " + handleGravityAndMovement());
+    
   }
 
   @Override
@@ -34,7 +36,7 @@ public class Player extends Entity {
     graphics.fillRect(getBoundsBottom().x, getBoundsBottom().y, getBoundsBottom().width, getBoundsBottom().height);
   }
 
-  // ________________________________________ tick submethods ________________________________________
+  // ________________________________________ tick sub-methods ________________________________________
   /**
    * Updates the {@link x} and {@link y} coordinates of the player.
    * 
@@ -55,29 +57,29 @@ public class Player extends Entity {
     return true;
   }
 
-  private boolean handleFloating() {
+  private boolean handleFloating() {  // handleGravityAndMovement sub-method
     if (!isFalling && !isJumping) { // if neither jumping nor falling player either stands on a block or hangs in the air. So it is necessary to start falling again. If on block, player will hit block and reset height and stop falling.
-      gravity = 0.0; // handle gravity
-      isFalling = true; // handle movement
+      gravity = 0.0;  // handle gravity
+      isFalling = true;  // handle movement
     }
     return true;
   }
 
-  private boolean handleFalling() {
+  private boolean handleFalling() {  // handleGravityAndMovement sub-method
     if (isFalling) {
-      gravity = gravity + 0.1; // handle gravity
+      gravity = gravity + 0.1;  // handle gravity
       log.trace("Falling gravity = " + gravity);
-      setVelocityY((int) gravity); // handle movement
+      setVelocityY((int) gravity);  // handle movement
     }
     return true;
   }
 
-  private boolean handleJumping() {
+  private boolean handleJumping() {  // handleGravityAndMovement sub-method
     if (isJumping) {
-      gravity = gravity + 0.1; // handle gravity
+      gravity = gravity + 0.1;  // handle gravity
       log.trace("Jumping gravity = " + gravity);
-      setVelocityY((int) +gravity); // handle movement
-      if (gravity >= 0.0) { // handle movement
+      setVelocityY((int) +gravity);  // handle movement
+      if (gravity >= 0.0) {  // handle movement
         // isJumping = false;
         isFalling = true;
       }
@@ -95,7 +97,7 @@ public class Player extends Entity {
     return true;
   }
 
-  private String handleSingleTileInteraction(Tile tile) {
+  private String handleSingleTileInteraction(Tile tile) {  // handleAllTileInteraction sub-method
     String statusMessage;
     if (!tile.isSolid()) {
       statusMessage = "false, tile not solid";
@@ -146,6 +148,6 @@ public class Player extends Entity {
 
     return statusMessage;
   }
-  // ######################################## tick submethods ########################################
+  // ######################################## tick sub-methods ########################################
 
 }

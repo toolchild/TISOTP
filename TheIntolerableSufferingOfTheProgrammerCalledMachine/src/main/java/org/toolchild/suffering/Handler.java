@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import org.toolchild.suffering.entity.Entity;
 import org.toolchild.suffering.entity.Player;
+import org.toolchild.suffering.input.KeyInput;
 import org.toolchild.suffering.tile.Tile;
 import org.toolchild.suffering.tile.Wall;
 
@@ -27,6 +28,7 @@ public class Handler {
   public void tick() {
     for (Entity entity : entities) {
       entity.tick();
+      
     }
     for (Tile tile : tiles) {
       tile.tick();

@@ -15,16 +15,18 @@ import org.toolchild.suffering.input.KeyInput;
 
 public class Game extends Canvas implements Runnable {
 
-  private static final Logger   log              = Logger.getLogger(Game.class);
+  private static final Logger   log                         = Logger.getLogger(Game.class);
 
-  private static final long     serialVersionUID = 5680154129348532365L;
-  public static final int       WIDTH            = 270;
-  public static final int       HEIGHT           = WIDTH / 16 * 9;
-  public static final int       SCALE            = 4;
+  private static final int      TICKS_AND_FRAMES_PER_SECOND = 30;
 
-  public static final Dimension SIZE             = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
+  private static final long     serialVersionUID            = 5680154129348532365L;
+  public static final int       WIDTH                       = 270;
+  public static final int       HEIGHT                      = WIDTH / 16 * 9;
+  public static final int       SCALE                       = 4;
 
-  public static final String    TITLE            = "The Intolerable Suffering of the Programmer called Machine";
+  public static final Dimension SIZE                        = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
+
+  public static final String    TITLE                       = "The Intolerable Suffering of the Programmer called Machine";
   private Thread                thread;
   private boolean               isRunning;
 
@@ -34,7 +36,8 @@ public class Game extends Canvas implements Runnable {
   public static Sprite          player;
   public static Sprite          grass;
 
-  public Game() {
+  public static KeyInput keyInput;
+    public Game() {
     setPreferredSize(SIZE);
     setMaximumSize(SIZE);
     setMinimumSize(SIZE);
@@ -59,6 +62,8 @@ public class Game extends Canvas implements Runnable {
     player = new Sprite(spriteSheet, 0, 0);
     grass = new Sprite(spriteSheet, 1, 0);
     addKeyListener(new KeyInput());
+    keyInput = (KeyInput) getKeyListeners()[0];
+    keyInput.init();
     return true;
   }
 
@@ -98,7 +103,7 @@ public class Game extends Canvas implements Runnable {
     long lastTime = System.nanoTime();
     long timer = System.currentTimeMillis();
     double delta = 0.0;
-    double ns = 1000000000.0 / 30.0;
+    double ns = 1000000000.0 / TICKS_AND_FRAMES_PER_SECOND;
     int frames = 0;
     int ticks = 0;
 
@@ -114,9 +119,7 @@ public class Game extends Canvas implements Runnable {
         tick();
         ticks++;
       }
-      
 
-      
       if (System.currentTimeMillis() - timer >= 1000) {
         timer = timer + 1000;
         log.info("FPS: " + frames + " Ticks: " + ticks);
@@ -143,6 +146,7 @@ public class Game extends Canvas implements Runnable {
 
   public void tick() {
     handler.tick();
+    
   }
 
 }

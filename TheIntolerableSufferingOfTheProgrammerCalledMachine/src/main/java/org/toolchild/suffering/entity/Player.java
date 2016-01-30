@@ -10,6 +10,8 @@ import org.toolchild.suffering.Id;
 import org.toolchild.suffering.tile.Tile;
 import org.toolchild.suffering.tile.Wall;
 
+import javafx.scene.control.SpinnerValueFactory.DoubleSpinnerValueFactory;
+
 public class Player extends Entity {
   private static final Logger log = Logger.getLogger(Game.class);
 
@@ -28,7 +30,14 @@ public class Player extends Entity {
 
   @Override
   public void render(Graphics graphics) {
+    int lineHeight = 20;
     graphics.drawImage(Game.player.getImage(), x, y, width, height, null);
+    graphics.setColor(Color.WHITE);
+    graphics.drawString("player x : "+ x , 20, 3* lineHeight);
+    graphics.drawString("player y : "+ y , 20, 4* lineHeight);
+    graphics.drawString("player velocityX : "+ velocityX , 20, 5* lineHeight);
+    graphics.drawString("player velocityY: "+ velocityY , 20, 6* lineHeight);
+    graphics.drawString("player gravity : "+ Double.toString(gravity).substring(0, 3), 20, 7* lineHeight);
     graphics.setColor(Color.RED);
     graphics.fillRect(getBoundsRight().x, getBoundsRight().y, getBoundsRight().width, getBoundsRight().height);
     graphics.fillRect(getBoundsLeft().x, getBoundsLeft().y, getBoundsLeft().width, getBoundsLeft().height);

@@ -3,6 +3,7 @@ package org.toolchild.suffering;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 
@@ -17,7 +18,7 @@ public class Game extends Canvas implements Runnable {
 
   private static final Logger   log                         = Logger.getLogger(Game.class);
 
-  private static final int      TICKS_AND_FRAMES_PER_SECOND = 30;
+  private static final int      TICKS_AND_FRAMES_PER_SECOND = 60;
 
   private static final long     serialVersionUID            = 5680154129348532365L;
   public static final int       WIDTH                       = 270;
@@ -104,9 +105,11 @@ public class Game extends Canvas implements Runnable {
     long timer = System.currentTimeMillis();
     double delta = 0.0;
     double ns = 1000000000.0 / TICKS_AND_FRAMES_PER_SECOND;
-    int frames = 0;
-    int ticks = 0;
-
+    int currentFrames = 0;
+    int lastSecondFrames= 0;
+    int currentTicks = 0;
+    int lastSecondTicks = 0;
+    
     while (isRunning) {
       long nowTime = System.nanoTime();
       // log.info(lastTime - nowTime);
@@ -114,31 +117,40 @@ public class Game extends Canvas implements Runnable {
       lastTime = nowTime;
       while (delta >= 1) {
         delta--;
-        render();
-        frames++;
         tick();
-        ticks++;
+        currentTicks++;
       }
+      currentFrames++;
+      render(lastSecondTicks, lastSecondFrames);
 
       if (System.currentTimeMillis() - timer >= 1000) {
+        
         timer = timer + 1000;
-        log.info("FPS: " + frames + " Ticks: " + ticks);
-        frames = 0;
-        ticks = 0;
+        log.info("FPS: " + currentFrames + " Ticks: " + currentTicks);
+
+        lastSecondFrames = currentFrames;
+        currentFrames = 0;
+        lastSecondTicks = currentTicks;
+        currentTicks = 0;
       }
     }
     log.debug("stop: " + stop());
   }
 
-  public void render() {
+  public void render(int lastSecondTicks, int lastSecondFrames) {
     BufferStrategy bufferStrategy = getBufferStrategy();
     if (bufferStrategy == null) {
       createBufferStrategy(3);
       return;
     }
     Graphics graphics = bufferStrategy.getDrawGraphics();
+    graphics.setFont(getFont().deriveFont(Font.BOLD));    
     graphics.setColor(Color.GRAY);
     graphics.fillRect(0, 0, getWidth(), getHeight());
+    graphics.setColor(Color.WHITE);
+    graphics.drawString("Ticks: " + lastSecondTicks, 20, 20);
+    graphics.drawString("Frames: " + lastSecondFrames, 20, 40);
+    
     handler.render(graphics);
     bufferStrategy.show();
     graphics.dispose();

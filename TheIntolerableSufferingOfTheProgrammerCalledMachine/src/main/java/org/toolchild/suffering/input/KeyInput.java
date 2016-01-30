@@ -32,9 +32,9 @@ public class KeyInput implements KeyListener {
   }
 
   public boolean updateKeyEvents(Entity entity) {
-    if (!keysActive.get("w").isActive) dKeyReleaseEvent(entity);
+    if (!keysActive.get("w").isActive) wKeyReleaseEvent(entity);
     if (!keysActive.get("a").isActive) aKeyReleaseEvent(entity);
-    if (!keysActive.get("d").isActive) aKeyReleaseEvent(entity);
+    if (!keysActive.get("d").isActive) dKeyReleaseEvent(entity);
     
     if (keysActive.get("w").isActive) wKeyEvent(entity);
    
@@ -57,18 +57,18 @@ public class KeyInput implements KeyListener {
       switch (key) {
         case KeyEvent.VK_W: {
           keysActive.put("w", new KeyStatus(true));
-          wKeyEvent(entity);
+//          wKeyEvent(entity);
           break;
         }
 
         case KeyEvent.VK_A: {
           keysActive.put("a", new KeyStatus(true));
-          aKeyEvent(entity);
+//          aKeyEvent(entity);
           break;
         }
         case KeyEvent.VK_D: {
           keysActive.put("d", new KeyStatus(true));
-          dKeyEvent(entity);
+//          dKeyEvent(entity);
           break;
         }
       }
@@ -79,18 +79,18 @@ public class KeyInput implements KeyListener {
     if (!entity.isJumping && entity.gravity < 1.0) {
       entity.isJumping = true;
       entity.gravity = -10.0;
-      log.debug("Jumped!");
+      log.trace("Jumped!");
     }
   }
 
   private void aKeyEvent(Entity entity) {
     entity.setVelocityX(-5);
-    log.debug("Went Left!");
+    log.trace("Went Left!");
   }
 
   private void dKeyEvent(Entity entity) {
     entity.setVelocityX(5);
-    log.debug("Went Right!");
+    log.trace("Went Right!");
   }
 
   @Override
@@ -101,18 +101,18 @@ public class KeyInput implements KeyListener {
       switch (key) {
         case KeyEvent.VK_W: {
           keysActive.put("w", new KeyStatus(false));
-          wKeyReleaseEvent(entity);
+//          wKeyReleaseEvent(entity);
           break;
         }
 
         case KeyEvent.VK_A: {
           keysActive.put("a", new KeyStatus(false));
-          aKeyReleaseEvent(entity);
+//          aKeyReleaseEvent(entity);
           break;
         }
         case KeyEvent.VK_D: {
           keysActive.put("d", new KeyStatus(false));
-          dKeyReleaseEvent(entity);
+//          dKeyReleaseEvent(entity);
           break;
         }
       }
@@ -121,17 +121,18 @@ public class KeyInput implements KeyListener {
   }
 
   private void aKeyReleaseEvent(Entity entity) {
-    log.debug("Jump Released");
+    log.trace("Jump Released");
     entity.setVelocityX(0);
   }
 
   private void dKeyReleaseEvent(Entity entity) {
-    log.debug("Right Released");
+    log.trace("Right Released");
     entity.setVelocityX(0);
   }
 
   private void wKeyReleaseEvent(Entity entity) {
-    log.debug("Left Released");
+    log.trace("Left Released");
+    entity.setVelocityX(0);
   }
 
   @Override

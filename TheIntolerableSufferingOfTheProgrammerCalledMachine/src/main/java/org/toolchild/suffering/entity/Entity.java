@@ -22,7 +22,7 @@ public abstract class Entity {
   public boolean isJumping = false;
   public boolean isFalling = true;
   public double gravity = 0.0;
-  
+  public int facing = 0; // 0 = left; 1 = right
   
   public Entity(int x, int y, int width, int height, boolean isSolid, Id id, Handler handler){
     this.x = x;

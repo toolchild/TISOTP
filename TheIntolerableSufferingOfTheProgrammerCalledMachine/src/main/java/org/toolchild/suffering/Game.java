@@ -34,7 +34,7 @@ public class Game extends Canvas implements Runnable {
   public static Handler         handler;
   public static SpriteSheet     spriteSheet;
 
-  public static Sprite          player;
+  public static Sprite          player[];
   public static Sprite          grass;
 
   public static KeyInput keyInput;
@@ -60,7 +60,12 @@ public class Game extends Canvas implements Runnable {
   private boolean init() {
     handler = new Handler();
     spriteSheet = new SpriteSheet("/spriteSheet.png");
-    player = new Sprite(spriteSheet, 0, 0);
+    player = new Sprite[10];
+    
+    for (int i = 0; i < player.length; i++) {
+      player[i] = new Sprite(spriteSheet,i,15);
+    }
+    
     grass = new Sprite(spriteSheet, 1, 0);
     addKeyListener(new KeyInput());
     keyInput = (KeyInput) getKeyListeners()[0];

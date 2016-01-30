@@ -13,7 +13,11 @@ import org.toolchild.suffering.tile.Wall;
 import javafx.scene.control.SpinnerValueFactory.DoubleSpinnerValueFactory;
 
 public class Player extends Entity {
-  private static final Logger log = Logger.getLogger(Game.class);
+  private static final Logger log        = Logger.getLogger(Game.class);
+
+  private int                 frame      = 0;
+  private int                 frameDelay = 0;
+  private boolean             isMoving   = false;
 
   public Player(int x, int y, int width, int height, boolean isSolid, Id id, Handler handler) {
     super(x, y, width, height, isSolid, id, handler);
@@ -23,21 +27,30 @@ public class Player extends Entity {
   public void tick() {
     Game.keyInput.updateKeyEvents(this);
     log.trace("handle gravity and movement " + handleGravityAndMovement());
+
     log.trace("update position: " + updatePosition());
     log.trace("handle all tile interaction: " + handleAllTileInteraction());
-    
+
   }
 
   @Override
   public void render(Graphics graphics) {
     int lineHeight = 20;
-    graphics.drawImage(Game.player.getImage(), x, y, width, height, null);
+    if (facing == 0) {
+      log.debug("facing left frame " + frame);
+      graphics.drawImage(Game.player[frame].getImage(), x, y, width, height, null);
+    }
+    if (facing == 1) {
+      log.debug("facing right frame:" + frame);
+      graphics.drawImage(Game.player[frame + 5].getImage(), x, y, width, height, null);
+    }
+
     graphics.setColor(Color.WHITE);
-    graphics.drawString("player x : "+ x , 20, 3* lineHeight);
-    graphics.drawString("player y : "+ y , 20, 4* lineHeight);
-    graphics.drawString("player velocityX : "+ velocityX , 20, 5* lineHeight);
-    graphics.drawString("player velocityY: "+ velocityY , 20, 6* lineHeight);
-    graphics.drawString("player gravity : "+ Double.toString(gravity).substring(0, 3), 20, 7* lineHeight);
+    graphics.drawString("player x : " + x, 20, 3 * lineHeight);
+    graphics.drawString("player y : " + y, 20, 4 * lineHeight);
+    graphics.drawString("player velocityX : " + velocityX, 20, 5 * lineHeight);
+    graphics.drawString("player velocityY: " + velocityY, 20, 6 * lineHeight);
+    graphics.drawString("player gravity : " + Double.toString(gravity).substring(0, 3), 20, 7 * lineHeight);
     graphics.setColor(Color.RED);
     graphics.fillRect(getBoundsRight().x, getBoundsRight().y, getBoundsRight().width, getBoundsRight().height);
     graphics.fillRect(getBoundsLeft().x, getBoundsLeft().y, getBoundsLeft().width, getBoundsLeft().height);
@@ -63,6 +76,18 @@ public class Player extends Entity {
     log.trace("handle Jumping " + handleJumping());
     log.trace("handle Falling " + handleFalling());
     log.trace("handle Floating " + handleFloating());
+    if (velocityX != 0) isMoving = true;
+    else isMoving = false;
+    if (isMoving) {
+      frameDelay++;
+      if (frameDelay >= 3) {
+        frame++;
+        if (frame >= Game.player.length/2) {
+          frame = 0;
+        }
+        frameDelay = 0;
+      }
+    }
     return true;
   }
 

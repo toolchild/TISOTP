@@ -63,11 +63,13 @@ public class KeyInput implements KeyListener {
 
         case KeyEvent.VK_A: {
           keysActive.put("a", new KeyStatus(true));
+          entity.facing = 0;
 //          aKeyEvent(entity);
           break;
         }
         case KeyEvent.VK_D: {
           keysActive.put("d", new KeyStatus(true));
+          entity.facing = 1;
 //          dKeyEvent(entity);
           break;
         }
@@ -122,7 +124,6 @@ public class KeyInput implements KeyListener {
 
   private void aKeyReleaseEvent(Entity entity) {
     log.trace("Jump Released");
-    entity.setVelocityX(0);
   }
 
   private void dKeyReleaseEvent(Entity entity) {

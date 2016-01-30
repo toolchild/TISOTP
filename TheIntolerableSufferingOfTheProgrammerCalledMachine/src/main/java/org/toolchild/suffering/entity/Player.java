@@ -33,10 +33,11 @@ public class Player extends Entity {
       }
       if (tile.id == Id.wall) {
         if (getBoundsTop().intersects(tile.getBounds())) {
-          // log.debug("hitTop");
+           log.debug("hitTop");
+           y = tile.getY() + tile.getHeight();
           setVelocityY(0);
           if (isJumping) {
-            isJumping = false;
+//            isJumping = false;
             gravity = 0.0;
             isFalling = true;
           }
@@ -81,6 +82,7 @@ public class Player extends Entity {
       gravity = 0.0;
       isFalling = true;
     }
+    log.debug("velocityY = " + velocityY);
 
   }
 

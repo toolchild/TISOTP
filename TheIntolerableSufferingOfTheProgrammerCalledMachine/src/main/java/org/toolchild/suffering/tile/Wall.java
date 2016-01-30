@@ -21,7 +21,7 @@ public class Wall extends Tile{
   public void render(Graphics graphics) {
     graphics.setColor(Color.RED);
     graphics.fillRect(x, y, width, height);
-    graphics.setColor(Color.BLUE);
+    graphics.setColor(Color.GRAY);
     graphics.fillRect(getBounds().x, getBounds().y, getBounds().width, getBounds().height);
 
     

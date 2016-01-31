@@ -36,6 +36,8 @@ public class Player extends Entity {
       Entity entity = handler.entities.get(e);
       if(entity.id == Id.pinkVial){
         if(getBounds().intersects(entity.getBounds())){
+          x = x - width;
+          y = y - height;
           width = width *2;
           height = height*2;
           entity.die();

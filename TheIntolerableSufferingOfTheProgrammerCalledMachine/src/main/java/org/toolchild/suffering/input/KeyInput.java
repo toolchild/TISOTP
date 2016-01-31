@@ -62,12 +62,10 @@ public class KeyInput implements KeyListener {
           }
           case KeyEvent.VK_A: {
             keysActive.put("a", new KeyStatus(true));
-            entity.facing = 0;
             break;
           }
           case KeyEvent.VK_D: {
             keysActive.put("d", new KeyStatus(true));
-            entity.facing = 1;
             break;
           }
         }
@@ -107,12 +105,14 @@ public class KeyInput implements KeyListener {
   }
 
   private void aKeyEvent(Entity entity) {
+    entity.facing = 0;
     entity.setVelocityX(-5);
     log.trace("Went Left!");
   }
 
   private void dKeyEvent(Entity entity) {
     entity.setVelocityX(5);
+    entity.facing = 1;
     log.trace("Went Right!");
   }
 

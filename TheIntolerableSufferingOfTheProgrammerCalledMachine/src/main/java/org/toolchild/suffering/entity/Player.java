@@ -38,11 +38,17 @@ public class Player extends Entity {
     int lineHeight = 20;
     if (facing == 0) {
       log.debug("facing left frame " + frame);
+      if(!isMoving){
+        frame = 0;
+      }
       graphics.drawImage(Game.player[frame].getImage(), x, y, width, height, null);
     }
     if (facing == 1) {
       log.debug("facing right frame:" + frame);
-      graphics.drawImage(Game.player[frame + 5].getImage(), x, y, width, height, null);
+      if(!isMoving){
+        frame = 0;
+      }
+      graphics.drawImage(Game.player[frame+5].getImage(), x, y, width, height, null);
     }
 
     graphics.setColor(Color.WHITE);

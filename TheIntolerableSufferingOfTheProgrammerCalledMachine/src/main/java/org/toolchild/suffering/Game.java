@@ -33,6 +33,7 @@ public class Game extends Canvas implements Runnable {
 
   public static Handler         handler;
   public static SpriteSheet     spriteSheet;
+  public static SpriteSheet     characterSpriteSheet;
 
   public static Sprite          player[];
   public static Sprite          grass;
@@ -60,10 +61,12 @@ public class Game extends Canvas implements Runnable {
   private boolean init() {
     handler = new Handler();
     spriteSheet = new SpriteSheet("/spriteSheet.png");
+    characterSpriteSheet = new SpriteSheet("/charSpriteSheet.png");
     player = new Sprite[10];
     
-    for (int i = 0; i < player.length; i++) {
-      player[i] = new Sprite(spriteSheet,i,15);
+    for (int i = 0; i < player.length/2; i++) {
+      player[i] = new Sprite(characterSpriteSheet,i,3);
+      player[i+player.length/2] = new Sprite(characterSpriteSheet,i, 5);
     }
     
     grass = new Sprite(spriteSheet, 1, 0);

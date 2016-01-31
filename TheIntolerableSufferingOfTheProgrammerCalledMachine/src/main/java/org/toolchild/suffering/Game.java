@@ -6,10 +6,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import org.apache.log4j.Logger;
+import org.toolchild.suffering.entity.Entity;
 import org.toolchild.suffering.gfx.Sprite;
 import org.toolchild.suffering.gfx.SpriteSheet;
 import org.toolchild.suffering.input.KeyInput;
@@ -21,7 +25,7 @@ public class Game extends Canvas implements Runnable {
   private static final int      TICKS_AND_FRAMES_PER_SECOND = 60;
 
   private static final long     serialVersionUID            = 5680154129348532365L;
-  public static final int       WIDTH                       = 270;
+  public static final int       WIDTH                       = 370;
   public static final int       HEIGHT                      = WIDTH / 16 * 9;
   public static final int       SCALE                       = 4;
 
@@ -35,11 +39,17 @@ public class Game extends Canvas implements Runnable {
   public static SpriteSheet     spriteSheet;
   public static SpriteSheet     characterSpriteSheet;
 
+  private BufferedImage         levelImage;
+
+  public static Camera          camera;
+
   public static Sprite          player[];
   public static Sprite          grass;
+  public static Sprite          pinkVial;
 
-  public static KeyInput keyInput;
-    public Game() {
+  public static KeyInput        keyInput;
+
+  public Game() {
     setPreferredSize(SIZE);
     setMaximumSize(SIZE);
     setMinimumSize(SIZE);
@@ -59,17 +69,28 @@ public class Game extends Canvas implements Runnable {
   }
 
   private boolean init() {
-    handler = new Handler();
+
+    try {
+      levelImage = ImageIO.read(getClass().getResource("/level1.png"));
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    handler = new Handler(levelImage);
+    camera = new Camera();
     spriteSheet = new SpriteSheet("/spriteSheet.png");
     characterSpriteSheet = new SpriteSheet("/charSpriteSheet.png");
+
     player = new Sprite[10];
-    
-    for (int i = 0; i < player.length/2; i++) {
-      player[i] = new Sprite(characterSpriteSheet,i,3);
-      player[i+player.length/2] = new Sprite(characterSpriteSheet,i, 5);
+
+    for (int i = 0; i < player.length / 2; i++) {
+      player[i] = new Sprite(characterSpriteSheet, i, 3);
+      player[i + player.length / 2] = new Sprite(characterSpriteSheet, i, 5);
     }
-    
+
     grass = new Sprite(spriteSheet, 1, 0);
+    pinkVial = new Sprite(spriteSheet, 2, 0);
     addKeyListener(new KeyInput());
     keyInput = (KeyInput) getKeyListeners()[0];
     keyInput.init();
@@ -114,10 +135,10 @@ public class Game extends Canvas implements Runnable {
     double delta = 0.0;
     double ns = 1000000000.0 / TICKS_AND_FRAMES_PER_SECOND;
     int currentFrames = 0;
-    int lastSecondFrames= 0;
+    int lastSecondFrames = 0;
     int currentTicks = 0;
     int lastSecondTicks = 0;
-    
+
     while (isRunning) {
       long nowTime = System.nanoTime();
       // log.info(lastTime - nowTime);
@@ -132,7 +153,7 @@ public class Game extends Canvas implements Runnable {
       render(lastSecondTicks, lastSecondFrames);
 
       if (System.currentTimeMillis() - timer >= 1000) {
-        
+
         timer = timer + 1000;
         log.info("FPS: " + currentFrames + " Ticks: " + currentTicks);
 
@@ -152,21 +173,35 @@ public class Game extends Canvas implements Runnable {
       return;
     }
     Graphics graphics = bufferStrategy.getDrawGraphics();
-    graphics.setFont(getFont().deriveFont(Font.BOLD));    
     graphics.setColor(Color.GRAY);
     graphics.fillRect(0, 0, getWidth(), getHeight());
+    graphics.setFont(getFont().deriveFont(Font.BOLD));
     graphics.setColor(Color.WHITE);
     graphics.drawString("Ticks: " + lastSecondTicks, 20, 20);
     graphics.drawString("Frames: " + lastSecondFrames, 20, 40);
-    
-    handler.render(graphics);
+    graphics.translate(camera.getX(), camera.getY()); // everything drawn after this will not move with the camera and player + everything tied to player position
+    log.debug("cameraX : " + camera.getX() + " cameraY : " + camera.getY());
+    handler.render(graphics, camera);
     bufferStrategy.show();
     graphics.dispose();
   }
 
   public void tick() {
+    for (Entity entity : handler.entities) {
+      if (entity.id == Id.player) {
+        camera.tick(entity);
+      }
+    }
     handler.tick();
-    
+
+  }
+
+  public static int getFrameWidth() {
+    return WIDTH * SCALE;
+  }
+
+  public static int getFrameHeight() {
+    return HEIGHT * SCALE;
   }
 
 }

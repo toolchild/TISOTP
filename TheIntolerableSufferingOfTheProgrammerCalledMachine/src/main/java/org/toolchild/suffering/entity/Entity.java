@@ -3,15 +3,16 @@ package org.toolchild.suffering.entity;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
+import org.toolchild.suffering.Camera;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
 
 public abstract class Entity {
-  int x;
-  int y;
-  int width;
-  int height;
-  boolean isSolid;
+  public int x;
+  public int y;
+  public int width;
+  public int height;
+  public boolean isSolid;
   
   public int velocityX;
   public int velocityY;
@@ -36,8 +37,11 @@ public abstract class Entity {
   
   public abstract void tick();
 
-  public abstract void render(Graphics graphics);
-
+  public abstract void render(Graphics graphics, Camera camera);
+  
+  public void die(){
+    handler.removeEntity(this);
+  }
   public Rectangle getBounds(){
     return new Rectangle(x, y, width, height);
   }

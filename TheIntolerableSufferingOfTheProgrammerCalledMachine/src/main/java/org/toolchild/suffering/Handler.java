@@ -18,14 +18,30 @@ public class Handler {
   public LinkedList<Entity>   entities = new LinkedList<Entity>();
   public LinkedList<Tile>     tiles    = new LinkedList<Tile>();
 
+  public int                  tilesTicked;
+  public int                  tilesRendere;
+
   public Handler(BufferedImage levelImage) {
     createLevel(levelImage);
   }
 
   public void render(Graphics graphics, Camera camera) {
+    int tilesRendered = 0;
     for (Tile tile : tiles) {
-      tile.render(graphics);
+      if (tile.getX() >= -camera.getX()-64&& tile.getX() <= -camera.getX() + Game.SIZE.getWidth()+64) {
+        if (tile.getY() >= -camera.getY()-64&& tile.getY() <= -camera.getY() + Game.SIZE.getHeight()+64) {
+          tile.render(graphics);
+          tilesRendered++;
+        }
+      }
     }
+    log.trace("tilesRendered: " + tilesRendered);
+    int column = 150;
+    int lineHeight = 20;
+    graphics.translate(-camera.getX(), -camera.getY()); // since nothing is tied to play, the graphics object is tied to camera to fix the folloing on the screen
+    graphics.drawString("tiles rendered: " + tilesRendered, 2*column, 3*lineHeight);
+    graphics.drawString("tiles ticked: " + tilesTicked, 2*column, 4*lineHeight);
+    graphics.translate(camera.getX(), camera.getY()); // untying graphics from camera
 
     for (Entity entity : entities) {
       entity.render(graphics, camera);
@@ -36,18 +52,20 @@ public class Handler {
   }
 
   public void tick() {
-    log.debug(entities);
+//    log.debug(entities);
     for (int e = 0; e < entities.size(); e++) {
       Entity entity = entities.get(e);
       entity.tick();
     }
 
-    for (
-
-    Tile tile : tiles)
-
-    {
-      tile.tick();
+    tilesTicked = 0 ;
+    for (Tile tile : tiles)   {
+      if (tile.getX() >= entities.get(0).getX() - Game.SIZE.getWidth()/2 -64 && tile.getX() <= entities.get(0).getX()+ (int) Game.SIZE.getWidth() / 2  + 64) {
+        if (tile.getY() >= entities.get(0).getY() - Game.SIZE.getHeight()/3 && tile.getY() <= entities.get(0).getY() + Game.SIZE.getHeight()/3 * 2 + 64 ) {
+          tile.tick();
+          tilesTicked++;
+        }
+      }
     }
 
   }
@@ -81,12 +99,13 @@ public class Handler {
         int green = (pixel >> 8) & 0xff;
         int blue = (pixel) & 0xff;
 
-        if (red == 0 && green == 0 && blue == 0) addTile(new Wall(x * 64, y * 64, 64, 64, true, Id.wall, this));
-        if (red == 0 && green == 0 && blue == 255) addEntity(new Player(x * 64, y * 64, 64, 64, true, Id.player, this));
-        if (red == 255 && green == 0 && blue == 0) addEntity(new PinkVial(x * 64, y * 64, 64, 64, true, Id.pinkVial, this));
+        int size = 64;
+        if (red == 0 && green == 0 && blue == 0) addTile(new Wall(x * size, y * size, size, size, true, Id.wall, this));
+        if (red == 0 && green == 0 && blue == 255) addEntity(new Player(x * size, y * size, size, size, true, Id.player, this));
+        if (red == 255 && green == 0 && blue == 0) addEntity(new PinkVial(x * size, y * size, size, size, true, Id.pinkVial, this));
 
       }
-//      addEntity(new PinkVial( 100, 200, 64, 64, true, Id.pinkVial, this));
+// addEntity(new PinkVial( 100, 200, 64, 64, true, Id.pinkVial, this));
     }
 
     // for (int i = 0; i < 5*Game.WIDTH * Game.SCALE / 64 + 1; i++) {

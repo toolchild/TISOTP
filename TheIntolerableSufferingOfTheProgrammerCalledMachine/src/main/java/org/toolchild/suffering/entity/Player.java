@@ -11,12 +11,8 @@ import org.toolchild.suffering.Id;
 import org.toolchild.suffering.tile.Tile;
 import org.toolchild.suffering.tile.Wall;
 
-import com.sun.javafx.binding.StringFormatter;
-
-import javafx.scene.control.SpinnerValueFactory.DoubleSpinnerValueFactory;
-
 public class Player extends Entity {
-  private static final Logger log        = Logger.getLogger(Game.class);
+  private static final Logger log        = Logger.getLogger(Player.class);
 
   private int                 frame      = 0;
   private int                 frameDelay = 0;
@@ -32,15 +28,17 @@ public class Player extends Entity {
     log.trace("handle gravity and movement " + handleGravityAndMovement());
     log.trace("update position: " + updatePosition());
     log.trace("handle all tile interaction: " + handleAllTileInteraction());
-    for (int e = 0; e < handler.entities.size(); e++) {
-      Entity entity = handler.entities.get(e);
-      if(entity.id == Id.pinkVial){
-        if(getBounds().intersects(entity.getBounds())){
-          x = x - width;
-          y = y - height;
-          width = width *2;
-          height = height*2;
-          entity.die();
+    for (int e = 0; e < handler.entities.size(); e++) { // need to use this for loop and
+      Entity entity = handler.entities.get(e); // get the entity to avoid an UnconcurrentModificationException
+      if (entity.id == Id.pinkVial) {
+        if (height <= 64) {
+          if (getBounds().intersects(entity.getBounds())) {
+            x = x - width;
+            y = y - height;
+// width = width *2;
+            height = height * 2;
+            entity.die();
+          }
         }
       }
     }
@@ -49,22 +47,23 @@ public class Player extends Entity {
   @Override
   public void render(Graphics graphics, Camera camera) {
     int lineHeight = 20;
+    int nextColumn = 150;
     renderPlayer(graphics); // renders the player and everything tied to its position
     graphics.setColor(Color.WHITE);
-    renderDebug(graphics, camera, lineHeight); // renders the debug messages relative to player
-    
+    renderDebug(graphics, camera, lineHeight, nextColumn); // renders the debug messages relative to player
+
   }
 
   private void renderPlayer(Graphics graphics) {
     if (facing == 0) {
-      log.debug("facing left frame " + frame);
+      log.trace("facing left frame " + frame);
       if (!isRunning) {
         frame = 0;
       }
       graphics.drawImage(Game.player[frame].getImage(), x, y, width, height, null);
     }
     if (facing == 1) {
-      log.debug("facing right frame:" + frame);
+      log.trace("facing right frame:" + frame);
       if (!isRunning) {
         frame = 0;
       }
@@ -76,27 +75,25 @@ public class Player extends Entity {
     graphics.fillRect(getBoundsTop().x, getBoundsTop().y, getBoundsTop().width, getBoundsTop().height);
     graphics.fillRect(getBoundsBottom().x, getBoundsBottom().y, getBoundsBottom().width, getBoundsBottom().height);
   }
-  
-  private void renderDebug(Graphics graphics, Camera camera, int lineHeight) {
+
+  private void renderDebug(Graphics graphics, Camera camera, int lineHeight, int column) {
     graphics.translate(-camera.getX(), -camera.getY()); // since nothing is tied to play, the graphics object is tied to camera
-    graphics.drawString("player x : " + x, 20 , 3 * lineHeight);
-    graphics.drawString("player y : " + y,  20, 4 * lineHeight);
-    graphics.drawString("camera x : " + camera.getX(), 100 , 3 * lineHeight);
-    graphics.drawString("camera y : " + camera.getY(),  100, 4 * lineHeight);
-    
-    graphics.drawString("player velocityX : " + velocityX, 20, + 5 * lineHeight);
-    graphics.drawString("player velocityY: " + velocityY, + 20, + 6 * lineHeight);
+    graphics.drawString("player x : " + x, 0, 3 * lineHeight);
+    graphics.drawString("player y : " + y, column, 3 * lineHeight);
+    graphics.drawString("camera x : " + camera.getX(), 0, 4 * lineHeight);
+    graphics.drawString("camera y : " + camera.getY(), column, 4 * lineHeight);
+
+    graphics.drawString("player velocityX : " + velocityX, 0, +5 * lineHeight);
+    graphics.drawString("player velocityY: " + velocityY, +0, +6 * lineHeight);
     int gravityStringLength = Double.toString(gravity).length();
     if (gravityStringLength > 5) {
       gravityStringLength = 5;
     }
-    graphics.drawString("player gravity : " + Double.toString(gravity).substring(0, gravityStringLength), 20,  7 * lineHeight);
-    graphics.drawString("player facing : " + (facing == 0 ? "Left" : "Right"), 20, 8 * lineHeight);
-    graphics.drawString("player isRunning: " + isRunning, 20, 9 * lineHeight);
+    graphics.drawString("player gravity : " + Double.toString(gravity).substring(0, gravityStringLength), 0, 7 * lineHeight);
+    graphics.drawString("player facing : " + (facing == 0 ? "Left" : "Right"), 0, 8 * lineHeight);
+    graphics.drawString("player isRunning: " + isRunning, 0, 9 * lineHeight);
     graphics.translate(camera.getX(), camera.getY()); // untying graphics from camera
   }
-
-  
 
   // ________________________________________ tick sub-methods ________________________________________
   /**
@@ -116,8 +113,11 @@ public class Player extends Entity {
     log.trace("handle Jumping " + handleJumping());
     log.trace("handle Falling " + handleFalling());
     log.trace("handle Floating " + handleFloating());
+
+    // -----handle anmiation frame
     if (velocityX != 0) isRunning = true;
     else isRunning = false;
+
     if (isRunning) {
       frameDelay++;
       if (frameDelay >= 3) {
@@ -128,6 +128,7 @@ public class Player extends Entity {
         frameDelay = 0;
       }
     }
+    // -----/handle anmiation frame
     return true;
   }
 
@@ -163,9 +164,13 @@ public class Player extends Entity {
 
   private boolean handleAllTileInteraction() {
     for (Tile tile : handler.tiles) {
-      String singleTileInteractionStatusMessage = handleSingleTileInteraction(tile);
-      if (singleTileInteractionStatusMessage != null) {
-        log.debug("single tile interaction: " + singleTileInteractionStatusMessage);
+      if (tile.getX() >= getX() - Game.SIZE.getWidth() / 2 - 64 && tile.getX() <= getX() + (int) Game.SIZE.getWidth() / 2 + 64) {
+        if (tile.getY() >= getY() - Game.SIZE.getHeight() / 3 && tile.getY() <= getY() + Game.SIZE.getHeight() / 3 * 2 + 64) {
+          String singleTileInteractionStatusMessage = handleSingleTileInteraction(tile);
+          if (singleTileInteractionStatusMessage != null) {
+            log.debug("single tile interaction: " + singleTileInteractionStatusMessage);
+          }
+        }
       }
     }
     return true;

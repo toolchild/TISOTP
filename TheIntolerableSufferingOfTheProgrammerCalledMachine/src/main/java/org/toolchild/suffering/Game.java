@@ -38,11 +38,14 @@ public class Game extends Canvas implements Runnable {
   public static Handler         handler;
   public static SpriteSheet     spriteSheet;
   public static SpriteSheet     characterSpriteSheet;
+  public static SpriteSheet     powerupSpriteSheet;
 
   private BufferedImage         levelImage;
 
   public static Camera          camera;
 
+  
+  public static Sprite          powerup[];
   public static Sprite          player[];
   public static Sprite          grass;
   public static Sprite          pinkVial;
@@ -71,7 +74,7 @@ public class Game extends Canvas implements Runnable {
   private boolean init() {
 
     try {
-      levelImage = ImageIO.read(getClass().getResource("/level1.png"));
+      levelImage = ImageIO.read(getClass().getResource("/herocore_map.png"));
     }
     catch (IOException e) {
       e.printStackTrace();
@@ -81,14 +84,20 @@ public class Game extends Canvas implements Runnable {
     camera = new Camera();
     spriteSheet = new SpriteSheet("/spriteSheet.png");
     characterSpriteSheet = new SpriteSheet("/charSpriteSheet.png");
+    powerupSpriteSheet = new SpriteSheet("/crystal-qubodup-ccby3-32-blue.png");
 
     player = new Sprite[10];
-
     for (int i = 0; i < player.length / 2; i++) {
       player[i] = new Sprite(characterSpriteSheet, i, 3);
       player[i + player.length / 2] = new Sprite(characterSpriteSheet, i, 5);
     }
 
+    powerup = new Sprite[8];
+    for (int i = 0; i < powerup.length; i++) {
+      powerup[i] = new Sprite(powerupSpriteSheet, i, 0);
+    }
+    
+    
     grass = new Sprite(spriteSheet, 1, 0);
     pinkVial = new Sprite(spriteSheet, 2, 0);
     addKeyListener(new KeyInput());
@@ -173,15 +182,19 @@ public class Game extends Canvas implements Runnable {
       return;
     }
     Graphics graphics = bufferStrategy.getDrawGraphics();
+    graphics.setFont(getFont().deriveFont(Font.BOLD));
+
     graphics.setColor(Color.GRAY);
     graphics.fillRect(0, 0, getWidth(), getHeight());
-    graphics.setFont(getFont().deriveFont(Font.BOLD));
+    
+    graphics.translate(camera.getX(), camera.getY()); // release graphics from camera
+    log.trace("cameraX : " + camera.getX() + " cameraY : " + camera.getY());
     graphics.setColor(Color.WHITE);
-    graphics.drawString("Ticks: " + lastSecondTicks, 20, 20);
-    graphics.drawString("Frames: " + lastSecondFrames, 20, 40);
-    graphics.translate(camera.getX(), camera.getY()); // everything drawn after this will not move with the camera and player + everything tied to player position
-    log.debug("cameraX : " + camera.getX() + " cameraY : " + camera.getY());
     handler.render(graphics, camera);
+    graphics.translate(- camera.getX(), - camera.getY()); // lock graphics to camera 
+    graphics.drawString("Ticks: " + lastSecondTicks, 0, 20);
+    graphics.drawString("Frames: " + lastSecondFrames, 0, 40);
+
     bufferStrategy.show();
     graphics.dispose();
   }

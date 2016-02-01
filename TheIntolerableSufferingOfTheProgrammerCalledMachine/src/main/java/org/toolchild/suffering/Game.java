@@ -25,9 +25,9 @@ public class Game extends Canvas implements Runnable {
   private static final int      TICKS_AND_FRAMES_PER_SECOND = 60;
 
   private static final long     serialVersionUID            = 5680154129348532365L;
-  public static final int       WIDTH                       = 370;
+  public static final int       WIDTH                       = 64;
   public static final int       HEIGHT                      = WIDTH / 16 * 9;
-  public static final int       SCALE                       = 4;
+  public static final int       SCALE                       = 24;
 
   public static final Dimension SIZE                        = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
 
@@ -41,9 +41,6 @@ public class Game extends Canvas implements Runnable {
   public static SpriteSheet     powerupSpriteSheet;
 
   private BufferedImage         levelImage;
-
-  public static Camera          camera;
-
   
   public static Sprite          powerup[];
   public static Sprite          player[];
@@ -60,17 +57,63 @@ public class Game extends Canvas implements Runnable {
 
   public static void main(String[] args) {
     Game game = new Game();
-    JFrame frame = new JFrame(TITLE);
-    // frame.setUndecorated(true);
-    frame.add(game);
-    frame.pack();
-    frame.setResizable(false);
-    frame.setLocationRelativeTo(null); // put the frame in the middle of the screen
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setVisible(true);
+    JFrame frame = game.generateAndGetJFrame(game);
     game.start();
   }
 
+  public synchronized boolean start() {
+    boolean hasStarted = false;
+    if (isRunning) {
+      hasStarted = false;
+    } else {
+      isRunning = true;
+      thread = new Thread(this, "Game Thread");
+      thread.start();
+      hasStarted = true;
+    }
+    return hasStarted;
+  }
+
+  @Override
+  public void run() {
+    log.debug("init: " + init());
+    requestFocus();
+    
+    long lastTime = System.nanoTime();
+    long timer = System.currentTimeMillis();
+    double delta = 0.0;
+    double ns = 1000000000.0 / TICKS_AND_FRAMES_PER_SECOND;
+    int currentFrames = 0;
+    int lastSecondFrames = 0;
+    int currentTicks = 0;
+    int lastSecondTicks = 0;
+
+    while (isRunning) {      
+      long nowTime = System.nanoTime();
+      delta = delta + (nowTime - lastTime) / ns;
+      lastTime = nowTime;
+      // log.info(lastTime - nowTime);
+      while (delta >= 1) {
+        delta--;
+        tick();
+        currentTicks++;
+      }
+      currentFrames++;
+      render(lastSecondTicks, lastSecondFrames);
+
+      if (System.currentTimeMillis() - timer >= 1000) {
+
+        timer = timer + 1000;
+        log.info("FPS: " + currentFrames + " Ticks: " + currentTicks);
+
+        lastSecondFrames = currentFrames;
+        currentFrames = 0;
+        lastSecondTicks = currentTicks;
+        currentTicks = 0;
+      }
+    }
+    log.debug("stop: " + stop());
+  }
   private boolean init() {
 
     try {
@@ -81,7 +124,6 @@ public class Game extends Canvas implements Runnable {
     }
 
     handler = new Handler(levelImage);
-    camera = new Camera();
     spriteSheet = new SpriteSheet("/spriteSheet.png");
     characterSpriteSheet = new SpriteSheet("/charSpriteSheet.png");
     powerupSpriteSheet = new SpriteSheet("/crystal-qubodup-ccby3-32-blue.png");
@@ -106,18 +148,7 @@ public class Game extends Canvas implements Runnable {
     return true;
   }
 
-  public synchronized boolean start() {
-    boolean hasStarted = false;
-    if (isRunning) {
-      hasStarted = false;
-    } else {
-      isRunning = true;
-      thread = new Thread(this, "Game Thread");
-      thread.start();
-      hasStarted = true;
-    }
-    return hasStarted;
-  }
+  
 
   public synchronized boolean stop() {
     boolean hasStopped = false;
@@ -135,44 +166,10 @@ public class Game extends Canvas implements Runnable {
     return hasStopped;
   }
 
-  @Override
-  public void run() {
-    log.debug("init: " + init());
-    requestFocus();
-    long lastTime = System.nanoTime();
-    long timer = System.currentTimeMillis();
-    double delta = 0.0;
-    double ns = 1000000000.0 / TICKS_AND_FRAMES_PER_SECOND;
-    int currentFrames = 0;
-    int lastSecondFrames = 0;
-    int currentTicks = 0;
-    int lastSecondTicks = 0;
-
-    while (isRunning) {
-      long nowTime = System.nanoTime();
-      // log.info(lastTime - nowTime);
-      delta = delta + (nowTime - lastTime) / ns;
-      lastTime = nowTime;
-      while (delta >= 1) {
-        delta--;
-        tick();
-        currentTicks++;
-      }
-      currentFrames++;
-      render(lastSecondTicks, lastSecondFrames);
-
-      if (System.currentTimeMillis() - timer >= 1000) {
-
-        timer = timer + 1000;
-        log.info("FPS: " + currentFrames + " Ticks: " + currentTicks);
-
-        lastSecondFrames = currentFrames;
-        currentFrames = 0;
-        lastSecondTicks = currentTicks;
-        currentTicks = 0;
-      }
-    }
-    log.debug("stop: " + stop());
+  
+  
+  public void tick() {
+    handler.tick();
   }
 
   public void render(int lastSecondTicks, int lastSecondFrames) {
@@ -183,31 +180,14 @@ public class Game extends Canvas implements Runnable {
     }
     Graphics graphics = bufferStrategy.getDrawGraphics();
     graphics.setFont(getFont().deriveFont(Font.BOLD));
-
     graphics.setColor(Color.GRAY);
     graphics.fillRect(0, 0, getWidth(), getHeight());
-    
-    graphics.translate(camera.getX(), camera.getY()); // release graphics from camera
-    log.trace("cameraX : " + camera.getX() + " cameraY : " + camera.getY());
-    graphics.setColor(Color.WHITE);
-    handler.render(graphics, camera);
-    graphics.translate(- camera.getX(), - camera.getY()); // lock graphics to camera 
-    graphics.drawString("Ticks: " + lastSecondTicks, 0, 20);
-    graphics.drawString("Frames: " + lastSecondFrames, 0, 40);
-
+    handler.render(graphics, lastSecondTicks, lastSecondFrames);
     bufferStrategy.show();
     graphics.dispose();
   }
 
-  public void tick() {
-    for (Entity entity : handler.entities) {
-      if (entity.id == Id.player) {
-        camera.tick(entity);
-      }
-    }
-    handler.tick();
-
-  }
+ 
 
   public static int getFrameWidth() {
     return WIDTH * SCALE;
@@ -215,6 +195,18 @@ public class Game extends Canvas implements Runnable {
 
   public static int getFrameHeight() {
     return HEIGHT * SCALE;
+  }
+  
+  private JFrame generateAndGetJFrame(Game game) {
+    JFrame frame = new JFrame(TITLE);
+    // frame.setUndecorated(true);
+    frame.add(game);
+    frame.pack();
+    frame.setResizable(false);
+    frame.setLocationRelativeTo(null); // put the frame in the middle of the screen
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setVisible(true);
+    return frame;
   }
 
 }

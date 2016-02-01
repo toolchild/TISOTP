@@ -1,5 +1,6 @@
 package org.toolchild.suffering;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -15,34 +16,27 @@ import org.toolchild.suffering.tile.Wall;
 public class Handler {
   private static final Logger log      = Logger.getLogger(Handler.class);
 
+  private Camera              camera;
+
   public LinkedList<Entity>   entities = new LinkedList<Entity>();
   public LinkedList<Tile>     tiles    = new LinkedList<Tile>();
 
   public int                  tilesTicked;
-  public int                  tilesRendere;
 
   public Handler(BufferedImage levelImage) {
+    camera = new Camera(); // the new camera is locked to the player from start
     createLevel(levelImage);
   }
 
-  public void render(Graphics graphics, Camera camera) {
-    int tilesRendered = 0;
-    for (Tile tile : tiles) {
-      if (tile.getX() >= -camera.getX()-64&& tile.getX() <= -camera.getX() + Game.SIZE.getWidth()+64) {
-        if (tile.getY() >= -camera.getY()-64&& tile.getY() <= -camera.getY() + Game.SIZE.getHeight()+64) {
-          tile.render(graphics);
-          tilesRendered++;
-        }
-      }
-    }
+  public void render(Graphics graphics, int lastSecondTicks, int lastSecondFrames) {
+    camera.releaseGraphicsFromCamera(graphics);
+    int tilesRendered = renderTiles(graphics);
     log.trace("tilesRendered: " + tilesRendered);
-    int column = 150;
-    int lineHeight = 20;
-    graphics.translate(-camera.getX(), -camera.getY()); // since nothing is tied to play, the graphics object is tied to camera to fix the folloing on the screen
-    graphics.drawString("tiles rendered: " + tilesRendered, 2*column, 3*lineHeight);
-    graphics.drawString("tiles ticked: " + tilesTicked, 2*column, 4*lineHeight);
-    graphics.translate(camera.getX(), camera.getY()); // untying graphics from camera
 
+    camera.lockGraphicsToCamera(graphics);
+    renderDebug(graphics, lastSecondTicks, lastSecondFrames, tilesRendered);
+    camera.releaseGraphicsFromCamera(graphics);
+    
     for (Entity entity : entities) {
       entity.render(graphics, camera);
     }
@@ -51,17 +45,47 @@ public class Handler {
 
   }
 
+  private void renderDebug(Graphics graphics, int lastSecondTicks, int lastSecondFrames, int tilesRendered) {
+    int column = 150;
+    int lineHeight = 20;
+    graphics.setColor(Color.WHITE);
+    graphics.drawString("Ticks: " + lastSecondTicks, 0, lineHeight);
+    graphics.drawString("Frames: " + lastSecondFrames, 0, 2 * lineHeight);
+    graphics.drawString("tiles rendered: " + tilesRendered, 2 * column, 3 * lineHeight);
+    graphics.drawString("tiles ticked: " + tilesTicked, 2 * column, 4 * lineHeight);
+  }
+
+
+  private int renderTiles(Graphics graphics) {
+    int tilesRendered = 0;
+    for (Tile tile : tiles) { // after releasing the camera, draw the tiles, not relative to player
+      if (tile.getX() >= -camera.getX() - 64 && tile.getX() <= -camera.getX() + Game.SIZE.getWidth() + 64) { // only render visible tiles, relative to top left edge of the shown screen -64
+        if (tile.getY() >= -camera.getY() - 64 && tile.getY() <= -camera.getY() + Game.SIZE.getHeight() + 64) {
+          tile.render(graphics);
+          tilesRendered++;
+        }
+      }
+    }
+    return tilesRendered;
+  }
+
   public void tick() {
-//    log.debug(entities);
+    for (Entity entity : entities) {
+      if (entity.id == Id.player) {
+        camera.tick(entity);
+      }
+    }
+
+// log.debug(entities);
     for (int e = 0; e < entities.size(); e++) {
       Entity entity = entities.get(e);
       entity.tick();
     }
 
-    tilesTicked = 0 ;
-    for (Tile tile : tiles)   {
-      if (tile.getX() >= entities.get(0).getX() - Game.SIZE.getWidth()/2 -64 && tile.getX() <= entities.get(0).getX()+ (int) Game.SIZE.getWidth() / 2  + 64) {
-        if (tile.getY() >= entities.get(0).getY() - Game.SIZE.getHeight()/3 && tile.getY() <= entities.get(0).getY() + Game.SIZE.getHeight()/3 * 2 + 64 ) {
+    tilesTicked = 0;
+    for (Tile tile : tiles) {
+      if (tile.getX() >= entities.get(0).getX() - Game.SIZE.getWidth() / 2 - 64 && tile.getX() <= entities.get(0).getX() + (int) Game.SIZE.getWidth() / 2 + 64) {
+        if (tile.getY() >= entities.get(0).getY() - Game.SIZE.getHeight() / 3 && tile.getY() <= entities.get(0).getY() + Game.SIZE.getHeight() / 3 * 2 + 64) {
           tile.tick();
           tilesTicked++;
         }
@@ -115,5 +139,9 @@ public class Handler {
 // }
 // addTile(new Wall(20*64, 6*64, 64, 64, true, Id.wall, this));
 // addEntity(new Player((int)Game.SIZE.getWidth()/2, 200, 64, 64, true, Id.player, this));
+  }
+
+  public Camera getCamera() {
+    return this.camera;
   }
 }

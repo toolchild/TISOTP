@@ -46,53 +46,9 @@ public class Player extends Entity {
 
   @Override
   public void render(Graphics graphics, Camera camera) {
-    int lineHeight = 20;
-    int nextColumn = 150;
     renderPlayer(graphics); // renders the player and everything tied to its position
     graphics.setColor(Color.WHITE);
-    renderDebug(graphics, camera, lineHeight, nextColumn); // renders the debug messages relative to player
-
-  }
-
-  private void renderPlayer(Graphics graphics) {
-    if (facing == 0) {
-      log.trace("facing left frame " + frame);
-      if (!isRunning) {
-        frame = 0;
-      }
-      graphics.drawImage(Game.player[frame].getImage(), x, y, width, height, null);
-    }
-    if (facing == 1) {
-      log.trace("facing right frame:" + frame);
-      if (!isRunning) {
-        frame = 0;
-      }
-      graphics.drawImage(Game.player[frame + 5].getImage(), x, y, width, height, null);
-    }
-    graphics.setColor(Color.RED);
-    graphics.fillRect(getBoundsRight().x, getBoundsRight().y, getBoundsRight().width, getBoundsRight().height);
-    graphics.fillRect(getBoundsLeft().x, getBoundsLeft().y, getBoundsLeft().width, getBoundsLeft().height);
-    graphics.fillRect(getBoundsTop().x, getBoundsTop().y, getBoundsTop().width, getBoundsTop().height);
-    graphics.fillRect(getBoundsBottom().x, getBoundsBottom().y, getBoundsBottom().width, getBoundsBottom().height);
-  }
-
-  private void renderDebug(Graphics graphics, Camera camera, int lineHeight, int column) {
-    graphics.translate(-camera.getX(), -camera.getY()); // since nothing is tied to play, the graphics object is tied to camera
-    graphics.drawString("player x : " + x, 0, 3 * lineHeight);
-    graphics.drawString("player y : " + y, column, 3 * lineHeight);
-    graphics.drawString("camera x : " + camera.getX(), 0, 4 * lineHeight);
-    graphics.drawString("camera y : " + camera.getY(), column, 4 * lineHeight);
-
-    graphics.drawString("player velocityX : " + velocityX, 0, +5 * lineHeight);
-    graphics.drawString("player velocityY: " + velocityY, +0, +6 * lineHeight);
-    int gravityStringLength = Double.toString(gravity).length();
-    if (gravityStringLength > 5) {
-      gravityStringLength = 5;
-    }
-    graphics.drawString("player gravity : " + Double.toString(gravity).substring(0, gravityStringLength), 0, 7 * lineHeight);
-    graphics.drawString("player facing : " + (facing == 0 ? "Left" : "Right"), 0, 8 * lineHeight);
-    graphics.drawString("player isRunning: " + isRunning, 0, 9 * lineHeight);
-    graphics.translate(camera.getX(), camera.getY()); // untying graphics from camera
+    renderDebug(graphics, camera); // renders the debug messages relative to player
   }
 
   // ________________________________________ tick sub-methods ________________________________________
@@ -228,5 +184,49 @@ public class Player extends Entity {
     return statusMessage;
   }
   // ######################################## tick sub-methods ########################################
+
+  // ________________________________________ render sub-methods ________________________________________
+  private void renderPlayer(Graphics graphics) {
+    if (facing == 0) {
+      log.trace("facing left frame " + frame);
+      if (!isRunning) {
+        frame = 0;
+      }
+      graphics.drawImage(Game.player[frame].getImage(), x, y, width, height, null);
+    }
+    if (facing == 1) {
+      log.trace("facing right frame:" + frame);
+      if (!isRunning) {
+        frame = 0;
+      }
+      graphics.drawImage(Game.player[frame + 5].getImage(), x, y, width, height, null);
+    }
+    //draw collision detection box
+    graphics.setColor(Color.RED);
+    graphics.fillRect(getBoundsRight().x, getBoundsRight().y, getBoundsRight().width, getBoundsRight().height);
+    graphics.fillRect(getBoundsLeft().x, getBoundsLeft().y, getBoundsLeft().width, getBoundsLeft().height);
+    graphics.fillRect(getBoundsTop().x, getBoundsTop().y, getBoundsTop().width, getBoundsTop().height);
+    graphics.fillRect(getBoundsBottom().x, getBoundsBottom().y, getBoundsBottom().width, getBoundsBottom().height);
+  }
+
+  private void renderDebug(Graphics graphics, Camera camera) {
+    camera.lockGraphicsToCamera(graphics);// since nothing is tied to player, the graphics object is tied to camera
+    graphics.drawString("player x : " + x, 0, 3 * lineHeight);
+    graphics.drawString("player y : " + y, column, 3 * lineHeight);
+    graphics.drawString("camera x : " + camera.getX(), 0, 4 * lineHeight);
+    graphics.drawString("camera y : " + camera.getY(), column, 4 * lineHeight);
+
+    graphics.drawString("player velocityX : " + velocityX, 0, +5 * lineHeight);
+    graphics.drawString("player velocityY: " + velocityY, +0, +6 * lineHeight);
+    int gravityStringLength = Double.toString(gravity).length();
+    if (gravityStringLength > 5) {
+      gravityStringLength = 5;
+    }
+    graphics.drawString("player gravity : " + Double.toString(gravity).substring(0, gravityStringLength), 0, 7 * lineHeight);
+    graphics.drawString("player facing : " + (facing == 0 ? "Left" : "Right"), 0, 8 * lineHeight);
+    graphics.drawString("player isRunning: " + isRunning, 0, 9 * lineHeight);
+    graphics.translate(camera.getX(), camera.getY()); // untying graphics from camera
+  }
+  // ######################################## render sub-methods ########################################
 
 }

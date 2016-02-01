@@ -8,6 +8,9 @@ import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
 
 public abstract class Entity {
+  public int lineHeight = 20;
+  public int column = 150;
+  
   public int x;
   public int y;
   public int width;
@@ -25,6 +28,7 @@ public abstract class Entity {
   public double gravity = 0.0;
   public int facing = 0; // 0 = left; 1 = right
   
+  
   public Entity(int x, int y, int width, int height, boolean isSolid, Id id, Handler handler){
     this.x = x;
     this.y = y;
@@ -37,6 +41,13 @@ public abstract class Entity {
   
   public abstract void tick();
 
+  /**
+   * 
+   * Renders this Entity.
+   * 
+   * @param graphics  are expected released from the camera
+   * @param camera  the camera, for lock and releasing purposes
+   */
   public abstract void render(Graphics graphics, Camera camera);
   
   public void die(){

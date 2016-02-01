@@ -13,7 +13,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import org.apache.log4j.Logger;
-import org.toolchild.suffering.entity.Entity;
 import org.toolchild.suffering.gfx.Sprite;
 import org.toolchild.suffering.gfx.SpriteSheet;
 import org.toolchild.suffering.input.KeyInput;
@@ -57,7 +56,8 @@ public class Game extends Canvas implements Runnable {
 
   public static void main(String[] args) {
     Game game = new Game();
-    JFrame frame = game.generateAndGetJFrame(game);
+    @SuppressWarnings("unused")
+    JFrame frame = game.initAndGetJFrame(game);
     game.start();
   }
 
@@ -197,7 +197,7 @@ public class Game extends Canvas implements Runnable {
     return HEIGHT * SCALE;
   }
   
-  private JFrame generateAndGetJFrame(Game game) {
+  private JFrame initAndGetJFrame(Game game) {
     JFrame frame = new JFrame(TITLE);
     // frame.setUndecorated(true);
     frame.add(game);

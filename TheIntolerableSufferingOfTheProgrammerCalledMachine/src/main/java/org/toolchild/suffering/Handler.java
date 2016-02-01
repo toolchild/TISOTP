@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import org.toolchild.suffering.entity.Entity;
 import org.toolchild.suffering.entity.Player;
 import org.toolchild.suffering.entity.powerup.PinkVial;
-import org.toolchild.suffering.input.KeyInput;
 import org.toolchild.suffering.tile.Tile;
 import org.toolchild.suffering.tile.Wall;
 

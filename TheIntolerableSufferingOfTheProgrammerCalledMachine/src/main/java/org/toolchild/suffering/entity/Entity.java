@@ -1,5 +1,7 @@
 package org.toolchild.suffering.entity;
 
+
+
 import java.awt.Graphics;
 import java.awt.Rectangle;
 

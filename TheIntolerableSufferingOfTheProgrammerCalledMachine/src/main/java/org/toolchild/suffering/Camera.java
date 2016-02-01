@@ -1,5 +1,6 @@
 package org.toolchild.suffering;
 
+
 import java.awt.Graphics;
 
 import org.toolchild.suffering.entity.Entity;

@@ -4,13 +4,14 @@ import java.awt.Graphics;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
-import org.toolchild.suffering.Camera;
 import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
 import org.toolchild.suffering.entity.Entity;
 import org.toolchild.suffering.tile.Tile;
 import org.toolchild.suffering.tile.Wall;
+
+import org.toolchild.suffering.Camera;
 
 public class PinkVial extends Entity {
   private static final Logger log        = Logger.getLogger(PinkVial.class);

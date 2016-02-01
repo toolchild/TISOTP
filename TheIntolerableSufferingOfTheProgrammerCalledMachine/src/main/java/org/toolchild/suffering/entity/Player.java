@@ -3,13 +3,13 @@ package org.toolchild.suffering.entity;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import org.apache.log4j.Logger;
-import org.toolchild.suffering.Camera;
 import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
 import org.toolchild.suffering.tile.Tile;
 import org.toolchild.suffering.tile.Wall;
+import org.apache.log4j.Logger;
+import org.toolchild.suffering.Camera;
 
 public class Player extends Entity {
   private static final Logger log        = Logger.getLogger(Player.class);
@@ -228,5 +228,6 @@ public class Player extends Entity {
     graphics.translate(camera.getX(), camera.getY()); // untying graphics from camera
   }
   // ######################################## render sub-methods ########################################
+
 
 }

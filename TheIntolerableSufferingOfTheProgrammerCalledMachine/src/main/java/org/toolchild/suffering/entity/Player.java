@@ -32,12 +32,12 @@ public class Player extends Entity {
     for (int e = 0; e < handler.entities.size(); e++) { // need to use this for loop and
       Entity entity = handler.entities.get(e); // get the entity to avoid an UnconcurrentModificationException
       if (entity.id == Id.pinkVial) {
-        if (height <= 64) {
+        if (height <= 10 * 64) {
           if (getBounds().intersects(entity.getBounds())) {
             x = x - width;
             y = y - height;
             // width = width *2;
-            height = height * 2;
+            height = (int) (height * 1.2);
             entity.die();
           }
         }
@@ -151,15 +151,15 @@ public class Player extends Entity {
 
   private boolean handleAllTileInteraction() {
     for (Tile tile : handler.tiles) {
-      // if (tile.getX() >= x - Game.SIZE.getWidth() / 2 - 64 && tile.getX() <= x + (int) Game.SIZE.getWidth() / 2 + 64) {
-      // if (tile.getY() >= y - Game.SIZE.getHeight() / 3 && tile.getY() <= y + Game.SIZE.getHeight() / 3 * 2 + 64) {
-      String singleTileInteractionStatusMessage = handleSingleTileInteraction(tile);
-      if (singleTileInteractionStatusMessage != null) {
-        log.debug("single tile interaction: " + singleTileInteractionStatusMessage);
+      if (tile.getX() >= x - 5*64 && tile.getX() <= x + 5*64) {
+        if (tile.getY() >= y - 5*64 && tile.getY() <= y + 5*64) {
+          String singleTileInteractionStatusMessage = handleSingleTileInteraction(tile);
+          if (singleTileInteractionStatusMessage != null) {
+            log.debug("single tile interaction: " + singleTileInteractionStatusMessage);
+          }
+        }
       }
     }
-    // }
-    // }
     return true;
   }
 

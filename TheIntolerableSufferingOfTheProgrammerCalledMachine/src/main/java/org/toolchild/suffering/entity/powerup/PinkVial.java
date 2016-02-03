@@ -46,8 +46,9 @@ public class PinkVial extends Entity {
   private boolean updatePosition() {
     x = x + velocityX;
     y = y + velocityY;
-// if (x <= 0) x = 0;
-// if (x + this.width >= Game.SIZE.getWidth()) x = (int) (Game.SIZE.getWidth() - this.width);
+    // TODO: use for level bounds
+    // if (x <= 0) x = 0;
+    // if (x + this.width >= Game.SIZE.getWidth()) x = (int) (Game.SIZE.getWidth() - this.width);
     return true;
   }
 
@@ -59,8 +60,8 @@ public class PinkVial extends Entity {
 
   private boolean handleAllTileInteraction() {
     for (Tile tile : handler.tiles) {
-      if (tile.getX() >= x - Game.SIZE.getWidth() / 2 - 64 && tile.getX() <= x + (int) Game.SIZE.getWidth() / 2 + 64) {
-        if (tile.getY() >= y - Game.SIZE.getHeight() / 3 && tile.getY() <= y + Game.SIZE.getHeight() / 3 * 2 + 64) {
+      if (tile.getX() >= x - 64 && tile.getX() <= x + 64) { // only tick tiles immediately around the entity
+        if (tile.getY() >= y - 64 && tile.getY() <= y + 64) {
           String singleTileInteractionStatusMessage = handleSingleTileInteraction(tile);
           if (singleTileInteractionStatusMessage != null) {
             log.trace("single tile interaction: " + singleTileInteractionStatusMessage);
@@ -134,8 +135,6 @@ public class PinkVial extends Entity {
 
   @Override
   public void render(Graphics graphics, Camera camera) {
-// graphics.translate(camera.getX(), camera.getY()); // since nothing is tied to play, the graphics object is tied to camera
     graphics.drawImage(Game.powerup[frame].getImage(), x, y, width, height, null);
   }
-
 }

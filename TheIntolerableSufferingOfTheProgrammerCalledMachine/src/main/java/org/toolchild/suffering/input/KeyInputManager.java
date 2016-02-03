@@ -13,9 +13,9 @@ public class KeyInputManager implements KeyListener {
 
   private static final Logger log = Logger.getLogger(KeyInputManager.class);
 
-  KeyStatus                   jumpKeyStatus;
-  KeyStatus                   leftKeyStatus;
-  KeyStatus                   rightKeyStatus;
+  private KeyStatus                   jumpKeyStatus;
+  private KeyStatus                   leftKeyStatus;
+  private KeyStatus                   rightKeyStatus;
 
   public void init() {
     jumpKeyStatus = new KeyStatus(false);

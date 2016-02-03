@@ -15,22 +15,22 @@ import org.toolchild.suffering.Camera;
 
 public class PinkVial extends Entity {
   private static final Logger log        = Logger.getLogger(PinkVial.class);
-
   private int                 frame      = 0;
   private int                 frameDelay = 0;
-  
-  private Random random = new Random();
+
+  private Random              random     = new Random();
 
   public PinkVial(int x, int y, int width, int height, boolean isSolid, Id id, Handler handler) {
     super(x, y, width, height, isSolid, id, handler);
     int direction = random.nextInt(2); // direction: 0 = left ; 1 = right
-    velocityX = direction == 0 ? -3 : +3; 
-    
+    velocityX = direction == 0 ? -3 : +3;
+    moveSpeed = 3;
+
   }
 
   @Override
   public void tick() {
-    log.trace("update position: "+ updatePosition() +" x: "+x +" y: " + y);
+    log.trace("update position: " + updatePosition() + " x: " + x + " y: " + y);
     frameDelay++;
     if (frameDelay >= 3) {
       frame++;
@@ -42,7 +42,7 @@ public class PinkVial extends Entity {
     log.trace("handle all tile interaction: " + handleAllTileInteraction());
     log.trace("handle gravity and movement: " + handleGravityAndMovement());
   }
-  
+
   private boolean updatePosition() {
     x = x + velocityX;
     y = y + velocityY;
@@ -50,7 +50,7 @@ public class PinkVial extends Entity {
 // if (x + this.width >= Game.SIZE.getWidth()) x = (int) (Game.SIZE.getWidth() - this.width);
     return true;
   }
-  
+
   private boolean handleGravityAndMovement() {
     log.trace("handle Falling " + handleFalling());
     log.trace("handle Floating " + handleFloating());
@@ -59,8 +59,8 @@ public class PinkVial extends Entity {
 
   private boolean handleAllTileInteraction() {
     for (Tile tile : handler.tiles) {
-      if (tile.getX() >= getX() - Game.SIZE.getWidth() / 2 - 64 && tile.getX() <= getX() + (int) Game.SIZE.getWidth() / 2 + 64) {
-        if (tile.getY() >= getY() - Game.SIZE.getHeight() / 3 && tile.getY() <= getY() + Game.SIZE.getHeight() / 3 * 2 + 64) {
+      if (tile.getX() >= x - Game.SIZE.getWidth() / 2 - 64 && tile.getX() <= x + (int) Game.SIZE.getWidth() / 2 + 64) {
+        if (tile.getY() >= y - Game.SIZE.getHeight() / 3 && tile.getY() <= y + Game.SIZE.getHeight() / 3 * 2 + 64) {
           String singleTileInteractionStatusMessage = handleSingleTileInteraction(tile);
           if (singleTileInteractionStatusMessage != null) {
             log.trace("single tile interaction: " + singleTileInteractionStatusMessage);
@@ -81,9 +81,10 @@ public class PinkVial extends Entity {
     } else {
       statusMessage = "false, tile id not recognized";
     }
-    
+
     return statusMessage;
   }
+
   private boolean handleFloating() {  // handleGravityAndMovement sub-method
     if (!isFalling && !isJumping) { // if neither jumping nor falling player either stands on a block or hangs in the air. So it is necessary to start falling again. If on block, player will hit block and reset height and stop falling.
       gravity = 0.0;  // handle gravity
@@ -96,16 +97,17 @@ public class PinkVial extends Entity {
     if (isFalling) {
       gravity = gravity + 0.1;  // handle gravity
       log.trace("Falling gravity = " + gravity);
-      setVelocityY((int) gravity);  // handle movement
+      velocityY = (int) gravity;  // handle movement
     }
     return true;
   }
+
   private String handleWallInteraction(Wall wall) {
     String statusMessage = null;
     if (getBoundsTop().intersects(wall.getBounds())) {
       statusMessage = "wall interaction: hitTop";
       y = wall.getY() + wall.getHeight();
-      setVelocityY(0);
+      velocityY = 0;
       if (isJumping) {
         // isJumping = false;
         gravity = 0.0;
@@ -113,21 +115,20 @@ public class PinkVial extends Entity {
       }
     } else if (getBoundsBottom().intersects(wall.getBounds())) {
       statusMessage = "wall interaction: hitBottom";
-      setVelocityY(0);
+      velocityY = 0;
       isJumping = false;
       y = wall.getY() - height; // reset height, looks cleaner
       if (isFalling) {
         isFalling = false;
       }
     } else if (getBoundsLeft().intersects(wall.getBounds())) {
-      setVelocityX(3);
+      velocityX = moveSpeed;
       x = wall.getX() + wall.getWidth();
     } else if (getBoundsRight().intersects(wall.getBounds())) {
       statusMessage = "wall interaction: hitRight";
-      setVelocityX(-3);
-      x = wall.getX() - width;
+      velocityX = -moveSpeed;
+      x = wall.getX() - width; // reset width, looks cleaner
     }
-
     return statusMessage;
   }
 

@@ -1,7 +1,5 @@
 package org.toolchild.suffering.entity;
 
-
-
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
@@ -21,6 +19,7 @@ public abstract class Entity {
   
   public int velocityX;
   public int velocityY;
+  public int moveSpeed;
   
   public Id id;
   public Handler handler;
@@ -74,55 +73,7 @@ public abstract class Entity {
   public Rectangle getBoundsRight(){
     return new Rectangle(x+width-5, y+10, 5 ,height-20);
   }
-  
-  public int getX() {
-    return x;
-  }
-
-  public void setX(int x) {
-    this.x = x;
-  }
-
-  public int getY() {
-    return y;
-  }
-
-  public void setY(int y) {
-    this.y = y;
-  }
-
-  public int getWidth() {
-    return width;
-  }
-
-  public void setWidth(int width) {
-    this.width = width;
-  }
-
-  public int getHeight() {
-    return height;
-  }
-
-  public void setHeight(int height) {
-    this.height = height;
-  }
-
-  public boolean isSolid() {
-    return isSolid;
-  }
-
-  public void setSolid(boolean isSolid) {
-    this.isSolid = isSolid;
-  }
-
-  public void setVelocityX(int velocityX) {
-    this.velocityX = velocityX;
-  }
-
-  public void setVelocityY(int velocityY) {
-    this.velocityY = velocityY;
-  }
-  
+   
   public Id getId (){
     return id;
   }

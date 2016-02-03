@@ -15,38 +15,36 @@ import javax.swing.JFrame;
 import org.apache.log4j.Logger;
 import org.toolchild.suffering.gfx.Sprite;
 import org.toolchild.suffering.gfx.SpriteSheet;
-import org.toolchild.suffering.input.KeyInput;
+import org.toolchild.suffering.input.KeyInputManager;
 
 public class Game extends Canvas implements Runnable {
-
+  private static final long     serialVersionUID            = 5680154129348532365L;
   private static final Logger   log                         = Logger.getLogger(Game.class);
-
   private static final int      TICKS_AND_FRAMES_PER_SECOND = 60;
 
-  private static final long     serialVersionUID            = 5680154129348532365L;
   public static final int       WIDTH                       = 64;
-  public static final int       HEIGHT                      = WIDTH / 16 * 9;
   public static final int       SCALE                       = 24;
-
+  public static final int       HEIGHT                      = WIDTH / 16 * 9;
   public static final Dimension SIZE                        = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
-
   public static final String    TITLE                       = "The Intolerable Suffering of the Programmer called Machine";
+
   private Thread                thread;
   private boolean               isRunning;
 
   public static Handler         handler;
+
   public static SpriteSheet     spriteSheet;
   public static SpriteSheet     characterSpriteSheet;
   public static SpriteSheet     powerupSpriteSheet;
 
   private BufferedImage         levelImage;
-  
+
   public static Sprite          powerup[];
   public static Sprite          player[];
   public static Sprite          grass;
   public static Sprite          pinkVial;
 
-  public static KeyInput        keyInput;
+  public static KeyInputManager keyInput;
 
   public Game() {
     setPreferredSize(SIZE);
@@ -61,7 +59,7 @@ public class Game extends Canvas implements Runnable {
     game.start();
   }
 
-  public synchronized boolean start() {
+  private synchronized boolean start() {
     boolean hasStarted = false;
     if (isRunning) {
       hasStarted = false;
@@ -78,7 +76,7 @@ public class Game extends Canvas implements Runnable {
   public void run() {
     log.debug("init: " + init());
     requestFocus();
-    
+
     long lastTime = System.nanoTime();
     long timer = System.currentTimeMillis();
     double delta = 0.0;
@@ -88,7 +86,7 @@ public class Game extends Canvas implements Runnable {
     int currentTicks = 0;
     int lastSecondTicks = 0;
 
-    while (isRunning) {      
+    while (isRunning) {
       long nowTime = System.nanoTime();
       delta = delta + (nowTime - lastTime) / ns;
       lastTime = nowTime;
@@ -114,6 +112,7 @@ public class Game extends Canvas implements Runnable {
     }
     log.debug("stop: " + stop());
   }
+
   private boolean init() {
 
     try {
@@ -138,19 +137,16 @@ public class Game extends Canvas implements Runnable {
     for (int i = 0; i < powerup.length; i++) {
       powerup[i] = new Sprite(powerupSpriteSheet, i, 0);
     }
-    
-    
+
     grass = new Sprite(spriteSheet, 1, 0);
     pinkVial = new Sprite(spriteSheet, 2, 0);
-    addKeyListener(new KeyInput());
-    keyInput = (KeyInput) getKeyListeners()[0];
+    addKeyListener(new KeyInputManager());
+    keyInput = (KeyInputManager) getKeyListeners()[0];
     keyInput.init();
     return true;
   }
 
-  
-
-  public synchronized boolean stop() {
+  private synchronized boolean stop() {
     boolean hasStopped = false;
     if (isRunning) {
       isRunning = false;
@@ -166,8 +162,6 @@ public class Game extends Canvas implements Runnable {
     return hasStopped;
   }
 
-  
-  
   public void tick() {
     handler.tick();
   }
@@ -187,7 +181,17 @@ public class Game extends Canvas implements Runnable {
     graphics.dispose();
   }
 
- 
+  private JFrame initAndGetJFrame(Game game) {
+    JFrame frame = new JFrame(TITLE);
+    // frame.setUndecorated(true);
+    frame.add(game);
+    frame.pack();
+    frame.setResizable(false);
+    // frame.setLocationRelativeTo(null); // put the frame in the middle of the screen
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setVisible(true);
+    return frame;
+  }
 
   public static int getFrameWidth() {
     return WIDTH * SCALE;
@@ -195,18 +199,6 @@ public class Game extends Canvas implements Runnable {
 
   public static int getFrameHeight() {
     return HEIGHT * SCALE;
-  }
-  
-  private JFrame initAndGetJFrame(Game game) {
-    JFrame frame = new JFrame(TITLE);
-    // frame.setUndecorated(true);
-    frame.add(game);
-    frame.pack();
-    frame.setResizable(false);
-    frame.setLocationRelativeTo(null); // put the frame in the middle of the screen
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setVisible(true);
-    return frame;
   }
 
 }

@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 import org.toolchild.suffering.Camera;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
+import org.toolchild.suffering.entity.movement.Movement;
 
 public abstract class Entity {
   public int lineHeight = 20;
@@ -17,19 +18,16 @@ public abstract class Entity {
   public int height;
   public boolean isSolid;
   
-  public int velocityX;
-  public int velocityY;
-  public int moveSpeed;
+  
   
   public Id id;
   public Handler handler;
   
-  public boolean isJumping = false;
-  public boolean isFalling = true;
-  public double gravity = 0.0;
+ 
   public int facing = 0; // 0 = left; 1 = right
   
-  
+  public Movement movement;
+
   public Entity(int x, int y, int width, int height, boolean isSolid, Id id, Handler handler){
     this.x = x;
     this.y = y;
@@ -38,6 +36,7 @@ public abstract class Entity {
     this.isSolid = isSolid;
     this.id = id;
     this.handler = handler;
+    movement = new Movement();
   }
   
   public abstract void tick();

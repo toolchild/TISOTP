@@ -23,8 +23,8 @@ public class PinkVial extends Entity {
   public PinkVial(int x, int y, int width, int height, boolean isSolid, Id id, Handler handler) {
     super(x, y, width, height, isSolid, id, handler);
     int direction = random.nextInt(2); // direction: 0 = left ; 1 = right
-    velocityX = direction == 0 ? -3 : +3;
-    moveSpeed = 3;
+    movement.setVelocityX(direction == 0 ? -3 : +3);
+    movement.setMoveSpeed(3);
 
   }
 
@@ -44,8 +44,8 @@ public class PinkVial extends Entity {
   }
 
   private boolean updatePosition() {
-    x = x + velocityX;
-    y = y + velocityY;
+    x = x + movement.getVelocityX();
+    y = y + movement.getVelocityY();
     // TODO: use for level bounds
     // if (x <= 0) x = 0;
     // if (x + this.width >= Game.SIZE.getWidth()) x = (int) (Game.SIZE.getWidth() - this.width);
@@ -53,8 +53,8 @@ public class PinkVial extends Entity {
   }
 
   private boolean handleGravityAndMovement() {
-    log.trace("handle Falling " + handleFalling());
-    log.trace("handle Floating " + handleFloating());
+    log.trace("handle Falling " + movement.handlePinkVialFalling());
+    log.trace("handle Floating " + movement.handleFloating());
     return true;
   }
 
@@ -86,48 +86,35 @@ public class PinkVial extends Entity {
     return statusMessage;
   }
 
-  private boolean handleFloating() {  // handleGravityAndMovement sub-method
-    if (!isFalling && !isJumping) { // if neither jumping nor falling player either stands on a block or hangs in the air. So it is necessary to start falling again. If on block, player will hit block and reset height and stop falling.
-      gravity = 0.0;  // handle gravity
-      isFalling = true;  // handle movement
-    }
-    return true;
-  }
 
-  private boolean handleFalling() {  // handleGravityAndMovement sub-method
-    if (isFalling) {
-      gravity = gravity + 0.1;  // handle gravity
-      log.trace("Falling gravity = " + gravity);
-      velocityY = (int) gravity;  // handle movement
-    }
-    return true;
-  }
+
+  
 
   private String handleWallInteraction(Wall wall) {
     String statusMessage = null;
     if (getBoundsTop().intersects(wall.getBounds())) {
       statusMessage = "wall interaction: hitTop";
       y = wall.getY() + wall.getHeight();
-      velocityY = 0;
-      if (isJumping) {
+      movement.setVelocityY(0);
+      if (movement.isJumping()) {
         // isJumping = false;
-        gravity = 0.0;
-        isFalling = true;
+        movement.setGravity(0.0);
+        movement.setFalling(true);
       }
     } else if (getBoundsBottom().intersects(wall.getBounds())) {
       statusMessage = "wall interaction: hitBottom";
-      velocityY = 0;
-      isJumping = false;
+      movement.setVelocityY(0);
+      movement.setJumping(false);
       y = wall.getY() - height; // reset height, looks cleaner
-      if (isFalling) {
-        isFalling = false;
+      if (movement.isFalling()) {
+        movement.setFalling(false);
       }
     } else if (getBoundsLeft().intersects(wall.getBounds())) {
-      velocityX = moveSpeed;
+      movement.setVelocityX(movement.getMoveSpeed());
       x = wall.getX() + wall.getWidth();
     } else if (getBoundsRight().intersects(wall.getBounds())) {
       statusMessage = "wall interaction: hitRight";
-      velocityX = -moveSpeed;
+      movement.setVelocityX(-movement.getMoveSpeed());
       x = wall.getX() - width; // reset width, looks cleaner
     }
     return statusMessage;

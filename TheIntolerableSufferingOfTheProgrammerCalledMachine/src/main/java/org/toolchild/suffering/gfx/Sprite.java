@@ -4,12 +4,16 @@ import java.awt.image.BufferedImage;
 
 public class Sprite {
 
-  public SpriteSheet spriteSheet;
-  
+  public SpriteSheet   spriteSheet;
+
   public BufferedImage image;
-  
-  public Sprite(SpriteSheet spriteSheet, int x , int y ){
-    image = spriteSheet.getSprite(x, y);
+
+  public Sprite(SpriteSheet spriteSheet, int x, int y, boolean isBigger) {
+    if (isBigger) {
+      image = spriteSheet.getBiggerSprite(x, y);
+    } else {
+      image = spriteSheet.getSprite(x, y);
+    }
   }
 
   public BufferedImage getImage() {
@@ -19,5 +23,5 @@ public class Sprite {
   public void setImage(BufferedImage image) {
     this.image = image;
   }
-  
+
 }

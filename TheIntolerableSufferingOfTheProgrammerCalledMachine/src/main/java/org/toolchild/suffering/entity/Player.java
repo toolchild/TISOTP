@@ -16,7 +16,6 @@ public class Player extends Entity {
 
   private int                 frame      = 0;
   private int                 frameDelay = 0;
-  
 
   public Player(int x, int y, int width, int height, boolean isSolid, Id id, Handler handler) {
     super(x, y, width, height, isSolid, id, handler);
@@ -36,11 +35,29 @@ public class Player extends Entity {
       if (entity.id == Id.pinkVial) {
         if (height <= 10 * 64) {
           if (getBounds().intersects(entity.getBounds())) {
-            x = x - width;
-            y = y - height;
-            // width = width *2;
+            y = y - (int) (height * 0.2);
             height = (int) (height * 1.2);
+            width = (int) (width * 1.2);
             entity.die();
+          }
+        }
+      }
+      if (entity.id == Id.mob1) {
+        if (height <= 10 * 64) {
+          if (getBoundsBottom().intersects(entity.getBoundsTop())) {
+            movement.setGravity(-movement.getGravity()*0.8);
+            height = (int) (height);
+            entity.die();
+          } else if (getBounds().intersects(entity.getBounds())) {
+            movement.setGravity(-movement.getGravity()*0.8);
+            movement.setVelocityX(-movement.getVelocityX());
+            y = y - 100;
+            height = (int) (height * (1.0 / 1.2));
+            width = (int) (width * (1.0 / 1.2));
+            if (height < 40){
+              die();
+            }
+            
           }
         }
       }
@@ -82,10 +99,6 @@ public class Player extends Entity {
     }
     return true;
   }
-
-  
-
-  
 
   private boolean handleAllTileInteraction() {
     for (Tile tile : handler.tiles) {
@@ -191,11 +204,14 @@ public class Player extends Entity {
     camera.lockGraphicsToCamera(graphics);// since nothing is tied to player, the graphics object is tied to camera
     graphics.drawString("player x : " + x, 0, 3 * lineHeight);
     graphics.drawString("player y : " + y, column, 3 * lineHeight);
-    graphics.drawString("camera x : " + camera.x, 0, 4 * lineHeight);
-    graphics.drawString("camera y : " + camera.y, column, 4 * lineHeight);
+    graphics.drawString("camera x : " + camera.getX(), 0, 4 * lineHeight);
+    graphics.drawString("camera y : " + camera.getY(), column, 4 * lineHeight);
+    // graphics.drawString("camera y * player y : " + ((double)camera.y * (double)y), 3*column, 4 * lineHeight);
 
-    graphics.drawString("player getVelocityX() : " + movement.getVelocityX(), 0, +5 * lineHeight);
-    graphics.drawString("player getVelocityY(): " + movement.getVelocityY(), +0, +6 * lineHeight);
+    graphics.drawString("player getVelocityX() : " + movement.getVelocityX(), 0, 5 * lineHeight);
+    graphics.drawString("player getVelocityY(): " + movement.getVelocityY(), 0, 6 * lineHeight);
+    graphics.drawString("player height : " + height, column, 5 * lineHeight);
+    graphics.drawString("player width : " + width, column, 6* lineHeight);
     int gravityStringLength = Double.toString(movement.getGravity()).length();
     if (gravityStringLength > 5) {
       gravityStringLength = 5;
@@ -203,7 +219,7 @@ public class Player extends Entity {
     graphics.drawString("player gravity : " + Double.toString(movement.getGravity()).substring(0, gravityStringLength), 0, 7 * lineHeight);
     graphics.drawString("player facing : " + (facing == 0 ? "Left" : "Right"), 0, 8 * lineHeight);
     graphics.drawString("player isRunning: " + movement.isMoving(), 0, 9 * lineHeight);
-    graphics.translate(camera.x, camera.y); // untying graphics from camera
+    graphics.translate(camera.getX(), camera.getY()); // untying graphics from camera
   }
 
   public void handleJumpKeyEvent(boolean isActive) {

@@ -103,15 +103,4 @@ public class Movement {
     return true;
   }
   
-  public boolean handlePinkVialFalling() {  // handleGravityAndMovement sub-method
-    if (isFalling) {
-      gravity = gravity + 0.1;  // handle gravity
-      log.trace("Falling gravity = " + gravity);
-      velocityY = (int) gravity;  // handle movement
-    }
-    return true;
-  }
-  
-  
-  
 }

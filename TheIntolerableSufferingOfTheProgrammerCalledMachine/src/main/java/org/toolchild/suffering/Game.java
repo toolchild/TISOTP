@@ -36,10 +36,14 @@ public class Game extends Canvas implements Runnable {
   public static SpriteSheet     spriteSheet;
   public static SpriteSheet     characterSpriteSheet;
   public static SpriteSheet     powerupSpriteSheet;
+  private static SpriteSheet    mob1SpriteSheetLeft;
+  private static SpriteSheet    mob1SpriteSheetRight;
+  public static SpriteSheet     backgroundSheet;
 
   private BufferedImage         levelImage;
 
   public static Sprite          powerup[];
+  public static Sprite          mob1[];
   public static Sprite          player[];
   public static Sprite          grass;
   public static Sprite          pinkVial;
@@ -126,20 +130,29 @@ public class Game extends Canvas implements Runnable {
     spriteSheet = new SpriteSheet("/spriteSheet.png");
     characterSpriteSheet = new SpriteSheet("/charSpriteSheet.png");
     powerupSpriteSheet = new SpriteSheet("/crystal-qubodup-ccby3-32-blue.png");
+    mob1SpriteSheetLeft = new SpriteSheet("/wellingtonLeft.png");
+    mob1SpriteSheetRight = new SpriteSheet("/wellingtonRight.png");
+    backgroundSheet = new SpriteSheet("/trip.jpg");
 
     player = new Sprite[10];
     for (int i = 0; i < player.length / 2; i++) {
-      player[i] = new Sprite(characterSpriteSheet, i, 3);
-      player[i + player.length / 2] = new Sprite(characterSpriteSheet, i, 5);
+      player[i] = new Sprite(characterSpriteSheet, i, 3, false);
+      player[i + player.length / 2] = new Sprite(characterSpriteSheet, i, 5, false);
     }
 
     powerup = new Sprite[8];
     for (int i = 0; i < powerup.length; i++) {
-      powerup[i] = new Sprite(powerupSpriteSheet, i, 0);
+      powerup[i] = new Sprite(powerupSpriteSheet, i, 0, false);
     }
 
-    grass = new Sprite(spriteSheet, 1, 0);
-    pinkVial = new Sprite(spriteSheet, 2, 0);
+    mob1 = new Sprite[16];
+    for (int i = 0; i < mob1.length / 2; i++) {
+      mob1[i] = new Sprite(mob1SpriteSheetLeft, i, 0, true);
+      mob1[i + mob1.length / 2] = new Sprite(mob1SpriteSheetRight, i, 0, true);
+    }
+
+    grass = new Sprite(spriteSheet, 1, 0, false);
+    pinkVial = new Sprite(spriteSheet, 2, 0, false);
     addKeyListener(new KeyInputManager());
     keyInput = (KeyInputManager) getKeyListeners()[0];
     keyInput.init();

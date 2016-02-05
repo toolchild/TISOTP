@@ -25,7 +25,6 @@ public class PinkVial extends Entity {
     int direction = random.nextInt(2); // direction: 0 = left ; 1 = right
     movement.setVelocityX(direction == 0 ? -3 : +3);
     movement.setMoveSpeed(3);
-
   }
 
   @Override
@@ -34,7 +33,7 @@ public class PinkVial extends Entity {
     frameDelay++;
     if (frameDelay >= 3) {
       frame++;
-      if (frame >= Game.player.length / 2) {
+      if (frame >= Game.powerup.length / 2) {
         frame = 0;
       }
       frameDelay = 0;
@@ -53,7 +52,7 @@ public class PinkVial extends Entity {
   }
 
   private boolean handleGravityAndMovement() {
-    log.trace("handle Falling " + movement.handlePinkVialFalling());
+    log.trace("handle Falling " + movement.handleFalling());
     log.trace("handle Floating " + movement.handleFloating());
     return true;
   }
@@ -84,11 +83,7 @@ public class PinkVial extends Entity {
     }
 
     return statusMessage;
-  }
-
-
-
-  
+  }  
 
   private String handleWallInteraction(Wall wall) {
     String statusMessage = null;

@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import org.apache.log4j.Logger;
 import org.toolchild.suffering.entity.Entity;
 import org.toolchild.suffering.entity.Player;
+import org.toolchild.suffering.entity.mob.Mob1;
 import org.toolchild.suffering.entity.powerup.PinkVial;
 import org.toolchild.suffering.tile.Tile;
 import org.toolchild.suffering.tile.Wall;
@@ -19,6 +20,9 @@ public class Handler {
   public LinkedList<Tile>     tiles    = new LinkedList<Tile>();
   public int                  tilesTicked;
   public Player               player;
+  
+  int levelWidth;
+  int levelHeight;
 
   public Handler(BufferedImage levelImage) {
     camera = new Camera(); // the new camera is locked to the player from start
@@ -28,7 +32,7 @@ public class Handler {
   public void tick() {
     for (Entity entity : entities) {
       if (entity.id == Id.player) {
-        camera.tick(entity);
+        camera.tick(player);
       }
     }
 
@@ -49,6 +53,8 @@ public class Handler {
 
   public void render(Graphics graphics, int lastSecondTicks, int lastSecondFrames) {
     camera.releaseGraphicsFromCamera(graphics);
+    graphics.drawImage(Game.backgroundSheet.getSpriteSheet(),0,0,levelWidth*64,levelHeight*64,null);
+
     int tilesRendered = renderTiles(graphics);
     log.trace("tilesRendered: " + tilesRendered);
 
@@ -64,11 +70,35 @@ public class Handler {
 
   }
 
+  private int renderTiles(Graphics graphics) {
+    int tilesRendered = 0;
+    for (Tile tile : tiles) { // after releasing the camera, draw the tiles, not relative to player
+      if (tile.getX() >= player.x - Game.SIZE.getWidth() - 64 && tile.getX() <= player.x + Game.SIZE.getWidth() + 64) { // only render visible tiles, relative to top left edge of the shown screen -64
+        if (tile.getY() >= player.y - Game.SIZE.getHeight() - 64 && tile.getY() <= player.y + Game.SIZE.getHeight() + 64) {
+          tile.render(graphics);
+          tilesRendered++;
+        }
+      }
+    }
+    return tilesRendered;
+  }
+
+  // ________________________________________ render sub-methods ________________________________________// ________________________________________ render sub-methods ________________________________________
+  private void renderDebug(Graphics graphics, int lastSecondTicks, int lastSecondFrames, int tilesRendered) {
+    int column = 150;
+    int lineHeight = 20;
+    graphics.setColor(Color.WHITE);
+    graphics.drawString("Ticks: " + lastSecondTicks, 0, lineHeight);
+    graphics.drawString("Frames: " + lastSecondFrames, 0, 2 * lineHeight);
+    graphics.drawString("tiles rendered: " + tilesRendered, 2 * column, 3 * lineHeight);
+    graphics.drawString("tiles ticked: " + tilesTicked, 2 * column, 4 * lineHeight);
+  }
+
   public void createLevel(BufferedImage levelImage) {
-    int width = levelImage.getWidth();
-    int height = levelImage.getHeight();
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
+    levelWidth = levelImage.getWidth();
+    levelHeight = levelImage.getHeight();
+    for (int y = 0; y < levelHeight; y++) {
+      for (int x = 0; x < levelWidth; x++) {
         int pixel = levelImage.getRGB(x, y);
         int red = (pixel >> 16) & 0xff;
         int green = (pixel >> 8) & 0xff;
@@ -76,7 +106,9 @@ public class Handler {
         int size = 64;
         if (red == 0 && green == 0 && blue == 255) addEntity(new Player(x * size, y * size, size, size, true, Id.player, this));
         if (red == 0 && green == 0 && blue == 0) addTile(new Wall(x * size, y * size, size, size, true, Id.wall, this));
+        if (red == 66 && green == 66 && blue == 66) addEntity(new Mob1(x * size, y * size, size, size, true, Id.mob1, this));
         if (red == 255 && green == 0 && blue == 0) addEntity(new PinkVial(x * size, y * size, size, size, true, Id.pinkVial, this));
+        
       }
     }
   }
@@ -99,32 +131,7 @@ public class Handler {
     tiles.remove(tile);
   }
 
-// ________________________________________ render sub-methods ________________________________________// ________________________________________ render sub-methods ________________________________________
-  private void renderDebug(Graphics graphics, int lastSecondTicks, int lastSecondFrames, int tilesRendered) {
-    int column = 150;
-    int lineHeight = 20;
-    graphics.setColor(Color.WHITE);
-    graphics.drawString("Ticks: " + lastSecondTicks, 0, lineHeight);
-    graphics.drawString("Frames: " + lastSecondFrames, 0, 2 * lineHeight);
-    graphics.drawString("tiles rendered: " + tilesRendered, 2 * column, 3 * lineHeight);
-    graphics.drawString("tiles ticked: " + tilesTicked, 2 * column, 4 * lineHeight);
-  }
-
-  private int renderTiles(Graphics graphics) {
-    int tilesRendered = 0;
-    for (Tile tile : tiles) { // after releasing the camera, draw the tiles, not relative to player
-      if (tile.getX() >= player.x - Game.SIZE.getWidth() - 64 && tile.getX() <= player.x + Game.SIZE.getWidth() + 64) { // only render visible tiles, relative to top left edge of the shown screen -64
-        if (tile.getY() >= player.y - Game.SIZE.getHeight() - 64 && tile.getY() <= player.y + Game.SIZE.getHeight() + 64) {
-          tile.render(graphics);
-          tilesRendered++;
-        }
-      }
-    }
-    return tilesRendered;
-  }
-  // ######################################## render sub-methods ########################################
-
-  public Camera getCamera() {
+public Camera getCamera() {
     return this.camera;
   }
 }

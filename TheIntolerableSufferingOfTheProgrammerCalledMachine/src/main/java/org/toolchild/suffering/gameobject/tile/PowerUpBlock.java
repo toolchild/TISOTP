@@ -1,4 +1,4 @@
-package org.toolchild.suffering.tile;
+package org.toolchild.suffering.gameobject.tile;
 
 import java.awt.Graphics;
 
@@ -10,13 +10,13 @@ import org.toolchild.suffering.gfx.Sprite;
 
 public class PowerUpBlock extends Tile {
 
-  private Sprite  powerup;
+//  private Sprite  powerup;
   private boolean used    = false;
   private int     spriteY = getY();
 
   public PowerUpBlock(int x, int y, int width, int height, boolean isSolid, Id id, Handler handler, Sprite powerup) {
     super(x, y, width, height, isSolid, id, handler);
-    this.powerup = powerup;
+//    this.powerup = powerup;
   }
 
   @Override
@@ -25,7 +25,7 @@ public class PowerUpBlock extends Tile {
       spriteY--;
       if(spriteY <= y - height){
         used = true;
-        handler.addEntity(new BlueCrystal(x, spriteY, width, height, id.blueCrystal, handler));
+        handler.addEntity(new BlueCrystal(x, spriteY, width, height, Id.blueCrystal, handler));
       }
     }
     // TODO Auto-generated method stub

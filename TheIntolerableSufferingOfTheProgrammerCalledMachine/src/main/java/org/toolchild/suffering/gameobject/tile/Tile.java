@@ -1,46 +1,26 @@
-package org.toolchild.suffering.tile;
+package org.toolchild.suffering.gameobject.tile;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
+import org.toolchild.suffering.gameobject.GameObject;
 
-public abstract class Tile {
-  public int x;
-  public int y;
-  public int width;
-  public int height;
-  public boolean isSolid;
-  public boolean activated = false;
-  
-  public int velocityX;
-  public int velocityY;
-  
-  public Id id;
-  public Handler handler;
-  
-  
+public abstract class Tile extends GameObject {
+  protected boolean isSolid;
+  protected boolean activated = false;
   
   public Tile(int x, int y, int width, int height, boolean isSolid, Id id, Handler handler){
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
+    super(x, y, width, height, id, handler);
     this.isSolid = isSolid;
-    this.id = id;
-    this.handler = handler;
+   
   }
   
   public abstract void tick();
 
   public abstract void render(Graphics graphics);
-
   
-  public void die(){
-    handler.removeTile(this);
-  }
-
   public int getX() {
     return x;
   }
@@ -81,14 +61,6 @@ public abstract class Tile {
     this.isSolid = isSolid;
   }
 
-  public void setVelocityX(int velocityX) {
-    this.velocityX = velocityX;
-  }
-
-  public void setVelocityY(int velocityY) {
-    this.velocityY = velocityY;
-  }
-
   public Id getId() {
     return id;
   }
@@ -97,7 +69,21 @@ public abstract class Tile {
     this.id = id;
   }
   
-  public Rectangle getBounds(){
-    return new Rectangle(x, y, width, height);
+  
+  public boolean isActivated() {
+    return this.activated;
   }
+
+  public void setActivated(boolean activated) {
+    this.activated = activated;
+  }
+
+  public Handler getHandler() {
+    return this.handler;
+  }
+
+  public void setHandler(Handler handler) {
+    this.handler = handler;
+  }
+  
 }

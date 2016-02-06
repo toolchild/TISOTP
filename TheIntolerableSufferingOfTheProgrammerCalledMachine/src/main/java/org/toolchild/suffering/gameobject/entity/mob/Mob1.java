@@ -1,17 +1,17 @@
-package org.toolchild.suffering.entity.mob;
+package org.toolchild.suffering.gameobject.entity.mob;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
-import org.toolchild.suffering.Camera;
 import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
-import org.toolchild.suffering.entity.Entity;
-import org.toolchild.suffering.tile.Tile;
-import org.toolchild.suffering.tile.Wall;
+import org.toolchild.suffering.gameobject.GameObject;
+import org.toolchild.suffering.gameobject.entity.Entity;
+import org.toolchild.suffering.gameobject.tile.Tile;
+import org.toolchild.suffering.gameobject.tile.Wall;
 
 public class Mob1 extends Entity {
   private static final Logger log        = Logger.getLogger(Mob1.class);
@@ -40,7 +40,7 @@ public class Mob1 extends Entity {
     }
     log.trace("handle animation cycle: " + handleAnimationCycle());
     log.trace("update Position: " + updatePosition());
-    log.trace("handle all tile interaction: " + handleAllTileInteraction());
+    log.trace("handle all tile interaction: " + handleAllInteraction());
     log.trace("handle gravity and movement: " + handleGravityAndMovement());
   }
 
@@ -74,70 +74,13 @@ public class Mob1 extends Entity {
     return true;
   }
 
-  private boolean handleAllTileInteraction() {
-    for (Tile tile : handler.tiles) {
-      if (tile.getX() >= x - 64 && tile.getX() <= x + 64) { // only tick tiles immediately around the entity
-        if (tile.getY() >= y - 64 && tile.getY() <= y + 64) {
-          String singleTileInteractionStatusMessage = handleSingleTileInteraction(tile);
-          if (singleTileInteractionStatusMessage != null) {
-            log.trace("single tile interaction: " + singleTileInteractionStatusMessage);
-          }
-        }
-      }
-    }
-    return true;
-  }
-
-  private String handleSingleTileInteraction(Tile tile) {  // handleAllTileInteraction sub-method
-    String statusMessage;
-    if (!tile.isSolid()) {
-      statusMessage = "false, tile not solid";
-    } else if (tile.id == Id.wall && tile instanceof Wall) {
-      Wall wall = (Wall) tile;
-      statusMessage = handleWallInteraction(wall);
-    } else {
-      statusMessage = "false, tile id not recognized";
-    }
-
-    return statusMessage;
-  }
-
-  private String handleWallInteraction(Wall wall) {
-    String statusMessage = null;
-    if (getBoundsTop().intersects(wall.getBounds())) {
-      statusMessage = "wall interaction: hitTop";
-      y = wall.getY() + wall.getHeight();
-      movement.setVelocityY(0);
-      if (movement.isJumping()) {
-        // isJumping = false;
-        movement.setGravity(0.0);
-        movement.setFalling(true);
-      }
-    } else if (getBoundsBottom().intersects(wall.getBounds())) {
-      statusMessage = "wall interaction: hitBottom";
-      movement.setVelocityY(0);
-      movement.setJumping(false);
-      y = wall.getY() - height; // reset height, looks cleaner
-      if (movement.isFalling()) {
-        movement.setFalling(false);
-      }
-    } else if (getBoundsLeft().intersects(wall.getBounds())) {
-      movement.setVelocityX(movement.getMoveSpeed());
-      x = wall.getX() + wall.getWidth();
-
-    } else if (getBoundsRight().intersects(wall.getBounds())) {
-      statusMessage = "wall interaction: hitRight";
-      movement.setVelocityX(-movement.getMoveSpeed());
-      x = wall.getX() - width; // reset width, looks cleaner
-    }
-    return statusMessage;
-  }
+  
 
   @Override
-  public void render(Graphics graphics, Camera camera) {
+  public void render(Graphics graphics) {
     handleAnimationRendering(graphics);
 
-    graphics.setColor(Color.RED);
+    graphics.setColor(Color.BLUE);
     graphics.fillRect(getBoundsRight().x, getBoundsRight().y, getBoundsRight().width, getBoundsRight().height);
     graphics.fillRect(getBoundsLeft().x, getBoundsLeft().y, getBoundsLeft().width, getBoundsLeft().height);
     graphics.fillRect(getBoundsTop().x, getBoundsTop().y, getBoundsTop().width, getBoundsTop().height);

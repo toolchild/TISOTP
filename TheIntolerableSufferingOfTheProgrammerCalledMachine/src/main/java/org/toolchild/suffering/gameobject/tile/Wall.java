@@ -1,4 +1,4 @@
-package org.toolchild.suffering.tile;
+package org.toolchild.suffering.gameobject.tile;
 
 import java.awt.Graphics;
 

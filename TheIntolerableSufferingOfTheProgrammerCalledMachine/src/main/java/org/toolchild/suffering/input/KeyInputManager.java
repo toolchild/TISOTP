@@ -6,8 +6,9 @@ import java.awt.event.KeyListener;
 import org.apache.log4j.Logger;
 import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Id;
-import org.toolchild.suffering.entity.Entity;
-import org.toolchild.suffering.entity.Player;
+import org.toolchild.suffering.gameobject.GameObject;
+import org.toolchild.suffering.gameobject.entity.Entity;
+import org.toolchild.suffering.gameobject.entity.Player;
 
 public class KeyInputManager implements KeyListener {
 
@@ -26,8 +27,8 @@ public class KeyInputManager implements KeyListener {
   @Override
   public void keyPressed(KeyEvent e) {
     int key = e.getKeyCode();
-    for (Entity entity : Game.handler.entities) {
-      if (entity.id == Id.player) {
+    for (GameObject player : Game.handler.getPlayers()) {
+      if (player.getId() == Id.player) {
         switch (key) {
           case KeyEvent.VK_W: {
             jumpKeyStatus.isActive = true;
@@ -49,8 +50,8 @@ public class KeyInputManager implements KeyListener {
   @Override
   public void keyReleased(KeyEvent e) {
     int key = e.getKeyCode();
-    for (Entity entity : Game.handler.entities) {
-      if (entity.id == Id.player) {
+    for (GameObject player : Game.handler.getPlayers()) {
+      if (player.getId() == Id.player) {
         switch (key) {
           case KeyEvent.VK_W: {
             jumpKeyStatus.isActive = false;

@@ -1,4 +1,4 @@
-package org.toolchild.suffering.entity;
+package org.toolchild.suffering.gameobject.entity;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -6,19 +6,24 @@ import java.awt.Graphics;
 import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
-import org.toolchild.suffering.tile.PowerUpBlock;
-import org.toolchild.suffering.tile.Tile;
+import org.toolchild.suffering.entity.movement.Movement;
+import org.toolchild.suffering.gameobject.GameObject;
+import org.toolchild.suffering.gameobject.tile.PowerUpBlock;
+import org.toolchild.suffering.gameobject.tile.Tile;
 import org.apache.log4j.Logger;
 import org.toolchild.suffering.Camera;
 
-public class Player extends Entity {
+public class Player extends GameObject {
   private static final Logger log        = Logger.getLogger(Player.class);
+  Movement movement;
 
   private int                 frame      = 0;
   private int                 frameDelay = 0;
+  private int facing = 0;
 
   public Player(int x, int y, int width, int height, Id id, Handler handler) {
     super(x, y, width, height, id, handler);
+    movement = new Movement();
     movement.setMoveSpeed(10);
   }
 
@@ -30,9 +35,9 @@ public class Player extends Entity {
     log.trace("handle all tile interaction: " + handleAllTileInteraction());
     log.trace("handle Animation " + handleAnimationCycle());
 
-    for (int e = 0; e < handler.entities.size(); e++) { // need to use this for loop and
-      Entity entity = handler.entities.get(e); // get the entity to avoid an UnconcurrentModificationException
-      if (entity.id == Id.blueCrystal) {
+    for (int e = 0; e < handler.getEntities().size(); e++) { // need to use this for loop and
+      Entity entity = (Entity) handler.getEntities().get(e); // get the entity to avoid an UnconcurrentModificationException
+      if (entity.getId() == Id.blueCrystal) {
         if (height <= 10 * 64) {
           if (getBounds().intersects(entity.getBounds())) {
             y = y - (int) (height * 0.2);
@@ -42,7 +47,7 @@ public class Player extends Entity {
           }
         }
       }
-      if (entity.id == Id.mob1) {
+      if (entity.getId() == Id.mob1) {
         if (height <= 10 * 64) {
           if (getBoundsBottom().intersects(entity.getBoundsTop())) {
             movement.setGravity(-movement.getGravity() * 0.8);
@@ -62,6 +67,10 @@ public class Player extends Entity {
         }
       }
     }
+  }
+
+  private void die() {
+    handler.removePlayer(this);
   }
 
   /**
@@ -101,10 +110,11 @@ public class Player extends Entity {
   }
 
   private boolean handleAllTileInteraction() {
-    for (Tile tile : handler.tiles) {
+    for (GameObject tile : handler.getTiles()) {
       if (tile.getX() >= x - 5 * 64 && tile.getX() <= x + 5 * 64) {
         if (tile.getY() >= y - 5 * 64 && tile.getY() <= y + 5 * 64) {
-          String singleTileInteractionStatusMessage = handleSingleTileInteraction(tile);
+          Tile tileInstance = (Tile) tile;
+          String singleTileInteractionStatusMessage = handleSingleTileInteraction(tileInstance);
           if (singleTileInteractionStatusMessage != null) {
             log.debug("single tile interaction: " + singleTileInteractionStatusMessage);
           }
@@ -118,10 +128,10 @@ public class Player extends Entity {
     String statusMessage;
     if (!tile.isSolid()) {
       statusMessage = "false, tile not solid";
-    } else if (tile.id == Id.powerUpBlock) {
+    } else if (tile.getId() == Id.powerUpBlock) {
       PowerUpBlock powerUpBlock = (PowerUpBlock) tile;
       statusMessage = handlePowerUpBlockInteraction(powerUpBlock);
-    } else if (tile.id == Id.wall) {
+    } else if (tile.getId() == Id.wall) {
       statusMessage = handleLevelTileInteraction(tile);
     } else statusMessage = "false, tile id not recognized";
 
@@ -139,7 +149,7 @@ public class Player extends Entity {
         movement.setFalling(true);
       }
       statusMessage = "powerUpBlock interaction: hitTop";
-      powerUpBlock.activated = true;
+      powerUpBlock.setActivated(true);
     } else {
      statusMessage = handleLevelTileInteraction(powerUpBlock);
     }
@@ -185,7 +195,6 @@ public class Player extends Entity {
     return statusMessage;
   }
 
-  @Override
   public void render(Graphics graphics, Camera camera) {
     renderPlayer(graphics); // renders the player and everything tied to its position
     graphics.setColor(Color.WHITE);
@@ -269,6 +278,12 @@ public class Player extends Entity {
       log.trace("Left Released");
       movement.setVelocityX(0);
     }
+  }
+
+  @Override
+  public void render(Graphics graphics) {
+    // TODO Auto-generated method stub
+    
   }
 
 }

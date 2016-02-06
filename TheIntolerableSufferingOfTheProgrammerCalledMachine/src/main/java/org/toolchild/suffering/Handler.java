@@ -6,24 +6,27 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
-import org.toolchild.suffering.entity.Entity;
-import org.toolchild.suffering.entity.Player;
-import org.toolchild.suffering.entity.mob.Mob1;
 import org.toolchild.suffering.entity.powerup.BlueCrystal;
-import org.toolchild.suffering.tile.PowerUpBlock;
-import org.toolchild.suffering.tile.Tile;
-import org.toolchild.suffering.tile.Wall;
+import org.toolchild.suffering.gameobject.GameObject;
+import org.toolchild.suffering.gameobject.entity.Entity;
+import org.toolchild.suffering.gameobject.entity.Player;
+import org.toolchild.suffering.gameobject.entity.mob.Mob1;
+import org.toolchild.suffering.gameobject.tile.PowerUpBlock;
+import org.toolchild.suffering.gameobject.tile.Tile;
+import org.toolchild.suffering.gameobject.tile.Wall;
 
 public class Handler {
-  private static final Logger log      = Logger.getLogger(Handler.class);
-  private Camera              camera;
-  public LinkedList<Entity>   entities = new LinkedList<Entity>();
-  public LinkedList<Tile>     tiles    = new LinkedList<Tile>();
-  public int                  tilesTicked;
-  public Player               player;
-  
-  int levelWidth;
-  int levelHeight;
+  private static final Logger    log      = Logger.getLogger(Handler.class);
+  private Camera                 camera;
+  private LinkedList<GameObject> entities = new LinkedList<GameObject>();
+  private LinkedList<GameObject> tiles    = new LinkedList<GameObject>();
+  private LinkedList<GameObject> players  = new LinkedList<GameObject>();
+  private Player player;
+  public int                     tilesTicked;
+  public int                     entitiesTicked;
+
+  int                            levelWidth;
+  int                            levelHeight;
 
   public Handler(BufferedImage levelImage) {
     camera = new Camera(); // the new camera is locked to the player from start
@@ -31,20 +34,26 @@ public class Handler {
   }
 
   public void tick() {
-    for (Entity entity : entities) {
-      if (entity.id == Id.player) {
-        camera.tick(player);
+    for (GameObject player : players) {
+      if (player.getId() == Id.player) {
+        camera.tick((Player)player);
       }
     }
 
-    tilesTicked = 0;
-    for (int e = 0; e < entities.size(); e++) {
-      Entity entity = entities.get(e);
-      entity.tick();
+    for (int e = 0; e < players.size(); e++) {
+      GameObject player =  players.get(e);
+      player.tick();
     }
-    for (Tile tile : tiles) {
-      if (tile.getX() >= player.x - Game.SIZE.getWidth() - 64 && tile.getX() <= player.x + Game.SIZE.getWidth() + 64) { // only ticks visible tiles, relative to top left edge of the shown screen -64
-        if (tile.getY() >= player.y - Game.SIZE.getHeight() - 64 && tile.getY() <= player.y + Game.SIZE.getHeight() + 64) {
+
+    entitiesTicked = 0;
+    for (int e = 0; e < entities.size(); e++) {
+      entities.get(e).tick();
+      entitiesTicked++;
+    }
+    tilesTicked = 0;
+    for (GameObject tile : tiles) {
+      if (tile.getX() >= player.getX() - Game.SIZE.getWidth() - 64 && tile.getX() <= player.getX() + Game.SIZE.getWidth() + 64) { // only ticks visible tiles, relative to top left edge of the shown screen -64
+        if (tile.getY() >= player.getY() - Game.SIZE.getHeight() - 64 && tile.getY() <= player.getY() + Game.SIZE.getHeight() + 64) {
           tile.tick();
           tilesTicked++;
         }
@@ -54,7 +63,7 @@ public class Handler {
 
   public void render(Graphics graphics, int lastSecondTicks, int lastSecondFrames) {
     camera.releaseGraphicsFromCamera(graphics);
-    graphics.drawImage(Game.backgroundSheet.getSpriteSheet(),0,0,levelWidth*64,levelHeight*64,null);
+    graphics.drawImage(Game.backgroundSheet.getSpriteSheet(), 0, 0, levelWidth * 64, levelHeight * 64, null);
 
     int tilesRendered = renderTiles(graphics);
     log.trace("tilesRendered: " + tilesRendered);
@@ -63,19 +72,22 @@ public class Handler {
     renderDebug(graphics, lastSecondTicks, lastSecondFrames, tilesRendered);
     camera.releaseGraphicsFromCamera(graphics);
 
-    for (Entity entity : entities) {
-      entity.render(graphics, camera);
+    for (GameObject entity : entities) {
+       entity.render(graphics);
     }
 
+    for (GameObject player : players) {
+       ((Player)player).render(graphics, camera);
+    }
     log.trace("entities: " + entities.size());
 
   }
 
   private int renderTiles(Graphics graphics) {
     int tilesRendered = 0;
-    for (Tile tile : tiles) { // after releasing the camera, draw the tiles, not relative to player
-      if (tile.getX() >= player.x - Game.SIZE.getWidth() - 64 && tile.getX() <= player.x + Game.SIZE.getWidth() + 64) { // only render visible tiles, relative to top left edge of the shown screen -64
-        if (tile.getY() >= player.y - Game.SIZE.getHeight() - 64 && tile.getY() <= player.y + Game.SIZE.getHeight() + 64) {
+    for (GameObject tile : tiles) { // after releasing the camera, draw the tiles, not relative to player
+      if (tile.getX() >= player.getX() - Game.SIZE.getWidth() - 64 && tile.getX() <= player.getX() + Game.SIZE.getWidth() + 64) { // only render visible tiles, relative to top left edge of the shown screen -64
+        if (tile.getY() >= player.getY() - Game.SIZE.getHeight() - 64 && tile.getY() <= player.getY() + Game.SIZE.getHeight() + 64) {
           tile.render(graphics);
           tilesRendered++;
         }
@@ -84,7 +96,6 @@ public class Handler {
     return tilesRendered;
   }
 
-  // ________________________________________ render sub-methods ________________________________________// ________________________________________ render sub-methods ________________________________________
   private void renderDebug(Graphics graphics, int lastSecondTicks, int lastSecondFrames, int tilesRendered) {
     int column = 150;
     int lineHeight = 20;
@@ -105,20 +116,24 @@ public class Handler {
         int green = (pixel >> 8) & 0xff;
         int blue = (pixel) & 0xff;
         int size = 64;
-        if (red == 0 && green == 0 && blue == 255) addEntity(new Player(x * size, y * size, size, size, Id.player, this));
+        if (red == 0 && green == 0 && blue == 255) addPlayer(new Player(x * size, y * size, size, size, Id.player, this));
         if (red == 0 && green == 0 && blue == 0) addTile(new Wall(x * size, y * size, size, size, true, Id.wall, this));
         if (red == 255 && green == 255 && blue == 0) addTile(new PowerUpBlock(x * size, y * size, size, size, true, Id.powerUpBlock, this, Game.powerupBlock));
         if (red == 66 && green == 66 && blue == 66) addEntity(new Mob1(x * size, y * size, size, size, Id.mob1, this));
-        if (red == 255 && green == 0 && blue == 0) addEntity(new BlueCrystal(x * size, y * size, size, size,  Id.blueCrystal, this));
-        
+        if (red == 255 && green == 0 && blue == 0) addEntity(new BlueCrystal(x * size, y * size, size, size, Id.blueCrystal, this));
       }
     }
   }
 
   public void addEntity(Entity entity) {
-    log.debug("entity added : " + entity.id);
+    log.debug("entity added : " + entity.getId());
     entities.add(entity);
-    if (entity.id == Id.player) player = (Player) entity;
+  }
+
+  public void addPlayer(GameObject player) {
+    log.debug("entity added : " + player.getId());
+    players.add(player);
+    this.player = (Player)player;
   }
 
   public void removeEntity(Entity entity) {
@@ -133,7 +148,35 @@ public class Handler {
     tiles.remove(tile);
   }
 
-public Camera getCamera() {
+  public Camera getCamera() {
     return this.camera;
+  }
+
+  public LinkedList<GameObject> getEntities() {
+    return this.entities;
+  }
+
+  public void setEntities(LinkedList<GameObject> entities) {
+    this.entities = entities;
+  }
+
+  public LinkedList<GameObject> getTiles() {
+    return this.tiles;
+  }
+
+  public void setTiles(LinkedList<GameObject> tiles) {
+    this.tiles = tiles;
+  }
+
+  public void removePlayer(GameObject player) {
+    players.remove(player);
+  }
+
+  public LinkedList<GameObject> getPlayers() {
+    return this.players;
+  }
+
+  public void setPlayers(LinkedList<GameObject> players) {
+    this.players = players;
   }
 }

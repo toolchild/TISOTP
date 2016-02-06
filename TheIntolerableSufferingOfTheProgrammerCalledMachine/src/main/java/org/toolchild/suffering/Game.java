@@ -35,18 +35,20 @@ public class Game extends Canvas implements Runnable {
 
   public static SpriteSheet     spriteSheet;
   public static SpriteSheet     characterSpriteSheet;
-  public static SpriteSheet     powerupSpriteSheet;
+  public static SpriteSheet     blueCrystalSpriteSheet;
   private static SpriteSheet    mob1SpriteSheetLeft;
   private static SpriteSheet    mob1SpriteSheetRight;
   public static SpriteSheet     backgroundSheet;
 
   private BufferedImage         levelImage;
 
-  public static Sprite          powerup[];
-  public static Sprite          mob1[];
-  public static Sprite          player[];
   public static Sprite          grass;
-  public static Sprite          pinkVial;
+  public static Sprite powerupBlock;
+  public static Sprite usedPowerupBlock;
+
+  public static Sprite          player[];
+  public static Sprite          mob1[];
+  public static Sprite          blueCrystal[];
 
   public static KeyInputManager keyInput;
 
@@ -120,7 +122,7 @@ public class Game extends Canvas implements Runnable {
   private boolean init() {
 
     try {
-      levelImage = ImageIO.read(getClass().getResource("/herocore_map.png"));
+      levelImage = ImageIO.read(getClass().getResource("/level1.png"));
     }
     catch (IOException e) {
       e.printStackTrace();
@@ -129,7 +131,7 @@ public class Game extends Canvas implements Runnable {
     handler = new Handler(levelImage);
     spriteSheet = new SpriteSheet("/spriteSheet.png");
     characterSpriteSheet = new SpriteSheet("/charSpriteSheet.png");
-    powerupSpriteSheet = new SpriteSheet("/crystal-qubodup-ccby3-32-blue.png");
+    blueCrystalSpriteSheet = new SpriteSheet("/crystal-qubodup-ccby3-32-blue.png");
     mob1SpriteSheetLeft = new SpriteSheet("/wellingtonLeft.png");
     mob1SpriteSheetRight = new SpriteSheet("/wellingtonRight.png");
     backgroundSheet = new SpriteSheet("/trip.jpg");
@@ -140,9 +142,9 @@ public class Game extends Canvas implements Runnable {
       player[i + player.length / 2] = new Sprite(characterSpriteSheet, i, 5, false);
     }
 
-    powerup = new Sprite[8];
-    for (int i = 0; i < powerup.length; i++) {
-      powerup[i] = new Sprite(powerupSpriteSheet, i, 0, false);
+    blueCrystal = new Sprite[8];
+    for (int i = 0; i < blueCrystal.length; i++) {
+      blueCrystal[i] = new Sprite(blueCrystalSpriteSheet, i, 0, false);
     }
 
     mob1 = new Sprite[16];
@@ -152,7 +154,8 @@ public class Game extends Canvas implements Runnable {
     }
 
     grass = new Sprite(spriteSheet, 1, 0, false);
-    pinkVial = new Sprite(spriteSheet, 2, 0, false);
+    powerupBlock = new Sprite(spriteSheet,3,0, false);
+    usedPowerupBlock = new Sprite(spriteSheet,4,0, false);
     addKeyListener(new KeyInputManager());
     keyInput = (KeyInputManager) getKeyListeners()[0];
     keyInput.init();

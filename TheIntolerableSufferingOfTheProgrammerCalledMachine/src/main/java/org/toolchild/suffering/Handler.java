@@ -9,7 +9,8 @@ import org.apache.log4j.Logger;
 import org.toolchild.suffering.entity.Entity;
 import org.toolchild.suffering.entity.Player;
 import org.toolchild.suffering.entity.mob.Mob1;
-import org.toolchild.suffering.entity.powerup.PinkVial;
+import org.toolchild.suffering.entity.powerup.BlueCrystal;
+import org.toolchild.suffering.tile.PowerUpBlock;
 import org.toolchild.suffering.tile.Tile;
 import org.toolchild.suffering.tile.Wall;
 
@@ -104,10 +105,11 @@ public class Handler {
         int green = (pixel >> 8) & 0xff;
         int blue = (pixel) & 0xff;
         int size = 64;
-        if (red == 0 && green == 0 && blue == 255) addEntity(new Player(x * size, y * size, size, size, true, Id.player, this));
+        if (red == 0 && green == 0 && blue == 255) addEntity(new Player(x * size, y * size, size, size, Id.player, this));
         if (red == 0 && green == 0 && blue == 0) addTile(new Wall(x * size, y * size, size, size, true, Id.wall, this));
-        if (red == 66 && green == 66 && blue == 66) addEntity(new Mob1(x * size, y * size, size, size, true, Id.mob1, this));
-        if (red == 255 && green == 0 && blue == 0) addEntity(new PinkVial(x * size, y * size, size, size, true, Id.pinkVial, this));
+        if (red == 255 && green == 255 && blue == 0) addTile(new PowerUpBlock(x * size, y * size, size, size, true, Id.powerUpBlock, this, Game.powerupBlock));
+        if (red == 66 && green == 66 && blue == 66) addEntity(new Mob1(x * size, y * size, size, size, Id.mob1, this));
+        if (red == 255 && green == 0 && blue == 0) addEntity(new BlueCrystal(x * size, y * size, size, size,  Id.blueCrystal, this));
         
       }
     }

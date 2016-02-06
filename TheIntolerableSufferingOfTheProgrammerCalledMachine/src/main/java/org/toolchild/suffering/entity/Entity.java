@@ -16,7 +16,7 @@ public abstract class Entity {
   public int y;
   public int width;
   public int height;
-  public boolean isSolid;
+  
   
   
   
@@ -28,12 +28,11 @@ public abstract class Entity {
   
   public Movement movement;
 
-  public Entity(int x, int y, int width, int height, boolean isSolid, Id id, Handler handler){
+  public Entity(int x, int y, int width, int height, Id id, Handler handler){
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
-    this.isSolid = isSolid;
     this.id = id;
     this.handler = handler;
     movement = new Movement();

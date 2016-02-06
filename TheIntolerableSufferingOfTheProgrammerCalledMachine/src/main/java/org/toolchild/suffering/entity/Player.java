@@ -6,8 +6,8 @@ import java.awt.Graphics;
 import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
+import org.toolchild.suffering.tile.PowerUpBlock;
 import org.toolchild.suffering.tile.Tile;
-import org.toolchild.suffering.tile.Wall;
 import org.apache.log4j.Logger;
 import org.toolchild.suffering.Camera;
 
@@ -17,8 +17,8 @@ public class Player extends Entity {
   private int                 frame      = 0;
   private int                 frameDelay = 0;
 
-  public Player(int x, int y, int width, int height, boolean isSolid, Id id, Handler handler) {
-    super(x, y, width, height, isSolid, id, handler);
+  public Player(int x, int y, int width, int height, Id id, Handler handler) {
+    super(x, y, width, height, id, handler);
     movement.setMoveSpeed(10);
   }
 
@@ -32,7 +32,7 @@ public class Player extends Entity {
 
     for (int e = 0; e < handler.entities.size(); e++) { // need to use this for loop and
       Entity entity = handler.entities.get(e); // get the entity to avoid an UnconcurrentModificationException
-      if (entity.id == Id.pinkVial) {
+      if (entity.id == Id.blueCrystal) {
         if (height <= 10 * 64) {
           if (getBounds().intersects(entity.getBounds())) {
             y = y - (int) (height * 0.2);
@@ -45,19 +45,19 @@ public class Player extends Entity {
       if (entity.id == Id.mob1) {
         if (height <= 10 * 64) {
           if (getBoundsBottom().intersects(entity.getBoundsTop())) {
-            movement.setGravity(-movement.getGravity()*0.8);
+            movement.setGravity(-movement.getGravity() * 0.8);
             height = (int) (height);
             entity.die();
           } else if (getBounds().intersects(entity.getBounds())) {
-            movement.setGravity(-movement.getGravity()*0.8);
+            movement.setGravity(-movement.getGravity() * 0.8);
             movement.setVelocityX(-movement.getVelocityX());
             y = y - 100;
             height = (int) (height * (1.0 / 1.2));
             width = (int) (width * (1.0 / 1.2));
-            if (height < 40){
+            if (height < 40) {
               die();
             }
-            
+
           }
         }
       }
@@ -118,49 +118,70 @@ public class Player extends Entity {
     String statusMessage;
     if (!tile.isSolid()) {
       statusMessage = "false, tile not solid";
-    } else if (tile.id == Id.wall && tile instanceof Wall) {
-      Wall wall = (Wall) tile;
-      statusMessage = handleWallInteraction(wall);
+    } else if (tile.id == Id.powerUpBlock) {
+      PowerUpBlock powerUpBlock = (PowerUpBlock) tile;
+      statusMessage = handlePowerUpBlockInteraction(powerUpBlock);
     } else {
-      statusMessage = "false, tile id not recognized";
+      statusMessage = handleLevelTileInteraction(tile);
     }
+
+    if (statusMessage == null) statusMessage = "false, tile id not recognized";
+
     return statusMessage;
   }
 
-  /**
-   * Handles the players interaction with {@link Wall} object.
-   * 
-   * @param wall
-   *          the
-   * @return
-   */
-  private String handleWallInteraction(Wall wall) {
+  private String handlePowerUpBlockInteraction(PowerUpBlock powerUpBlock) {
     String statusMessage = null;
-    if (getBoundsTop().intersects(wall.getBounds())) {
-      statusMessage = "wall interaction: hitTop";
-      y = wall.getY() + wall.getHeight();
+    if (getBoundsTop().intersects(powerUpBlock.getBounds())) {
+      y = powerUpBlock.getY() + powerUpBlock.getHeight();
       movement.setVelocityY(0);
       if (movement.isJumping()) {
         // getIsJumping() = false;
         movement.setGravity(0.0);
         movement.setFalling(true);
       }
-    } else if (getBoundsBottom().intersects(wall.getBounds())) {
-      statusMessage = "wall interaction: hitBottom";
+      statusMessage = "powerUpBlock interaction: hitTop";
+      powerUpBlock.activated = true;
+    } else{
+      handleLevelTileInteraction(powerUpBlock);
+    }
+    return statusMessage;
+  }
+
+  /**
+   * Handles the players interaction with {@link T} object.
+   * 
+   * @param tile
+   *          the
+   * @return
+   */
+  private String handleLevelTileInteraction(Tile tile) {
+    String statusMessage = null;
+    if (getBoundsTop().intersects(tile.getBounds())) {
+      statusMessage = "level tile interaction: hitTop";
+      y = tile.getY() + tile.getHeight();
+      movement.setVelocityY(0);
+      if (movement.isJumping()) {
+        // getIsJumping() = false;
+        movement.setGravity(0.0);
+        movement.setFalling(true);
+      }
+    } else if (getBoundsBottom().intersects(tile.getBounds())) {
+      statusMessage = "level tile interaction: hitBottom";
       movement.setVelocityY(0);
       movement.setJumping(false);
-      y = wall.getY() - height; // reset height, looks cleaner
+      y = tile.getY() - height; // reset height, looks cleaner
       if (movement.isFalling()) {
         movement.setFalling(false);
       }
-    } else if (getBoundsLeft().intersects(wall.getBounds())) {
-      statusMessage = "wall interaction: hitLeft";
+    } else if (getBoundsLeft().intersects(tile.getBounds())) {
+      statusMessage = "level tile interaction: hitLeft";
       movement.setVelocityY(0);
-      x = wall.getX() + wall.getWidth();
-    } else if (getBoundsRight().intersects(wall.getBounds())) {
-      statusMessage = "wall interaction: hitRight";
+      x = tile.getX() + tile.getWidth();
+    } else if (getBoundsRight().intersects(tile.getBounds())) {
+      statusMessage = "level tile interaction: hitRight";
       movement.setVelocityY(0);
-      x = wall.getX() - width;
+      x = tile.getX() - width;
     }
 
     return statusMessage;
@@ -211,7 +232,7 @@ public class Player extends Entity {
     graphics.drawString("player getVelocityX() : " + movement.getVelocityX(), 0, 5 * lineHeight);
     graphics.drawString("player getVelocityY(): " + movement.getVelocityY(), 0, 6 * lineHeight);
     graphics.drawString("player height : " + height, column, 5 * lineHeight);
-    graphics.drawString("player width : " + width, column, 6* lineHeight);
+    graphics.drawString("player width : " + width, column, 6 * lineHeight);
     int gravityStringLength = Double.toString(movement.getGravity()).length();
     if (gravityStringLength > 5) {
       gravityStringLength = 5;
@@ -225,7 +246,7 @@ public class Player extends Entity {
   public void handleJumpKeyEvent(boolean isActive) {
     if (isActive && !movement.isJumping() && movement.getGravity() < 1.0) {
       movement.setJumping(true);
-      movement.setGravity(-10.0);
+      movement.setGravity(-12.0);
       log.trace("Jumped!");
     }
   }

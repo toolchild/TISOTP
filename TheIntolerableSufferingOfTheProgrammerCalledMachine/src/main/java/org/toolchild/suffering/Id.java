@@ -1,5 +1,5 @@
 package org.toolchild.suffering;
 
 public enum Id {
-  player, wall, pinkVial,mob1;
+  player, wall, blueCrystal,mob1, powerUpBlock;
 }

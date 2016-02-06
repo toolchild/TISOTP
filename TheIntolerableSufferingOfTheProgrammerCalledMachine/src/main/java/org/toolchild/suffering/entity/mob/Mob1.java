@@ -20,8 +20,8 @@ public class Mob1 extends Entity {
   private int                 frame      = 0;
   private int                 frameDelay = 0;
 
-  public Mob1(int x, int y, int width, int height, boolean isSolid, Id id, Handler handler) {
-    super(x, y, width, height, isSolid, id, handler);
+  public Mob1(int x, int y, int width, int height, Id id, Handler handler) {
+    super(x, y, width, height, id, handler);
     int direction = random.nextInt(2); // direction: 0 = left ; 1 = right
     movement.setVelocityX(direction == 0 ? -3 : +3);
     // movement.setVelocityX(-1);
@@ -147,10 +147,10 @@ public class Mob1 extends Entity {
   private void handleAnimationRendering(Graphics graphics) {
     if (facing == 0) {
       graphics.drawImage(Game.mob1[frame].getImage(), x, y, width, height, null);
-      log.debug("facing left frame " + frame);
+      log.trace("facing left frame " + frame);
     } else if (facing == 1) {
       graphics.drawImage(Game.mob1[frame + 8].getImage(), x, y, width, height, null);
-      log.debug("facing right frame:" + (frame + 8));
+      log.trace("facing right frame:" + (frame + 8));
     }
   }
 

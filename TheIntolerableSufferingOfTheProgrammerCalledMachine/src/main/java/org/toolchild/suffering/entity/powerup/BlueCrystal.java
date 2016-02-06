@@ -13,15 +13,15 @@ import org.toolchild.suffering.tile.Wall;
 
 import org.toolchild.suffering.Camera;
 
-public class PinkVial extends Entity {
-  private static final Logger log        = Logger.getLogger(PinkVial.class);
+public class BlueCrystal extends Entity {
+  private static final Logger log        = Logger.getLogger(BlueCrystal.class);
   private int                 frame      = 0;
   private int                 frameDelay = 0;
 
   private Random              random     = new Random();
 
-  public PinkVial(int x, int y, int width, int height, boolean isSolid, Id id, Handler handler) {
-    super(x, y, width, height, isSolid, id, handler);
+  public BlueCrystal(int x, int y, int width, int height,  Id id, Handler handler) {
+    super(x, y, width, height,  id, handler);
     int direction = random.nextInt(2); // direction: 0 = left ; 1 = right
     movement.setVelocityX(direction == 0 ? -3 : +3);
     movement.setMoveSpeed(3);
@@ -33,7 +33,7 @@ public class PinkVial extends Entity {
     frameDelay++;
     if (frameDelay >= 3) {
       frame++;
-      if (frame >= Game.powerup.length / 2) {
+      if (frame >= Game.blueCrystal.length / 2) {
         frame = 0;
       }
       frameDelay = 0;
@@ -117,6 +117,6 @@ public class PinkVial extends Entity {
 
   @Override
   public void render(Graphics graphics, Camera camera) {
-    graphics.drawImage(Game.powerup[frame].getImage(), x, y, width, height, null);
+    graphics.drawImage(Game.blueCrystal[frame].getImage(), x, y, width, height, null);
   }
 }

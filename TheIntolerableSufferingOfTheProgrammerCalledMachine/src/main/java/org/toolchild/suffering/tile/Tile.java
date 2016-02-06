@@ -7,17 +7,19 @@ import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
 
 public abstract class Tile {
-  int x;
-  int y;
-  int width;
-  int height;
-  boolean isSolid;
+  public int x;
+  public int y;
+  public int width;
+  public int height;
+  public boolean isSolid;
+  public boolean activated = false;
   
   public int velocityX;
   public int velocityY;
   
   public Id id;
   public Handler handler;
+  
   
   
   public Tile(int x, int y, int width, int height, boolean isSolid, Id id, Handler handler){

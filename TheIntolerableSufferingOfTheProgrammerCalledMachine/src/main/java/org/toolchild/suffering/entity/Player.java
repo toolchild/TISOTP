@@ -121,11 +121,9 @@ public class Player extends Entity {
     } else if (tile.id == Id.powerUpBlock) {
       PowerUpBlock powerUpBlock = (PowerUpBlock) tile;
       statusMessage = handlePowerUpBlockInteraction(powerUpBlock);
-    } else {
+    } else if (tile.id == Id.wall) {
       statusMessage = handleLevelTileInteraction(tile);
-    }
-
-    if (statusMessage == null) statusMessage = "false, tile id not recognized";
+    } else statusMessage = "false, tile id not recognized";
 
     return statusMessage;
   }
@@ -142,8 +140,8 @@ public class Player extends Entity {
       }
       statusMessage = "powerUpBlock interaction: hitTop";
       powerUpBlock.activated = true;
-    } else{
-      handleLevelTileInteraction(powerUpBlock);
+    } else {
+     statusMessage = handleLevelTileInteraction(powerUpBlock);
     }
     return statusMessage;
   }
@@ -229,8 +227,8 @@ public class Player extends Entity {
     graphics.drawString("camera y : " + camera.getY(), column, 4 * lineHeight);
     // graphics.drawString("camera y * player y : " + ((double)camera.y * (double)y), 3*column, 4 * lineHeight);
 
-    graphics.drawString("player getVelocityX() : " + movement.getVelocityX(), 0, 5 * lineHeight);
-    graphics.drawString("player getVelocityY(): " + movement.getVelocityY(), 0, 6 * lineHeight);
+    graphics.drawString("player velocity x : " + movement.getVelocityX(), 0, 5 * lineHeight);
+    graphics.drawString("player velocity y : " + movement.getVelocityY(), 0, 6 * lineHeight);
     graphics.drawString("player height : " + height, column, 5 * lineHeight);
     graphics.drawString("player width : " + width, column, 6 * lineHeight);
     int gravityStringLength = Double.toString(movement.getGravity()).length();

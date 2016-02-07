@@ -18,6 +18,7 @@ public class Wall extends Tile{
 
   @Override
   public void render(Graphics graphics) {
+  
     graphics.drawImage(Game.grass.getImage(), x, y,width, height, null);
   }
 

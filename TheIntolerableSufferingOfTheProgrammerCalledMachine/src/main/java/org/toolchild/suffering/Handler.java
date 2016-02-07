@@ -75,6 +75,12 @@ public class Handler {
     for (GameObject entity : entities) {
        entity.render(graphics);
     }
+    for (GameObject entity : entities) { // after releasing the camera, draw the tiles, not relative to player
+      camera.lockGraphicsToCamera(graphics);
+      graphics.setColor(Color.YELLOW);
+      graphics.fillRect(Game.getFrameWidth()- 500 + entity.getX() / 32, (entity.getY() / 32)-2, 4, 4);
+      camera.releaseGraphicsFromCamera(graphics);
+      }
 
     for (GameObject player : players) {
        ((Player)player).render(graphics, camera);
@@ -84,14 +90,24 @@ public class Handler {
   }
 
   private int renderTiles(Graphics graphics) {
+
     int tilesRendered = 0;
     for (GameObject tile : tiles) { // after releasing the camera, draw the tiles, not relative to player
+
       if (tile.getX() >= player.getX() - Game.SIZE.getWidth() - 64 && tile.getX() <= player.getX() + Game.SIZE.getWidth() + 64) { // only render visible tiles, relative to top left edge of the shown screen -64
         if (tile.getY() >= player.getY() - Game.SIZE.getHeight() - 64 && tile.getY() <= player.getY() + Game.SIZE.getHeight() + 64) {
           tile.render(graphics);
           tilesRendered++;
         }
       }
+      }
+    for (GameObject tile : tiles) { // after releasing the camera, draw the tiles, not relative to player
+    camera.lockGraphicsToCamera(graphics);
+    graphics.setColor(Color.WHITE);
+    graphics.fillRect(Game.getFrameWidth()- 500 + tile.getX() / 32, tile.getY() / 32, 2, 2);
+    graphics.setColor(Color.RED);
+    graphics.fillRect(Game.getFrameWidth()- 500 + player.getX() / 32 , (player.getY() / 32)-2, 4*(player.getHeight()/64) , 4*(player.getHeight()/64) );      
+    camera.releaseGraphicsFromCamera(graphics);
     }
     return tilesRendered;
   }

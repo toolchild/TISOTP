@@ -83,18 +83,17 @@ public class Movement {
 
   public boolean handleFalling() {  // handleGravityAndMovement sub-method
     if (isFalling) {
-      gravity = gravity + 0.1;  // handle gravity
-      log.trace("Falling gravity = " + gravity);
-      velocityY = (int) gravity;  // handle movement
+      gravity = gravity + 0.5;  // handle gravity
+//      log.debug("Falling gravity = " + gravity);
+      velocityY = (int) gravity;    // handle movement
     }
     return true;
   }
   
   public boolean handlePlayerJumping() {  // handleGravityAndMovement sub-method
     if (isJumping) {
-      gravity = gravity + 0.1;  // handle gravity
-      log.trace("Jumping gravity = " + gravity);
-      velocityY = (int) +gravity;  // handle movement
+//      log.debug("Jumping gravity = " + gravity);
+      velocityY = (int) gravity;  // handle movement
       if (gravity >= 0.0) {  // handle movement
         // isJumping = false;
         isFalling = true;

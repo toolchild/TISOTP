@@ -8,10 +8,7 @@ import org.apache.log4j.Logger;
 import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
-import org.toolchild.suffering.gameobject.GameObject;
 import org.toolchild.suffering.gameobject.entity.Entity;
-import org.toolchild.suffering.gameobject.tile.Tile;
-import org.toolchild.suffering.gameobject.tile.Wall;
 
 public class Mob1 extends Entity {
   private static final Logger log        = Logger.getLogger(Mob1.class);

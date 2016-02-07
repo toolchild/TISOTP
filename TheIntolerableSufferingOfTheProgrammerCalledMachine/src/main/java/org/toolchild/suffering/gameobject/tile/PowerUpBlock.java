@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
-import org.toolchild.suffering.entity.powerup.BlueCrystal;
+import org.toolchild.suffering.gameobject.entity.powerup.BlueCrystal;
 import org.toolchild.suffering.gfx.Sprite;
 
 public class PowerUpBlock extends Tile {

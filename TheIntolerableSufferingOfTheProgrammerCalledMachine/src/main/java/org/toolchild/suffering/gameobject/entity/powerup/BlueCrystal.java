@@ -1,4 +1,4 @@
-package org.toolchild.suffering.entity.powerup;
+package org.toolchild.suffering.gameobject.entity.powerup;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -8,11 +8,7 @@ import org.apache.log4j.Logger;
 import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
-import org.toolchild.suffering.gameobject.GameObject;
 import org.toolchild.suffering.gameobject.entity.Entity;
-import org.toolchild.suffering.gameobject.tile.Tile;
-import org.toolchild.suffering.gameobject.tile.Wall;
-import org.toolchild.suffering.Camera;
 
 public class BlueCrystal extends Entity {
   private static final Logger log        = Logger.getLogger(BlueCrystal.class);

@@ -1,7 +1,6 @@
 package org.toolchild.suffering.gameobject.tile;
 
 import java.awt.Graphics;
-import java.awt.Rectangle;
 
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;

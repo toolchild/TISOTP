@@ -1,14 +1,11 @@
 package org.toolchild.suffering.gameobject.entity;
 
 import java.awt.Graphics;
-import java.awt.Rectangle;
 
 import org.apache.log4j.Logger;
-import org.toolchild.suffering.Camera;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
 import org.toolchild.suffering.entity.movement.Movement;
-import org.toolchild.suffering.entity.powerup.BlueCrystal;
 import org.toolchild.suffering.gameobject.GameObject;
 import org.toolchild.suffering.gameobject.tile.Tile;
 
@@ -74,7 +71,7 @@ public abstract class Entity extends GameObject{
     if (getBoundsTop().intersects(tile.getBounds())) {
       statusMessage = "wall interaction: hitTop";
       y = tile.getY() + tile.getHeight();
-      movement.setVelocityY(0);
+//      movement.setVelocityY(0);
       if (movement.isJumping()) {
         // isJumping = false;
         movement.setGravity(0.0);

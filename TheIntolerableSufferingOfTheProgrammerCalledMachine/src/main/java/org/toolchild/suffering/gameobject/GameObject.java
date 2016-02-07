@@ -33,24 +33,27 @@ public abstract class GameObject {
     
   }
 
+  protected int boundsOffset = 10;
+  protected int boundsWidth = 5;
+  
   public Rectangle getBounds() {
     return new Rectangle(x, y, width, height);
   }
 
   public Rectangle getBoundsTop() {
-    return new Rectangle(x + 10, y, width - 20, 5);
+    return new Rectangle(x + boundsOffset, y, width - 2* boundsOffset, boundsWidth);
   }
 
   public Rectangle getBoundsBottom() {
-    return new Rectangle(x + 10, y + height - 5, width - 20, 5);
+    return new Rectangle(x + boundsOffset, y + height, width - 2* boundsOffset, boundsWidth);
   }
 
   public Rectangle getBoundsLeft() {
-    return new Rectangle(x, y + 10, 5, height - 20);
+    return new Rectangle(x, y + boundsOffset, boundsWidth, height - 2*boundsOffset);
   }
 
   public Rectangle getBoundsRight() {
-    return new Rectangle(x + width - 5, y + 10, 5, height - 20);
+    return new Rectangle(x + width - boundsWidth, y + boundsOffset, boundsWidth, height - 2*boundsOffset);
   }
 
   

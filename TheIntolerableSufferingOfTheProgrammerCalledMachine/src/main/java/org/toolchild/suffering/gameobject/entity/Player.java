@@ -15,16 +15,22 @@ import org.toolchild.suffering.Camera;
 
 public class Player extends GameObject {
   private static final Logger log        = Logger.getLogger(Player.class);
-  Movement movement;
+  Movement                    movement;
 
   private int                 frame      = 0;
   private int                 frameDelay = 0;
-  private int facing = 0;
+  private int                 facing     = 0;
+  private int                 jumpCount  = 0;
+  private int                 jumpTimeCount  = 0;
+  int jumpStartY;
+  int maxJumpHeight = 64*3;
+  int jumpHeight = 0;
 
   public Player(int x, int y, int width, int height, Id id, Handler handler) {
     super(x, y, width, height, id, handler);
     movement = new Movement();
     movement.setMoveSpeed(10);
+    jumpStartY = y;
   }
 
   @Override
@@ -34,6 +40,12 @@ public class Player extends GameObject {
     log.trace("update position: " + updatePosition());
     log.trace("handle all tile interaction: " + handleAllTileInteraction());
     log.trace("handle Animation " + handleAnimationCycle());
+    
+    if(movement.isJumping()){
+      jumpTimeCount++;
+    } else {
+      jumpTimeCount = 0;
+    }
 
     for (int e = 0; e < handler.getEntities().size(); e++) { // need to use this for loop and
       Entity entity = (Entity) handler.getEntities().get(e); // get the entity to avoid an UnconcurrentModificationException
@@ -49,7 +61,7 @@ public class Player extends GameObject {
       }
       if (entity.getId() == Id.mob1) {
         if (height <= 10 * 64) {
-          if (getBoundsBottom().intersects(entity.getBoundsTop())) {
+          if (getBoundsBottom().intersects(entity.getBounds())) {
             movement.setGravity(-movement.getGravity() * 0.8);
             height = (int) (height);
             entity.die();
@@ -129,8 +141,7 @@ public class Player extends GameObject {
     if (!tile.isSolid()) {
       statusMessage = "false, tile not solid";
     } else if (tile.getId() == Id.powerUpBlock) {
-      PowerUpBlock powerUpBlock = (PowerUpBlock) tile;
-      statusMessage = handlePowerUpBlockInteraction(powerUpBlock);
+      statusMessage = handlePowerUpBlockInteraction(tile);
     } else if (tile.getId() == Id.wall) {
       statusMessage = handleLevelTileInteraction(tile);
     } else statusMessage = "false, tile id not recognized";
@@ -138,20 +149,14 @@ public class Player extends GameObject {
     return statusMessage;
   }
 
-  private String handlePowerUpBlockInteraction(PowerUpBlock powerUpBlock) {
+  private String handlePowerUpBlockInteraction(Tile powerUpBlock) {
     String statusMessage = null;
     if (getBoundsTop().intersects(powerUpBlock.getBounds())) {
-      y = powerUpBlock.getY() + powerUpBlock.getHeight();
-      movement.setVelocityY(0);
-      if (movement.isJumping()) {
-        // getIsJumping() = false;
-        movement.setGravity(0.0);
-        movement.setFalling(true);
-      }
+      handleLevelTileInteraction(powerUpBlock);
       statusMessage = "powerUpBlock interaction: hitTop";
       powerUpBlock.setActivated(true);
     } else {
-     statusMessage = handleLevelTileInteraction(powerUpBlock);
+      statusMessage = handleLevelTileInteraction(powerUpBlock);
     }
     return statusMessage;
   }
@@ -171,13 +176,14 @@ public class Player extends GameObject {
       movement.setVelocityY(0);
       if (movement.isJumping()) {
         // getIsJumping() = false;
-        movement.setGravity(0.0);
+         movement.setGravity(1.0);
         movement.setFalling(true);
       }
-    } else if (getBoundsBottom().intersects(tile.getBounds())) {
+    } else if (getBoundsBottom().intersects(tile.getBounds()) && movement.getGravity() > 0) {
       statusMessage = "level tile interaction: hitBottom";
       movement.setVelocityY(0);
       movement.setJumping(false);
+      jumpCount = 0;
       y = tile.getY() - height; // reset height, looks cleaner
       if (movement.isFalling()) {
         movement.setFalling(false);
@@ -230,11 +236,18 @@ public class Player extends GameObject {
 
   private void renderDebug(Graphics graphics, Camera camera) {
     camera.lockGraphicsToCamera(graphics);// since nothing is tied to player, the graphics object is tied to camera
+    graphics.drawString("jump height : " + jumpHeight, column, lineHeight);
     graphics.drawString("player x : " + x, 0, 3 * lineHeight);
     graphics.drawString("player y : " + y, column, 3 * lineHeight);
     graphics.drawString("camera x : " + camera.getX(), 0, 4 * lineHeight);
     graphics.drawString("camera y : " + camera.getY(), column, 4 * lineHeight);
     // graphics.drawString("camera y * player y : " + ((double)camera.y * (double)y), 3*column, 4 * lineHeight);
+    
+    graphics.drawLine(Game.getFrameWidth() - 500, Game.getFrameHeight() ,Game.getFrameWidth() - 500,Game.getFrameHeight()- 300);
+    graphics.drawLine(Game.getFrameWidth() - 500, Game.getFrameHeight() ,Game.getFrameWidth() ,Game.getFrameHeight());
+    graphics.fillRect(Game.getFrameWidth() - 500 + 5*jumpTimeCount, Game.getFrameHeight()-10 - jumpHeight, 10, 10);
+    graphics.drawString("" + jumpHeight, Game.getFrameWidth() - 500 + 5*jumpTimeCount, Game.getFrameHeight()-10 - jumpHeight);
+    graphics.finalize();
 
     graphics.drawString("player velocity x : " + movement.getVelocityX(), 0, 5 * lineHeight);
     graphics.drawString("player velocity y : " + movement.getVelocityY(), 0, 6 * lineHeight);
@@ -251,10 +264,31 @@ public class Player extends GameObject {
   }
 
   public void handleJumpKeyEvent(boolean isActive) {
-    if (isActive && !movement.isJumping() && movement.getGravity() < 1.0) {
+    log.trace("y '" + y  + "' jumpStartY '" +jumpStartY + "'");
+    jumpHeight = jumpStartY - y;
+    boolean canJump = jumpCount < 100 && movement.getGravity() < 1.0 && jumpHeight < maxJumpHeight;
+    boolean initJump = jumpCount < 1 ;
+    log.trace("jump height : '" +jumpHeight +"' key active : '" + isActive + "'count : '" + jumpCount + "' canjump : '" + canJump + "' init jump : '" + initJump + "' is jumping : '" + movement.isJumping() + "' is falling : '" + movement.isFalling() + "'");
+    
+    if (isActive && canJump && initJump) {
       movement.setJumping(true);
-      movement.setGravity(-12.0);
+      movement.setGravity(-10);
+      jumpCount++;
+      log.trace("init jump!");
+      jumpStartY = y;
+    } else if (isActive && canJump) {
+      movement.setGravity(movement.getGravity() - 0.5);
+      jumpCount++;
       log.trace("Jumped!");
+    } else if (!isActive && movement.isJumping() && jumpCount != 100) {
+      jumpCount = 100;
+      movement.setGravity(movement.getGravity() + 0.5);
+      log.trace("Jump Stop!");
+    } else if (!isActive && !movement.isJumping()) {
+      jumpCount = 0;
+      jumpHeight = 0;
+      jumpStartY= y;
+      movement.setGravity(movement.getGravity() + 0.5);
     }
   }
 
@@ -283,7 +317,7 @@ public class Player extends GameObject {
   @Override
   public void render(Graphics graphics) {
     // TODO Auto-generated method stub
-    
+
   }
 
 }

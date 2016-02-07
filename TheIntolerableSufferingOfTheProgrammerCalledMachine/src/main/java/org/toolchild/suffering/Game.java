@@ -28,6 +28,8 @@ public class Game extends Canvas implements Runnable {
   public static final Dimension SIZE                        = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
   public static final String    TITLE                       = "The Intolerable Suffering of the Programmer called Machine";
 
+  public static int currentTicks = 0;
+  
   private Thread                thread;
   private boolean               isRunning;
 
@@ -89,7 +91,7 @@ public class Game extends Canvas implements Runnable {
     double ns = 1000000000.0 / TICKS_AND_FRAMES_PER_SECOND;
     int currentFrames = 0;
     int lastSecondFrames = 0;
-    int currentTicks = 0;
+    currentTicks = 0;
     int lastSecondTicks = 0;
 
     while (isRunning) {

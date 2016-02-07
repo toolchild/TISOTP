@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Id;
 import org.toolchild.suffering.gameobject.GameObject;
-import org.toolchild.suffering.gameobject.entity.Entity;
 import org.toolchild.suffering.gameobject.entity.Player;
 
 public class KeyInputManager implements KeyListener {
@@ -22,6 +21,41 @@ public class KeyInputManager implements KeyListener {
     jumpKeyStatus = new KeyStatus(false);
     leftKeyStatus = new KeyStatus(false);
     rightKeyStatus = new KeyStatus(false);
+  }
+
+  public boolean updateKeyEvents(Player player) {
+    if (!jumpKeyStatus.isActive) jumpKeyReleaseEvent(player);
+    if (!leftKeyStatus.isActive) leftKeyReleaseEvent(player);
+    if (!rightKeyStatus.isActive) rightKeyReleaseEvent(player);
+    if (jumpKeyStatus.isActive) jumpKeyEvent(player);
+    if (leftKeyStatus.isActive && !rightKeyStatus.isActive || leftKeyStatus.isActive && leftKeyStatus.timeStamp > rightKeyStatus.timeStamp) leftKeyEvent(player);
+    if (rightKeyStatus.isActive && !leftKeyStatus.isActive || rightKeyStatus.isActive && rightKeyStatus.timeStamp > leftKeyStatus.timeStamp) rightKeyEvent(player);
+    return true;
+  }
+
+  private void jumpKeyEvent(Player player) {
+    player.handleJumpKeyEvent(true);
+  }
+
+  private void jumpKeyReleaseEvent(Player player) {
+    player.handleJumpKeyEvent(false);
+    log.trace("Jump Released");
+  }
+
+  private void leftKeyEvent(Player player) {
+    player.handleLeftKeyEvent(true);
+  }
+
+  private void leftKeyReleaseEvent(Player player) {
+    player.handleLeftKeyEvent(false);
+  }
+
+  private void rightKeyEvent(Player player) {
+    player.handleRightKeyEvent(true);
+  }
+  
+  private void rightKeyReleaseEvent(Player player) {
+    player.handleRightKeyEvent(false);
   }
 
   @Override
@@ -70,42 +104,6 @@ public class KeyInputManager implements KeyListener {
     }
   }
   
-  public boolean updateKeyEvents(Player player) {
-    if (!jumpKeyStatus.isActive) jumpKeyReleaseEvent(player);
-    if (!leftKeyStatus.isActive) leftKeyReleaseEvent(player);
-    if (!rightKeyStatus.isActive) rightKeyReleaseEvent(player);
-    if (jumpKeyStatus.isActive) jumpKeyEvent(player);
-    if (leftKeyStatus.isActive && !rightKeyStatus.isActive || leftKeyStatus.isActive && leftKeyStatus.timeStamp > rightKeyStatus.timeStamp) leftKeyEvent(player);
-    if (rightKeyStatus.isActive && !leftKeyStatus.isActive || rightKeyStatus.isActive && rightKeyStatus.timeStamp > leftKeyStatus.timeStamp) rightKeyEvent(player);
-    return true;
-  }
-
-  // ________________________________________ updateKeyEvents sub-methods ________________________________________
-
-  private void jumpKeyEvent(Player player) {
-    player.handleJumpKeyEvent(true);
-  }
-
-  private void leftKeyEvent(Player player) {
-    player.handleLeftKeyEvent(true);
-  }
-
-  private void rightKeyEvent(Player player) {
-    player.handleRightKeyEvent(true);
-  }
-
-  private void jumpKeyReleaseEvent(Player player) {
-    log.trace("Jump Released");
-  }
-
-  private void leftKeyReleaseEvent(Player player) {
-    player.handleLeftKeyEvent(false);
-  }
-
-  private void rightKeyReleaseEvent(Player player) {
-    player.handleRightKeyEvent(false);
-  }
-  // ######################################## updateKeyEvents sub-methods ########################################
 
   @Override
   public void keyTyped(KeyEvent e) {}

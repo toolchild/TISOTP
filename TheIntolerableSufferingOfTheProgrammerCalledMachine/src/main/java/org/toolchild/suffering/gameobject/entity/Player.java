@@ -185,6 +185,7 @@ public class Player extends GameObject {
       movement.setJumping(false);
       jumpCount = 0;
       y = tile.getY() - height; // reset height, looks cleaner
+      jumpStartY = y;
       if (movement.isFalling()) {
         movement.setFalling(false);
       }

@@ -1,6 +1,7 @@
 package org.toolchild.suffering.gameobject.tile;
 
-import java.awt.Graphics;
+
+import java.awt.Graphics2D;
 
 import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
@@ -33,9 +34,9 @@ public class PowerUpBlock extends Tile {
   }
 
   @Override
-  public void render(Graphics graphics) {
-    if (!used) graphics.drawImage(Game.blueCrystal[1].getImage(), x, spriteY, width, height, null);
-    if (!activated) graphics.drawImage(Game.powerupBlock.getImage(), x, y, width, height, null);
-    else graphics.drawImage(Game.usedPowerupBlock.getImage(), x, y, width, height, null);
+  public void render(Graphics2D graphics2D) {
+    if (!used) graphics2D.drawImage(Game.blueCrystal[1].getImage(), x, spriteY, width, height, null);
+    if (!activated) graphics2D.drawImage(Game.powerupBlock.getImage(), x, y, width, height, null);
+    else graphics2D.drawImage(Game.usedPowerupBlock.getImage(), x, y, width, height, null);
   }
 }

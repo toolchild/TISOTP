@@ -2,16 +2,16 @@ package org.toolchild.suffering.gameobject.entity;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
+import org.apache.log4j.Logger;
+import org.toolchild.suffering.Camera;
 import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
 import org.toolchild.suffering.entity.movement.Movement;
 import org.toolchild.suffering.gameobject.GameObject;
-import org.toolchild.suffering.gameobject.tile.PowerUpBlock;
 import org.toolchild.suffering.gameobject.tile.Tile;
-import org.apache.log4j.Logger;
-import org.toolchild.suffering.Camera;
 
 public class Player extends GameObject {
   private static final Logger log                  = Logger.getLogger(Player.class);
@@ -79,6 +79,7 @@ public class Player extends GameObject {
         movement.setGravity(-movement.getGravity() * 0.8);
         height = (int) (height);
         entity.die();
+        log.debug("mob1 interaction bottom");
       } else if (getBounds().intersects(entity.getBounds()) && isValnurable) {
         height = (int) (height * (1.0 / 1.2));
         width = (int) (width * (1.0 / 1.2));
@@ -86,6 +87,8 @@ public class Player extends GameObject {
         if (height < 40) {
           die();
         }
+        log.debug("mob1 interaction");
+        
 
       }
     }
@@ -223,25 +226,25 @@ public class Player extends GameObject {
     return statusMessage;
   }
 
-  public void render(Graphics graphics, Camera camera) {
-    renderPlayer(graphics); // renders the player and everything tied to its position
-    graphics.setColor(Color.WHITE);
-    renderDebug(graphics, camera); // renders the debug messages relative to player
+  public void render(Graphics2D graphics2D, Camera camera) {
+    renderPlayer(graphics2D); // renders the player and everything tied to its position
+    graphics2D.setColor(Color.WHITE);
+    renderDebug(graphics2D, camera); // renders the debug messages relative to player
   }
 
-  private void renderPlayer(Graphics graphics) {
+  private void renderPlayer(Graphics2D graphics2D) {
     if (!isValnurable) {
-      graphics.setColor(Color.WHITE);
-      graphics.drawRect(x, y, width, height);
+      graphics2D.setColor(Color.WHITE);
+      graphics2D.drawRect(x, y, width, height);
     }
 
-    handleAnimationRendering(graphics);
+    handleAnimationRendering(graphics2D);
     // draw collision detection box
-    graphics.setColor(Color.RED);
-    graphics.fillRect(getBoundsRight().x, getBoundsRight().y, getBoundsRight().width, getBoundsRight().height);
-    graphics.fillRect(getBoundsLeft().x, getBoundsLeft().y, getBoundsLeft().width, getBoundsLeft().height);
-    graphics.fillRect(getBoundsTop().x, getBoundsTop().y, getBoundsTop().width, getBoundsTop().height);
-    graphics.fillRect(getBoundsBottom().x, getBoundsBottom().y, getBoundsBottom().width, getBoundsBottom().height);
+    graphics2D.setColor(Color.RED);
+    graphics2D.draw(getBoundsTop());
+    graphics2D.draw(getBoundsBottom()); 
+    graphics2D.draw(getBoundsLeft()); 
+    graphics2D.draw(getBoundsRight());
   }
 
   private void handleAnimationRendering(Graphics graphics) {
@@ -262,33 +265,33 @@ public class Player extends GameObject {
 
   }
 
-  private void renderDebug(Graphics graphics, Camera camera) {
-    camera.lockGraphicsToCamera(graphics);// since nothing is tied to player, the graphics object is tied to camera
-    graphics.drawString("jump height : " + jumpHeight, column, lineHeight);
-    graphics.drawString("player x : " + x, 0, 3 * lineHeight);
-    graphics.drawString("player y : " + y, column, 3 * lineHeight);
-    graphics.drawString("camera x : " + camera.getX(), 0, 4 * lineHeight);
-    graphics.drawString("camera y : " + camera.getY(), column, 4 * lineHeight);
+  private void renderDebug(Graphics2D graphics2D, Camera camera) {
+    camera.lockGraphicsToCamera(graphics2D);// since nothing is tied to player, the graphics object is tied to camera
+    graphics2D.drawString("jump height : " + jumpHeight, column, lineHeight);
+    graphics2D.drawString("player x : " + x, 0, 3 * lineHeight);
+    graphics2D.drawString("player y : " + y, column, 3 * lineHeight);
+    graphics2D.drawString("camera x : " + camera.getX(), 0, 4 * lineHeight);
+    graphics2D.drawString("camera y : " + camera.getY(), column, 4 * lineHeight);
     // graphics.drawString("camera y * player y : " + ((double)camera.y * (double)y), 3*column, 4 * lineHeight);
 
-    graphics.drawLine(Game.getFrameWidth() - 500, Game.getFrameHeight(), Game.getFrameWidth() - 500, Game.getFrameHeight() - 300);
-    graphics.drawLine(Game.getFrameWidth() - 500, Game.getFrameHeight(), Game.getFrameWidth(), Game.getFrameHeight());
-    graphics.fillRect(Game.getFrameWidth() - 500 + 5 * jumpTimeCount, Game.getFrameHeight() - 10 - jumpHeight, 10, 10);
-    graphics.drawString("" + jumpHeight, Game.getFrameWidth() - 500 + 5 * jumpTimeCount, Game.getFrameHeight() - 10 - jumpHeight);
-    graphics.finalize();
+    graphics2D.drawLine(Game.getFrameWidth() - 500, Game.getFrameHeight(), Game.getFrameWidth() - 500, Game.getFrameHeight() - 300);
+    graphics2D.drawLine(Game.getFrameWidth() - 500, Game.getFrameHeight(), Game.getFrameWidth(), Game.getFrameHeight());
+    graphics2D.fillRect(Game.getFrameWidth() - 500 + 5 * jumpTimeCount, Game.getFrameHeight() - 10 - jumpHeight, 10, 10);
+    graphics2D.drawString("" + jumpHeight, Game.getFrameWidth() - 500 + 5 * jumpTimeCount, Game.getFrameHeight() - 10 - jumpHeight);
+    graphics2D.finalize();
 
-    graphics.drawString("player velocity x : " + movement.getVelocityX(), 0, 5 * lineHeight);
-    graphics.drawString("player velocity y : " + movement.getVelocityY(), 0, 6 * lineHeight);
-    graphics.drawString("player height : " + height, column, 5 * lineHeight);
-    graphics.drawString("player width : " + width, column, 6 * lineHeight);
+    graphics2D.drawString("player velocity x : " + movement.getVelocityX(), 0, 5 * lineHeight);
+    graphics2D.drawString("player velocity y : " + movement.getVelocityY(), 0, 6 * lineHeight);
+    graphics2D.drawString("player height : " + height, column, 5 * lineHeight);
+    graphics2D.drawString("player width : " + width, column, 6 * lineHeight);
     int gravityStringLength = Double.toString(movement.getGravity()).length();
     if (gravityStringLength > 5) {
       gravityStringLength = 5;
     }
-    graphics.drawString("player gravity : " + Double.toString(movement.getGravity()).substring(0, gravityStringLength), 0, 7 * lineHeight);
-    graphics.drawString("player facing : " + (facing == 0 ? "Left" : "Right"), 0, 8 * lineHeight);
-    graphics.drawString("player isRunning: " + movement.isMoving(), 0, 9 * lineHeight);
-    graphics.translate(camera.getX(), camera.getY()); // untying graphics from camera
+    graphics2D.drawString("player gravity : " + Double.toString(movement.getGravity()).substring(0, gravityStringLength), 0, 7 * lineHeight);
+    graphics2D.drawString("player facing : " + (facing == 0 ? "Left" : "Right"), 0, 8 * lineHeight);
+    graphics2D.drawString("player isRunning: " + movement.isMoving(), 0, 9 * lineHeight);
+    graphics2D.translate(camera.getX(), camera.getY()); // untying graphics from camera
   }
 
   public void handleJumpKeyEvent(boolean isActive) {
@@ -343,7 +346,7 @@ public class Player extends GameObject {
   }
 
   @Override
-  public void render(Graphics graphics) {
+  public void render(Graphics2D graphics2D) {
     // TODO Auto-generated method stub
 
   }

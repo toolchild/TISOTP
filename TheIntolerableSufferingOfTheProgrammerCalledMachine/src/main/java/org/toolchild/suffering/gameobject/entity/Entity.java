@@ -1,6 +1,7 @@
 package org.toolchild.suffering.gameobject.entity;
 
-import java.awt.Graphics;
+
+import java.awt.Graphics2D;
 
 import org.apache.log4j.Logger;
 import org.toolchild.suffering.Handler;
@@ -24,10 +25,10 @@ public abstract class Entity extends GameObject{
    * 
    * Renders this Entity.
    * 
-   * @param graphics  are expected released from the camera
+   * @param graphics2D  are expected released from the camera
    * @param camera  the camera, for lock and releasing purposes
    */
-  public abstract void render(Graphics graphics);
+  public abstract void render(Graphics2D graphics2D);
   
   protected boolean handleAllInteraction() {
     handleAllEntityInteraction();

@@ -2,6 +2,7 @@ package org.toolchild.suffering.gameobject.entity.mob;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
@@ -74,24 +75,25 @@ public class Mob1 extends Entity {
   
 
   @Override
-  public void render(Graphics graphics) {
-    handleAnimationRendering(graphics);
+  public void render(Graphics2D graphics2D) {
+    handleAnimationRendering(graphics2D);
 
-    graphics.setColor(Color.BLUE);
-    graphics.fillRect(getBoundsRight().x, getBoundsRight().y, getBoundsRight().width, getBoundsRight().height);
-    graphics.fillRect(getBoundsLeft().x, getBoundsLeft().y, getBoundsLeft().width, getBoundsLeft().height);
-    graphics.fillRect(getBoundsTop().x, getBoundsTop().y, getBoundsTop().width, getBoundsTop().height);
-    graphics.fillRect(getBoundsBottom().x, getBoundsBottom().y, getBoundsBottom().width, getBoundsBottom().height);
+    graphics2D.setColor(Color.BLUE);
+    graphics2D.draw(getBoundsTop());
+    graphics2D.draw(getBoundsBottom()); 
+    graphics2D.draw(getBoundsLeft()); 
+    graphics2D.draw(getBoundsRight());
   }
 
-  private void handleAnimationRendering(Graphics graphics) {
+  private void handleAnimationRendering(Graphics2D graphics2D) {
     if (facing == 0) {
-      graphics.drawImage(Game.mob1[frame].getImage(), x, y, width, height, null);
+      graphics2D.drawImage(Game.mob1[frame].getImage(), x, y, width, height, null);
       log.trace("facing left frame " + frame);
     } else if (facing == 1) {
-      graphics.drawImage(Game.mob1[frame + 8].getImage(), x, y, width, height, null);
+      graphics2D.drawImage(Game.mob1[frame + 8].getImage(), x, y, width, height, null);
       log.trace("facing right frame:" + (frame + 8));
     }
   }
+
 
 }

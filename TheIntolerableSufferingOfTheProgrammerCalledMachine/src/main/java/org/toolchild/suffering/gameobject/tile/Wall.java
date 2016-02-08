@@ -1,6 +1,6 @@
 package org.toolchild.suffering.gameobject.tile;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
@@ -17,9 +17,9 @@ public class Wall extends Tile{
   }
 
   @Override
-  public void render(Graphics graphics) {
+  public void render(Graphics2D graphics2D) {
   
-    graphics.drawImage(Game.grass.getImage(), x, y,width, height, null);
+    graphics2D.drawImage(Game.grass.getImage(), x, y,width, height, null);
   }
 
 }

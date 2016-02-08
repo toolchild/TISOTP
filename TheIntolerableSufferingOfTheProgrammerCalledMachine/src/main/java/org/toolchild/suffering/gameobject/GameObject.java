@@ -1,6 +1,6 @@
 package org.toolchild.suffering.gameobject;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 import org.toolchild.suffering.Handler;
@@ -19,7 +19,7 @@ public abstract class GameObject {
 
   public abstract void tick();
   
-  public abstract void render(Graphics graphics);
+  public abstract void render(Graphics2D graphics2D);
 
   protected Handler handler;
   public GameObject(int x, int y, int width, int height, Id id, Handler handler) {

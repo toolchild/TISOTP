@@ -1,7 +1,7 @@
 package org.toolchild.suffering;
 
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
@@ -61,58 +61,58 @@ public class Handler {
     }
   }
 
-  public void render(Graphics graphics, int lastSecondTicks, int lastSecondFrames) {
-    camera.releaseGraphicsFromCamera(graphics);
-    graphics.drawImage(Game.backgroundSheet.getSpriteSheet(), 0, 0, levelWidth * 64, levelHeight * 64, null);
+  public void render(Graphics2D graphics2d, int lastSecondTicks, int lastSecondFrames) {
+    camera.releaseGraphicsFromCamera(graphics2d);
+    graphics2d.drawImage(Game.backgroundSheet.getSpriteSheet(), 0, 0, levelWidth * 64, levelHeight * 64, null);
 
-    int tilesRendered = renderTiles(graphics);
+    int tilesRendered = renderTiles(graphics2d);
     log.trace("tilesRendered: " + tilesRendered);
 
-    camera.lockGraphicsToCamera(graphics);
-    renderDebug(graphics, lastSecondTicks, lastSecondFrames, tilesRendered);
-    camera.releaseGraphicsFromCamera(graphics);
+    camera.lockGraphicsToCamera(graphics2d);
+    renderDebug(graphics2d, lastSecondTicks, lastSecondFrames, tilesRendered);
+    camera.releaseGraphicsFromCamera(graphics2d);
 
     for (GameObject entity : entities) {
-       entity.render(graphics);
+       entity.render(graphics2d);
     }
     for (GameObject entity : entities) { // after releasing the camera, draw the tiles, not relative to player
-      camera.lockGraphicsToCamera(graphics);
-      graphics.setColor(Color.YELLOW);
-      graphics.fillRect(Game.getFrameWidth()- 500 + entity.getX() / 32, (entity.getY() / 32)-2, 4, 4);
-      camera.releaseGraphicsFromCamera(graphics);
+      camera.lockGraphicsToCamera(graphics2d);
+      graphics2d.setColor(Color.YELLOW);
+      graphics2d.fillRect(Game.getFrameWidth()- 500 + entity.getX() / 32, (entity.getY() / 32)-2, 4, 4);
+      camera.releaseGraphicsFromCamera(graphics2d);
       }
 
     for (GameObject player : players) {
-       ((Player)player).render(graphics, camera);
+       ((Player)player).render(graphics2d, camera);
     }
     log.trace("entities: " + entities.size());
 
   }
 
-  private int renderTiles(Graphics graphics) {
+  private int renderTiles(Graphics2D graphics2d) {
 
     int tilesRendered = 0;
     for (GameObject tile : tiles) { // after releasing the camera, draw the tiles, not relative to player
 
       if (tile.getX() >= player.getX() - Game.SIZE.getWidth() - 64 && tile.getX() <= player.getX() + Game.SIZE.getWidth() + 64) { // only render visible tiles, relative to top left edge of the shown screen -64
         if (tile.getY() >= player.getY() - Game.SIZE.getHeight() - 64 && tile.getY() <= player.getY() + Game.SIZE.getHeight() + 64) {
-          tile.render(graphics);
+          tile.render(graphics2d);
           tilesRendered++;
         }
       }
       }
     for (GameObject tile : tiles) { // after releasing the camera, draw the tiles, not relative to player
-    camera.lockGraphicsToCamera(graphics);
-    graphics.setColor(Color.WHITE);
-    graphics.fillRect(Game.getFrameWidth()- 500 + tile.getX() / 32, tile.getY() / 32, 2, 2);
-    graphics.setColor(Color.RED);
-    graphics.fillRect(Game.getFrameWidth()- 500 + player.getX() / 32 , (player.getY() / 32)-2, 4*(player.getHeight()/64) , 4*(player.getHeight()/64) );      
-    camera.releaseGraphicsFromCamera(graphics);
+    camera.lockGraphicsToCamera(graphics2d);
+    graphics2d.setColor(Color.WHITE);
+    graphics2d.fillRect(Game.getFrameWidth()- 500 + tile.getX() / 32, tile.getY() / 32, 2, 2);
+    graphics2d.setColor(Color.RED);
+    graphics2d.fillRect(Game.getFrameWidth()- 500 + player.getX() / 32 , (player.getY() / 32)-2, 4*(player.getHeight()/64) , 4*(player.getHeight()/64) );      
+    camera.releaseGraphicsFromCamera(graphics2d);
     }
     return tilesRendered;
   }
 
-  private void renderDebug(Graphics graphics, int lastSecondTicks, int lastSecondFrames, int tilesRendered) {
+  private void renderDebug(Graphics2D graphics, int lastSecondTicks, int lastSecondFrames, int tilesRendered) {
     int column = 150;
     int lineHeight = 20;
     graphics.setColor(Color.WHITE);

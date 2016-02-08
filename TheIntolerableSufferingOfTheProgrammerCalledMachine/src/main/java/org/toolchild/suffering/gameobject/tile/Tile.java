@@ -1,6 +1,7 @@
 package org.toolchild.suffering.gameobject.tile;
 
-import java.awt.Graphics;
+
+import java.awt.Graphics2D;
 
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
@@ -18,7 +19,7 @@ public abstract class Tile extends GameObject {
   
   public abstract void tick();
 
-  public abstract void render(Graphics graphics);
+  public abstract void render(Graphics2D graphics2D);
   
   public int getX() {
     return x;

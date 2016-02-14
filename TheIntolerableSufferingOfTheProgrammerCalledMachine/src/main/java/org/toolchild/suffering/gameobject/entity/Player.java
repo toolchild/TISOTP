@@ -9,28 +9,30 @@ import org.toolchild.suffering.Camera;
 import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
+import org.toolchild.suffering.SpriteManager;
 import org.toolchild.suffering.entity.movement.Movement;
 import org.toolchild.suffering.gameobject.GameObject;
 import org.toolchild.suffering.gameobject.tile.Tile;
+import org.toolchild.suffering.gfx.Sprite;
 
 public class Player extends GameObject {
   private static final Logger log                  = Logger.getLogger(Player.class);
-  Movement                    movement;
+  private Movement            movement;
 
   private int                 frame                = 0;
   private int                 frameDelay           = 0;
   private int                 facing               = 0;
   private int                 jumpCount            = 0;
   private int                 jumpTimeCount        = 0;
-  int                         jumpStartY;
-  int                         maxJumpHeight        = 64 * 3;
-  int                         jumpHeight           = 0;
-  boolean                     isValnurable         = true;
-  int                         isValnurableCount    = 0;
+  private int                 jumpStartY;
+  private int                 maxJumpHeight        = 64 * 3;
+  private int                 jumpHeight           = 0;
+  private boolean             isValnurable         = true;
+  private int                 isValnurableCount    = 0;
   private static final int    IS_INVULNERABLE_TIME = 120;
 
-  public Player(int x, int y, int width, int height, Id id, Handler handler) {
-    super(x, y, width, height, id, handler);
+  public Player(int x, int y, int width, int height, Id id, Handler handler, Sprite[] sprites) {
+    super(x, y, width, height, id, handler, sprites);
     movement = new Movement();
     movement.setMoveSpeed(10);
     jumpStartY = y;
@@ -75,7 +77,7 @@ public class Player extends GameObject {
 
   private void handleMob1Interaction(Entity entity) {
     if (entity.getId() == Id.mob1) {
-      if (getBoundsBottom().intersects(entity.getBounds() )&& isValnurable) {
+      if (getBoundsBottom().intersects(entity.getBounds()) && isValnurable) {
         movement.setGravity(-movement.getGravity() * 0.8);
         height = (int) (height);
         entity.die();
@@ -88,7 +90,6 @@ public class Player extends GameObject {
           die();
         }
         log.debug("mob1 interaction");
-        
 
       }
     }
@@ -138,7 +139,7 @@ public class Player extends GameObject {
       frameDelay++;
       if (frameDelay >= 3) {
         frame++;
-        if (frame >= Game.player.length / 2) {
+        if (frame >= sprites.length / 2) {
           frame = 0;
         }
         frameDelay = 0;
@@ -242,8 +243,8 @@ public class Player extends GameObject {
     // draw collision detection box
     graphics2D.setColor(Color.RED);
     graphics2D.draw(getBoundsTop());
-    graphics2D.draw(getBoundsBottom()); 
-    graphics2D.draw(getBoundsLeft()); 
+    graphics2D.draw(getBoundsBottom());
+    graphics2D.draw(getBoundsLeft());
     graphics2D.draw(getBoundsRight());
   }
 
@@ -253,14 +254,14 @@ public class Player extends GameObject {
       if (!movement.isMoving()) {
         frame = 0;
       }
-      graphics.drawImage(Game.player[frame].getImage(), x, y, width, height, null);
+      graphics.drawImage(sprites[frame].getImage(), x, y, width, height, null);
     }
     if (facing == 1) {
       log.trace("facing right frame:" + frame);
       if (!movement.isMoving()) {
         frame = 0;
       }
-      graphics.drawImage(Game.player[frame + 5].getImage(), x, y, width, height, null);
+      graphics.drawImage(sprites[frame + 5].getImage(), x, y, width, height, null);
     }
 
   }

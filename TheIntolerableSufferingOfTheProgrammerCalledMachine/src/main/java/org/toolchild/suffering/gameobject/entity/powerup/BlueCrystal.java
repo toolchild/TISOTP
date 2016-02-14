@@ -1,14 +1,14 @@
 package org.toolchild.suffering.gameobject.entity.powerup;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
-import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
+import org.toolchild.suffering.SpriteManager;
 import org.toolchild.suffering.gameobject.entity.Entity;
+import org.toolchild.suffering.gfx.Sprite;
 
 public class BlueCrystal extends Entity {
   private static final Logger log        = Logger.getLogger(BlueCrystal.class);
@@ -17,8 +17,8 @@ public class BlueCrystal extends Entity {
 
   private Random              random     = new Random();
 
-  public BlueCrystal(int x, int y, int width, int height, Id id, Handler handler) {
-    super(x, y, width, height, id, handler);
+  public BlueCrystal(int x, int y, int width, int height, Id id, Handler handler, Sprite[] sprites) {
+    super(x, y, width, height, id, handler, sprites);
     int direction = random.nextInt(2); // direction: 0 = left ; 1 = right
     movement.setVelocityX(direction == 0 ? -3 : +3);
     movement.setMoveSpeed(3);
@@ -30,7 +30,7 @@ public class BlueCrystal extends Entity {
     frameDelay++;
     if (frameDelay >= 3) {
       frame++;
-      if (frame >= Game.blueCrystal.length / 2) {
+      if (frame >= sprites.length / 2) {
         frame = 0;
       }
       frameDelay = 0;
@@ -54,18 +54,9 @@ public class BlueCrystal extends Entity {
     return true;
   }
 
+
   @Override
-  public void render(Graphics2D graphics2D) {
-    handleAnimationRendering(graphics2D);
-
-    graphics2D.setColor(Color.BLUE);
-    graphics2D.draw(getBoundsTop());
-    graphics2D.draw(getBoundsBottom()); 
-    graphics2D.draw(getBoundsLeft()); 
-    graphics2D.draw(getBoundsRight());
-  }
-
-  private void handleAnimationRendering(Graphics2D graphics2D) {
-    graphics2D.drawImage(Game.blueCrystal[frame].getImage(), x, y, width, height, null);
+  protected void handleAnimationRendering(Graphics2D graphics2D) {
+    graphics2D.drawImage(sprites[frame].getImage(), x, y, width, height, null);
   }
 }

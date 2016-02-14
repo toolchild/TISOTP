@@ -26,7 +26,8 @@ public class SpriteSheet {
   }
 
   public BufferedImage getSprite(int x , int y){
-    return spriteSheet.getSubimage(x*32, y*32, 32, 32);
+    int factor = 32;
+    return spriteSheet.getSubimage(x*factor, y*factor, factor, factor);
   }
   
   public BufferedImage getBiggerSprite(int x , int y){

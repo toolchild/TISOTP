@@ -1,6 +1,6 @@
 package org.toolchild.suffering.gameobject.entity;
 
-
+import java.awt.Color;
 import java.awt.Graphics2D;
 
 import org.apache.log4j.Logger;
@@ -9,33 +9,45 @@ import org.toolchild.suffering.Id;
 import org.toolchild.suffering.entity.movement.Movement;
 import org.toolchild.suffering.gameobject.GameObject;
 import org.toolchild.suffering.gameobject.tile.Tile;
+import org.toolchild.suffering.gfx.Sprite;
 
-public abstract class Entity extends GameObject{
-  private static final Logger log        = Logger.getLogger(Entity.class);
-  protected int facing = 0; // 0 = left; 1 = right
-  protected Movement movement;
+public abstract class Entity extends GameObject {
+  private static final Logger log    = Logger.getLogger(Entity.class);
+  protected int               facing = 0;                              // 0 = left; 1 = right
+  protected Movement          movement;
 
-  public Entity(int x, int y, int width, int height, Id id, Handler handler){
-    super(x, y, width, height, id, handler);
+  public Entity(int x, int y, int width, int height, Id id, Handler handler, Sprite[] sprites) {
+    super(x, y, width, height, id, handler, sprites);
     movement = new Movement();
   }
-  
 
   /**
    * 
    * Renders this Entity.
    * 
-   * @param graphics2D  are expected released from the camera
-   * @param camera  the camera, for lock and releasing purposes
+   * @param graphics2D
+   *          are expected released from the camera
+   * @param camera
+   *          the camera, for lock and releasing purposes
    */
-  public abstract void render(Graphics2D graphics2D);
-  
+  public void render(Graphics2D graphics2D) {
+    handleAnimationRendering(graphics2D);
+
+    graphics2D.setColor(Color.BLUE);
+    graphics2D.draw(getBoundsTop());
+    graphics2D.draw(getBoundsBottom());
+    graphics2D.draw(getBoundsLeft());
+    graphics2D.draw(getBoundsRight());
+  }
+
+  protected abstract void handleAnimationRendering(Graphics2D graphics2D);
+
   protected boolean handleAllInteraction() {
     handleAllEntityInteraction();
     handleAllTileInteraction();
     return true;
   }
-  
+
   private void handleAllTileInteraction() {
     for (GameObject tile : handler.getTiles()) {
       if (tile.getX() >= x - 64 && tile.getX() <= x + 64) { // only tick tiles immediately around the entity
@@ -50,8 +62,6 @@ public abstract class Entity extends GameObject{
     }
   }
 
-  
-
   private String handleSingleTileInteraction(Tile tile) {  // handleAllTileInteraction sub-method
     String statusMessage;
     if (!tile.isSolid()) {
@@ -65,14 +75,12 @@ public abstract class Entity extends GameObject{
     return statusMessage;
   }
 
-  
-  
   private String handleLevelInteraction(Tile tile) {
     String statusMessage = null;
     if (getBoundsTop().intersects(tile.getBounds())) {
       statusMessage = "wall interaction: hitTop";
       y = tile.getY() + tile.getHeight();
-//      movement.setVelocityY(0);
+      // movement.setVelocityY(0);
       if (movement.isJumping()) {
         // isJumping = false;
         movement.setGravity(0.0);
@@ -96,8 +104,7 @@ public abstract class Entity extends GameObject{
     }
     return statusMessage;
   }
-  
-  
+
   private void handleAllEntityInteraction() {
     for (GameObject entity : handler.getEntities()) {
       if (entity.getX() >= x - 64 && entity.getX() <= x + 64) { // only tick tiles immediately around the entity
@@ -111,19 +118,18 @@ public abstract class Entity extends GameObject{
       }
     }
   }
-  
-  
+
   private String handleSingleEntityInteraction(Entity entity) {  // handleAllTileInteraction sub-method
     String statusMessage;
     statusMessage = "false, tile not solid";
-    if (entity != this && (entity.getId() == Id.mob1 || entity.getId() ==Id.blueCrystal)) {
+    if (entity != this && (entity.getId() == Id.mob1 || entity.getId() == Id.blueCrystal)) {
       statusMessage = handleEntityInteraction(entity);
     } else {
       statusMessage = "false, tile id not recognized";
     }
     return statusMessage;
   }
-  
+
   private String handleEntityInteraction(Entity entity) {
     String statusMessage = null;
     if (getBoundsTop().intersects(entity.getBounds())) {
@@ -153,14 +159,12 @@ public abstract class Entity extends GameObject{
     }
     return statusMessage;
   }
-  
-  
-  
-  public void die(){
+
+  public void die() {
     handler.removeEntity(this);
   }
-   
-  public Id getId (){
+
+  public Id getId() {
     return id;
   }
 }

@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
 public class SpriteSheet {
 
   private BufferedImage spriteSheet;
-  
+
   public BufferedImage getSpriteSheet() {
     return this.spriteSheet;
   }
@@ -17,24 +17,23 @@ public class SpriteSheet {
     this.spriteSheet = spriteSheet;
   }
 
-  public SpriteSheet(String path){
+  public SpriteSheet(String path) {
     try {
-      spriteSheet = ImageIO.read(getClass().getResource(path));
-    } catch (IOException e) {
+      this.spriteSheet = ImageIO.read(getClass().getResource(path));
+    }
+    catch (IOException e) {
       e.printStackTrace();
     }
   }
 
-  public BufferedImage getSprite(int x , int y){
+  public BufferedImage getSprite(int x, int y) {
     int factor = 32;
-    return spriteSheet.getSubimage(x*factor, y*factor, factor, factor);
+    return this.spriteSheet.getSubimage(x * factor, y * factor, factor, factor);
   }
-  
-  public BufferedImage getBiggerSprite(int x , int y){
+
+  public BufferedImage getBiggerSprite(int x, int y) {
     int factor = 64;
-    return spriteSheet.getSubimage(x*factor, y*factor, factor, factor);
+    return this.spriteSheet.getSubimage(x * factor, y * factor, factor, factor);
   }
-  
-  
 
 }

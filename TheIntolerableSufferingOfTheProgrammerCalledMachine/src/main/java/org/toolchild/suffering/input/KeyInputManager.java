@@ -13,48 +13,48 @@ public class KeyInputManager implements KeyListener {
 
   private static final Logger log = Logger.getLogger(KeyInputManager.class);
 
-  private KeyStatus                   jumpKeyStatus;
-  private KeyStatus                   leftKeyStatus;
-  private KeyStatus                   rightKeyStatus;
+  private KeyStatus           jumpKeyStatus;
+  private KeyStatus           leftKeyStatus;
+  private KeyStatus           rightKeyStatus;
 
   public void init() {
-    jumpKeyStatus = new KeyStatus(false);
-    leftKeyStatus = new KeyStatus(false);
-    rightKeyStatus = new KeyStatus(false);
+    this.jumpKeyStatus = new KeyStatus(false);
+    this.leftKeyStatus = new KeyStatus(false);
+    this.rightKeyStatus = new KeyStatus(false);
   }
 
   public boolean updateKeyEvents(Player player) {
-    if (!jumpKeyStatus.isActive) jumpKeyReleaseEvent(player);
-    if (!leftKeyStatus.isActive) leftKeyReleaseEvent(player);
-    if (!rightKeyStatus.isActive) rightKeyReleaseEvent(player);
-    if (jumpKeyStatus.isActive) jumpKeyEvent(player);
-    if (leftKeyStatus.isActive && !rightKeyStatus.isActive || leftKeyStatus.isActive && leftKeyStatus.timeStamp > rightKeyStatus.timeStamp) leftKeyEvent(player);
-    if (rightKeyStatus.isActive && !leftKeyStatus.isActive || rightKeyStatus.isActive && rightKeyStatus.timeStamp > leftKeyStatus.timeStamp) rightKeyEvent(player);
+    if (!this.jumpKeyStatus.isActive) jumpKeyReleaseEvent(player);
+    if (!this.leftKeyStatus.isActive) leftKeyReleaseEvent(player);
+    if (!this.rightKeyStatus.isActive) rightKeyReleaseEvent(player);
+    if (this.jumpKeyStatus.isActive) jumpKeyEvent(player);
+    if (this.leftKeyStatus.isActive && !this.rightKeyStatus.isActive || this.leftKeyStatus.isActive && this.leftKeyStatus.timeStamp > this.rightKeyStatus.timeStamp) leftKeyEvent(player);
+    if (this.rightKeyStatus.isActive && !this.leftKeyStatus.isActive || this.rightKeyStatus.isActive && this.rightKeyStatus.timeStamp > this.leftKeyStatus.timeStamp) rightKeyEvent(player);
     return true;
   }
 
-  private void jumpKeyEvent(Player player) {
+  private static void jumpKeyEvent(Player player) {
     player.handleJumpKeyEvent(true);
   }
 
-  private void jumpKeyReleaseEvent(Player player) {
+  private static void jumpKeyReleaseEvent(Player player) {
     player.handleJumpKeyEvent(false);
     log.trace("Jump Released");
   }
 
-  private void leftKeyEvent(Player player) {
+  private static void leftKeyEvent(Player player) {
     player.handleLeftKeyEvent(true);
   }
 
-  private void leftKeyReleaseEvent(Player player) {
+  private static void leftKeyReleaseEvent(Player player) {
     player.handleLeftKeyEvent(false);
   }
 
-  private void rightKeyEvent(Player player) {
+  private static void rightKeyEvent(Player player) {
     player.handleRightKeyEvent(true);
   }
-  
-  private void rightKeyReleaseEvent(Player player) {
+
+  private static void rightKeyReleaseEvent(Player player) {
     player.handleRightKeyEvent(false);
   }
 
@@ -65,15 +65,18 @@ public class KeyInputManager implements KeyListener {
       if (player.getId() == Id.player) {
         switch (key) {
           case KeyEvent.VK_W: {
-            jumpKeyStatus.isActive = true;
+            this.jumpKeyStatus.isActive = true;
             break;
           }
           case KeyEvent.VK_A: {
-            leftKeyStatus.isActive = true;
+            this.leftKeyStatus.isActive = true;
             break;
           }
           case KeyEvent.VK_D: {
-            rightKeyStatus.isActive = true;
+            this.rightKeyStatus.isActive = true;
+            break;
+          }
+          default: {
             break;
           }
         }
@@ -88,22 +91,24 @@ public class KeyInputManager implements KeyListener {
       if (player.getId() == Id.player) {
         switch (key) {
           case KeyEvent.VK_W: {
-            jumpKeyStatus.isActive = false;
+            this.jumpKeyStatus.isActive = false;
             break;
           }
           case KeyEvent.VK_A: {
-            leftKeyStatus.isActive = false;
+            this.leftKeyStatus.isActive = false;
             break;
           }
           case KeyEvent.VK_D: {
-            rightKeyStatus.isActive = false;
+            this.rightKeyStatus.isActive = false;
+            break;
+          }
+          default: {
             break;
           }
         }
       }
     }
   }
-  
 
   @Override
   public void keyTyped(KeyEvent e) {}

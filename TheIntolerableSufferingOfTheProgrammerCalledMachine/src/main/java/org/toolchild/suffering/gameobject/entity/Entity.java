@@ -13,23 +13,21 @@ import org.toolchild.suffering.gfx.Sprite;
 
 public abstract class Entity extends GameObject {
   private static final Logger log    = Logger.getLogger(Entity.class);
-  protected int               facing = 0;                              // 0 = left; 1 = right
+  protected int               facing = 0;                                                           // 0 = left; 1 = right
   protected Movement          movement;
 
   public Entity(int x, int y, int width, int height, Id id, Handler handler, Sprite[] sprites) {
     super(x, y, width, height, id, handler, sprites);
-    movement = new Movement();
+    this.movement = new Movement();
   }
 
   /**
-   * 
    * Renders this Entity.
    * 
-   * @param graphics2D
-   *          are expected released from the camera
-   * @param camera
-   *          the camera, for lock and releasing purposes
+   * @param graphics2D are expected released from the camera
+   * @param camera the camera, for lock and releasing purposes
    */
+  @Override
   public void render(Graphics2D graphics2D) {
     handleAnimationRendering(graphics2D);
 
@@ -49,9 +47,9 @@ public abstract class Entity extends GameObject {
   }
 
   private void handleAllTileInteraction() {
-    for (GameObject tile : handler.getTiles()) {
-      if (tile.getX() >= x - 64 && tile.getX() <= x + 64) { // only tick tiles immediately around the entity
-        if (tile.getY() >= y - 64 && tile.getY() <= y + 64) {
+    for (GameObject tile : this.handler.getTiles()) {
+      if (tile.getX() >= this.x - 64 && tile.getX() <= this.x + 64) { // only tick tiles immediately around the entity
+        if (tile.getY() >= this.y - 64 && tile.getY() <= this.y + 64) {
           Tile tileInstance = (Tile) tile;
           String singleTileInteractionStatusMessage = handleSingleTileInteraction(tileInstance);
           if (singleTileInteractionStatusMessage != null) {
@@ -79,36 +77,36 @@ public abstract class Entity extends GameObject {
     String statusMessage = null;
     if (getBoundsTop().intersects(tile.getBounds())) {
       statusMessage = "wall interaction: hitTop";
-      y = tile.getY() + tile.getHeight();
+      this.y = tile.getY() + tile.getHeight();
       // movement.setVelocityY(0);
-      if (movement.isJumping()) {
+      if (this.movement.isJumping()) {
         // isJumping = false;
-        movement.setGravity(0.0);
-        movement.setFalling(true);
+        this.movement.setGravity(0.0);
+        this.movement.setFalling(true);
       }
     } else if (getBoundsBottom().intersects(tile.getBounds())) {
       statusMessage = "wall interaction: hitBottom";
-      movement.setVelocityY(0);
-      movement.setJumping(false);
-      y = tile.getY() - height; // reset height, looks cleaner
-      if (movement.isFalling()) {
-        movement.setFalling(false);
+      this.movement.setVelocityY(0);
+      this.movement.setJumping(false);
+      this.y = tile.getY() - this.height; // reset height, looks cleaner
+      if (this.movement.isFalling()) {
+        this.movement.setFalling(false);
       }
     } else if (getBoundsLeft().intersects(tile.getBounds())) {
-      movement.setVelocityX(movement.getMoveSpeed());
-      x = tile.getX() + tile.getWidth();
+      this.movement.setVelocityX(this.movement.getMoveSpeed());
+      this.x = tile.getX() + tile.getWidth();
     } else if (getBoundsRight().intersects(tile.getBounds())) {
       statusMessage = "wall interaction: hitRight";
-      movement.setVelocityX(-movement.getMoveSpeed());
-      x = tile.getX() - width; // reset width, looks cleaner
+      this.movement.setVelocityX(-this.movement.getMoveSpeed());
+      this.x = tile.getX() - this.width; // reset width, looks cleaner
     }
     return statusMessage;
   }
 
   private void handleAllEntityInteraction() {
-    for (GameObject entity : handler.getEntities()) {
-      if (entity.getX() >= x - 64 && entity.getX() <= x + 64) { // only tick tiles immediately around the entity
-        if (entity.getY() >= y - 64 && entity.getY() <= y + 64) {
+    for (GameObject entity : this.handler.getEntities()) {
+      if (entity.getX() >= this.x - 64 && entity.getX() <= this.x + 64) { // only tick tiles immediately around the entity
+        if (entity.getY() >= this.y - 64 && entity.getY() <= this.y + 64) {
           Entity entityInstance = (Entity) entity;
           String singleTileInteractionStatusMessage = handleSingleEntityInteraction(entityInstance);
           if (singleTileInteractionStatusMessage != null) {
@@ -134,37 +132,34 @@ public abstract class Entity extends GameObject {
     String statusMessage = null;
     if (getBoundsTop().intersects(entity.getBounds())) {
       statusMessage = "entity interaction: hitTop";
-      y = entity.getY() + entity.getHeight();
-      movement.setVelocityY(0);
-      if (movement.isJumping()) {
+      this.y = entity.getY() + entity.getHeight();
+      this.movement.setVelocityY(0);
+      if (this.movement.isJumping()) {
         // isJumping = false;
-        movement.setGravity(0.0);
-        movement.setFalling(true);
+        this.movement.setGravity(0.0);
+        this.movement.setFalling(true);
       }
     } else if (getBoundsBottom().intersects(entity.getBounds())) {
       statusMessage = "entity interaction: hitBottom";
-      movement.setVelocityY(0);
-      movement.setJumping(false);
-      y = entity.getY() - height; // reset height, looks cleaner
-      if (movement.isFalling()) {
-        movement.setFalling(false);
+      this.movement.setVelocityY(0);
+      this.movement.setJumping(false);
+      this.y = entity.getY() - this.height; // reset height, looks cleaner
+      if (this.movement.isFalling()) {
+        this.movement.setFalling(false);
       }
     } else if (getBoundsLeft().intersects(entity.getBounds())) {
-      movement.setVelocityX(movement.getMoveSpeed());
-      x = entity.getX() + entity.getWidth();
+      this.movement.setVelocityX(this.movement.getMoveSpeed());
+      this.x = entity.getX() + entity.getWidth();
     } else if (getBoundsRight().intersects(entity.getBounds())) {
       statusMessage = "wall interaction: hitRight";
-      movement.setVelocityX(-movement.getMoveSpeed());
-      x = entity.getX() - width; // reset width, looks cleaner
+      this.movement.setVelocityX(-this.movement.getMoveSpeed());
+      this.x = entity.getX() - this.width; // reset width, looks cleaner
     }
     return statusMessage;
   }
 
   public void die() {
-    handler.removeEntity(this);
+    this.handler.removeEntity(this);
   }
 
-  public Id getId() {
-    return id;
-  }
 }

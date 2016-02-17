@@ -6,7 +6,6 @@ import java.util.Random;
 import org.apache.log4j.Logger;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
-import org.toolchild.suffering.SpriteManager;
 import org.toolchild.suffering.gameobject.entity.Entity;
 import org.toolchild.suffering.gfx.Sprite;
 
@@ -19,21 +18,21 @@ public class Mob1 extends Entity {
 
   public Mob1(int x, int y, int width, int height, Id id, Handler handler, Sprite[] sprites) {
     super(x, y, width, height, id, handler, sprites);
-    int direction = random.nextInt(2); // direction: 0 = left ; 1 = right
-    movement.setVelocityX(direction == 0 ? -3 : +3);
+    int direction = this.random.nextInt(2); // direction: 0 = left ; 1 = right
+    this.movement.setVelocityX(direction == 0 ? -3 : +3);
     // movement.setVelocityX(-1);
 
-    movement.setMoveSpeed(5);
-    movement.setMoving(true);
+    this.movement.setMoveSpeed(5);
+    this.movement.setMoving(true);
   }
 
   @Override
   public void tick() {
-    if (movement.getVelocityX() < 0) {
-      facing = 0;
+    if (this.movement.getVelocityX() < 0) {
+      this.facing = 0;
     }
-    if (movement.getVelocityX() > 0) {
-      facing = 1;
+    if (this.movement.getVelocityX() > 0) {
+      this.facing = 1;
     }
     log.trace("handle animation cycle: " + handleAnimationCycle());
     log.trace("update Position: " + updatePosition());
@@ -42,43 +41,43 @@ public class Mob1 extends Entity {
   }
 
   private boolean updatePosition() {
-    x = x + movement.getVelocityX();
-    y = y + movement.getVelocityY();
+    this.x = this.x + this.movement.getVelocityX();
+    this.y = this.y + this.movement.getVelocityY();
     // if (x <= 0) x = 0;
     // if (x + this.width >= Game.SIZE.getWidth()) x = (int) (Game.SIZE.getWidth() - this.width);
     return true;
   }
 
   private boolean handleAnimationCycle() {
-    if (movement.getVelocityX() != 0) movement.setMoving(true);
-    else movement.setMoving(false);
-    if (movement.isMoving()) {
-      frameDelay++;
-      if (frameDelay >= 3) {
-        frame++;
-        if (frame >= sprites.length / 2) {
-          frame = 0;
+    if (this.movement.getVelocityX() != 0) this.movement.setMoving(true);
+    else this.movement.setMoving(false);
+    if (this.movement.isMoving()) {
+      this.frameDelay++;
+      if (this.frameDelay >= 3) {
+        this.frame++;
+        if (this.frame >= this.sprites.length / 2) {
+          this.frame = 0;
         }
-        frameDelay = 0;
+        this.frameDelay = 0;
       }
     }
     return true;
   }
 
   private boolean handleGravityAndMovement() {
-    log.trace("handle Falling " + movement.handleFalling());
-    log.trace("handle Floating " + movement.handleFloating());
+    log.trace("handle Falling " + this.movement.handleFalling());
+    log.trace("handle Floating " + this.movement.handleFloating());
     return true;
   }
 
   @Override
   protected void handleAnimationRendering(Graphics2D graphics2D) {
-    if (facing == 0) {
-      graphics2D.drawImage(sprites[frame].getImage(), x, y, width, height, null);
-      log.trace("facing left frame " + frame);
-    } else if (facing == 1) {
-      graphics2D.drawImage(sprites[frame + 8].getImage(), x, y, width, height, null);
-      log.trace("facing right frame:" + (frame + 8));
+    if (this.facing == 0) {
+      graphics2D.drawImage(this.sprites[this.frame].getImage(), this.x, this.y, this.width, this.height, null);
+      log.trace("facing left frame " + this.frame);
+    } else if (this.facing == 1) {
+      graphics2D.drawImage(this.sprites[this.frame + 8].getImage(), this.x, this.y, this.width, this.height, null);
+      log.trace("facing right frame:" + (this.frame + 8));
     }
   }
 

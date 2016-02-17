@@ -8,14 +8,14 @@ public class Sprite {
 
   public Sprite(SpriteSheet spriteSheet, int x, int y, boolean isBigger) {
     if (isBigger) {
-      image = spriteSheet.getBiggerSprite(x, y);
+      this.image = spriteSheet.getBiggerSprite(x, y);
     } else {
-      image = spriteSheet.getSprite(x, y);
+      this.image = spriteSheet.getSprite(x, y);
     }
   }
 
   public BufferedImage getImage() {
-    return image;
+    return this.image;
   }
 
   public void setImage(BufferedImage image) {

@@ -1,22 +1,18 @@
 package org.toolchild.suffering.entity.movement;
 
-import org.apache.log4j.Logger;
-
 public class Movement {
-  private static final Logger log        = Logger.getLogger(Movement.class);
+  // private static final Logger log = Logger.getLogger(Movement.class);
 
   private double  gravity;
-  private boolean isMoving = false;
-  
+  private boolean isMoving  = false;
+
   private boolean isJumping = false;
   private boolean isFalling = true;
-  
-  private int velocityX;
-  private int velocityY;
-  private int moveSpeed;
-  
 
-  
+  private int     velocityX;
+  private int     velocityY;
+  private int     moveSpeed;
+
   public double getGravity() {
     return this.gravity;
   }
@@ -74,32 +70,32 @@ public class Movement {
   }
 
   public boolean handleFloating() {  // handleGravityAndMovement sub-method
-    if (!isFalling && !isJumping) { // if neither jumping nor falling player either stands on a block or hangs in the air. So it is necessary to start falling again. If on block, player will hit block and reset height and stop falling.
-      gravity = 0.0;  // handle gravity
-      isFalling = true;  // handle movement
+    if (!this.isFalling && !this.isJumping) { // if neither jumping nor falling player either stands on a block or hangs in the air. So it is necessary to start falling again. If on block, player will hit block and reset height and stop falling.
+      this.gravity = 0.0;  // handle gravity
+      this.isFalling = true;  // handle movement
     }
     return true;
   }
 
   public boolean handleFalling() {  // handleGravityAndMovement sub-method
-    if (isFalling) {
-      gravity = gravity + 0.5;  // handle gravity
-//      log.debug("Falling gravity = " + gravity);
-      velocityY = (int) gravity;    // handle movement
+    if (this.isFalling) {
+      this.gravity = this.gravity + 0.5;  // handle gravity
+      // log.debug("Falling gravity = " + gravity);
+      this.velocityY = (int) this.gravity;    // handle movement
     }
     return true;
   }
-  
+
   public boolean handlePlayerJumping() {  // handleGravityAndMovement sub-method
-    if (isJumping) {
-//      log.debug("Jumping gravity = " + gravity);
-      velocityY = (int) gravity;  // handle movement
-      if (gravity >= 0.0) {  // handle movement
+    if (this.isJumping) {
+      // log.debug("Jumping gravity = " + gravity);
+      this.velocityY = (int) this.gravity;  // handle movement
+      if (this.gravity >= 0.0) {  // handle movement
         // isJumping = false;
-        isFalling = true;
+        this.isFalling = true;
       }
     }
     return true;
   }
-  
+
 }

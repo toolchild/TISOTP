@@ -98,7 +98,7 @@ public class Player extends GameObject {
     graphics2D.setColor(Color.WHITE);
     renderDebug(graphics2D, camera); // renders the debug messages relative to player
   }
-  
+
   @Override
   public void tick() {
     Game.keyInput.updateKeyEvents(this);
@@ -123,8 +123,6 @@ public class Player extends GameObject {
 
     handleAllEntityInteraction();
   }
-
- 
 
   /**
    * Updates the x and y coordinates of the player.
@@ -261,7 +259,6 @@ public class Player extends GameObject {
       this.y = tile.getY() + tile.getHeight();
       this.movement.setVelocityY(0);
       if (this.movement.isJumping()) {
-        // getIsJumping() = false;
         this.movement.setGravity(1.0);
         this.movement.setFalling(true);
       }
@@ -347,7 +344,7 @@ public class Player extends GameObject {
     graphics2D.drawString("player gravity : " + Double.toString(this.movement.getGravity()).substring(0, gravityStringLength), 0, 7 * this.lineHeight);
     graphics2D.drawString("player facing : " + (this.facing == 0 ? "Left" : "Right"), 0, 8 * this.lineHeight);
     graphics2D.drawString("player isRunning: " + this.movement.isMoving(), 0, 9 * this.lineHeight);
-    graphics2D.translate(camera.getX(), camera.getY()); // untying graphics from camera
+    graphics2D.translate(camera.getX(), camera.getY()); // untying graphics from camera TODO: replace by camera.unlock function
   }
 
 }

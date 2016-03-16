@@ -3,6 +3,7 @@ package org.toolchild.suffering.gameobject.entity;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 import org.toolchild.suffering.Camera;
@@ -209,6 +210,7 @@ public class Player extends GameObject {
   }
 
   private boolean handleAllTileInteraction() {
+    ArrayList<Tile> tilesInteracting = new ArrayList<Tile>();
     for (GameObject tile : this.handler.getTiles()) {
       if (tile.getX() >= this.x - 5 * 64 && tile.getX() <= this.x + 5 * 64) {
         if (tile.getY() >= this.y - 5 * 64 && tile.getY() <= this.y + 5 * 64) {
@@ -216,9 +218,15 @@ public class Player extends GameObject {
           String singleTileInteractionStatusMessage = handleSingleTileInteraction(tileInstance);
           if (singleTileInteractionStatusMessage != null) {
             log.debug("single tile interaction: " + singleTileInteractionStatusMessage);
+            if(singleTileInteractionStatusMessage.contains("Top")){
+              tilesInteracting.add(tileInstance);
+            }
           }
         }
       }
+    }
+    for (Tile tile : tilesInteracting) {
+      this.y= tile.getY() + tile.getHeight();
     }
     return true;
   }
@@ -256,7 +264,7 @@ public class Player extends GameObject {
     String statusMessage = null;
     if (getBoundsTop().intersects(tile.getBounds())) {
       statusMessage = "level tile interaction: hitTop";
-      this.y = tile.getY() + tile.getHeight();
+//      this.y = tile.getY() + tile.getHeight();
       this.movement.setVelocityY(0);
       if (this.movement.isJumping()) {
         this.movement.setGravity(1.0);

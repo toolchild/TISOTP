@@ -20,7 +20,6 @@ public class Handler {
   private LinkedList<GameObject> entities = new LinkedList<>();
   private LinkedList<GameObject> tiles    = new LinkedList<>();
   private LinkedList<GameObject> players  = new LinkedList<>();
-  private Player                 player;
   private SpriteManager          spriteManager;
   public int                     tilesTicked;
   public int                     entitiesTicked;
@@ -53,8 +52,8 @@ public class Handler {
     }
     this.tilesTicked = 0;
     for (GameObject tile : this.tiles) {
-      if (tile.getX() >= this.player.getX() - Game.SIZE.getWidth() - 64 && tile.getX() <= this.player.getX() + Game.SIZE.getWidth() + 64) { // only ticks visible tiles, relative to top left edge of the shown screen -64
-        if (tile.getY() >= this.player.getY() - Game.SIZE.getHeight() - 64 && tile.getY() <= this.player.getY() + Game.SIZE.getHeight() + 64) {
+      if (tile.getX() >= this.players.getFirst().getX() - Game.SIZE.getWidth() - 64 && tile.getX() <= this.players.getFirst().getX() + Game.SIZE.getWidth() + 64) { // only ticks visible tiles, relative to top left edge of the shown screen -64
+        if (tile.getY() >= this.players.getFirst().getY() - Game.SIZE.getHeight() - 64 && tile.getY() <= this.players.getFirst().getY() + Game.SIZE.getHeight() + 64) {
           tile.tick();
           this.tilesTicked++;
         }
@@ -102,8 +101,8 @@ public class Handler {
     int tilesRendered = 0;
     for (GameObject tile : this.tiles) { // after releasing the camera, draw the tiles, not relative to player
 
-      if (tile.getX() >= this.player.getX() - Game.SIZE.getWidth() - 64 && tile.getX() <= this.player.getX() + Game.SIZE.getWidth() + 64) { // only render visible tiles, relative to top left edge of the shown screen -64
-        if (tile.getY() >= this.player.getY() - Game.SIZE.getHeight() - 64 && tile.getY() <= this.player.getY() + Game.SIZE.getHeight() + 64) {
+      if (tile.getX() >= this.players.getFirst().getX() - Game.SIZE.getWidth() - 64 && tile.getX() <= this.players.getFirst().getX() + Game.SIZE.getWidth() + 64) { // only render visible tiles, relative to top left edge of the shown screen -64
+        if (tile.getY() >= this.players.getFirst().getY() - Game.SIZE.getHeight() - 64 && tile.getY() <= this.players.getFirst().getY() + Game.SIZE.getHeight() + 64) {
           tile.render(graphics2d);
           tilesRendered++;
         }
@@ -114,7 +113,7 @@ public class Handler {
       graphics2d.setColor(Color.WHITE);
       graphics2d.fillRect(Game.getFrameWidth() - 500 + tile.getX() / 32, tile.getY() / 32, 2, 2);
       graphics2d.setColor(Color.RED);
-      graphics2d.fillRect(Game.getFrameWidth() - 500 + this.player.getX() / 32, (this.player.getY() / 32) - 2, 4 * (this.player.getHeight() / 64), 4 * (this.player.getHeight() / 64));
+      graphics2d.fillRect(Game.getFrameWidth() - 500 + this.players.getFirst().getX() / 32, (this.players.getFirst().getY() / 32) - 2, 4 * (this.players.getFirst().getHeight() / 64), 4 * (this.players.getFirst().getHeight() / 64));
       this.camera.releaseGraphicsFromCamera(graphics2d);
     }
     return tilesRendered;
@@ -159,10 +158,9 @@ public class Handler {
    * 
    * @param player The player.
    */
-  public void addPlayer(GameObject player) {
+  public void addPlayer(Entity player) {
     log.debug("entity added : " + player.getId());
     this.players.add(player);
-    this.player = (Player) player;
   }
 
   public void removeEntity(Entity entity) {

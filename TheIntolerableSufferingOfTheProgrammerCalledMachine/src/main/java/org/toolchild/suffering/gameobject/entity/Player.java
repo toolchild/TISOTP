@@ -1,7 +1,6 @@
 package org.toolchild.suffering.gameobject.entity;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
@@ -15,13 +14,11 @@ import org.toolchild.suffering.gameobject.GameObject;
 import org.toolchild.suffering.gameobject.tile.Tile;
 import org.toolchild.suffering.gfx.Sprite;
 
-public class Player extends GameObject {
+public class Player extends Entity {
   private static final Logger log                  = Logger.getLogger(Player.class);
-  private Movement            movement;
 
   private int                 frame                = 0;
   private int                 frameDelay           = 0;
-  private int                 facing               = 0;
   private int                 jumpCount            = 0;
   private int                 jumpTimeCount        = 0;
   private int                 jumpStartY;
@@ -182,7 +179,8 @@ public class Player extends GameObject {
     }
   }
 
-  private void die() {
+  @Override
+  public void die() {
     this.handler.removePlayer(this);
   }
 
@@ -218,7 +216,7 @@ public class Player extends GameObject {
           String singleTileInteractionStatusMessage = handleSingleTileInteraction(tileInstance);
           if (singleTileInteractionStatusMessage != null) {
             log.debug("single tile interaction: " + singleTileInteractionStatusMessage);
-            if(singleTileInteractionStatusMessage.contains("Top")){
+            if (singleTileInteractionStatusMessage.contains("Top")) {
               tilesInteracting.add(tileInstance);
             }
           }
@@ -226,7 +224,7 @@ public class Player extends GameObject {
       }
     }
     for (Tile tile : tilesInteracting) {
-      this.y= tile.getY() + tile.getHeight();
+      this.y = tile.getY() + tile.getHeight();
     }
     return true;
   }
@@ -264,7 +262,7 @@ public class Player extends GameObject {
     String statusMessage = null;
     if (getBoundsTop().intersects(tile.getBounds())) {
       statusMessage = "level tile interaction: hitTop";
-//      this.y = tile.getY() + tile.getHeight();
+      // this.y = tile.getY() + tile.getHeight();
       this.movement.setVelocityY(0);
       if (this.movement.isJumping()) {
         this.movement.setGravity(1.0);
@@ -308,7 +306,8 @@ public class Player extends GameObject {
     graphics2D.draw(getBoundsRight());
   }
 
-  private void handleAnimationRendering(Graphics graphics) {
+  @Override
+  protected void handleAnimationRendering(Graphics2D graphics) {
     if (this.facing == 0) {
       log.trace("facing left frame " + this.frame);
       if (!this.movement.isMoving()) {
@@ -354,5 +353,8 @@ public class Player extends GameObject {
     graphics2D.drawString("player isRunning: " + this.movement.isMoving(), 0, 9 * this.lineHeight);
     graphics2D.translate(camera.getX(), camera.getY()); // untying graphics from camera TODO: replace by camera.unlock function
   }
+
+  
+ 
 
 }

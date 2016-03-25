@@ -210,7 +210,7 @@ public class Player extends GameObject {
   }
 
   private boolean handleAllTileInteraction() {
-    ArrayList<Tile> tilesInteracting = new ArrayList<Tile>();
+    ArrayList<Tile> tilesInteracting = new ArrayList<>();
     for (GameObject tile : this.handler.getTiles()) {
       if (tile.getX() >= this.x - 5 * 64 && tile.getX() <= this.x + 5 * 64) {
         if (tile.getY() >= this.y - 5 * 64 && tile.getY() <= this.y + 5 * 64) {

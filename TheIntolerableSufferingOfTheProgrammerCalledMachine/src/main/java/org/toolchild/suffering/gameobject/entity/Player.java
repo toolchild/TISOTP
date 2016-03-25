@@ -9,7 +9,6 @@ import org.toolchild.suffering.Camera;
 import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
-import org.toolchild.suffering.entity.movement.Movement;
 import org.toolchild.suffering.gameobject.GameObject;
 import org.toolchild.suffering.gameobject.tile.Tile;
 import org.toolchild.suffering.gfx.Sprite;
@@ -30,7 +29,6 @@ public class Player extends Entity {
 
   public Player(int x, int y, int width, int height, Id id, Handler handler, Sprite[] sprites) {
     super(x, y, width, height, id, handler, sprites);
-    this.movement = new Movement();
     this.movement.setMoveSpeed(10);
     this.jumpStartY = y;
   }
@@ -262,7 +260,6 @@ public class Player extends Entity {
     String statusMessage = null;
     if (getBoundsTop().intersects(tile.getBounds())) {
       statusMessage = "level tile interaction: hitTop";
-      // this.y = tile.getY() + tile.getHeight();
       this.movement.setVelocityY(0);
       if (this.movement.isJumping()) {
         this.movement.setGravity(1.0);

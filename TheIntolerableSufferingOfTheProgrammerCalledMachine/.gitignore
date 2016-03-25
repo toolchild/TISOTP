@@ -1,3 +1,10 @@
 /bin/
 /target/
 /.project
+
+*.class
+
+*.jar
+*.war
+*.ear
+*.project

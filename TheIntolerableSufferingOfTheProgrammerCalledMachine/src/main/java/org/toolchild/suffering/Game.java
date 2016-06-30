@@ -14,17 +14,15 @@ import org.apache.log4j.Logger;
 import org.toolchild.suffering.input.KeyInputManager;
 
 public class Game extends Canvas implements Runnable {
-  private static final long     serialVersionUID            = 5680154129348532365L;
-  private static final Logger   log                         = Logger.getLogger(Game.class);
-  private static final int      TICKS_AND_FRAMES_PER_SECOND = 20;
+  private static final long     serialVersionUID = 5680154129348532365L;
+  private static final Logger   log              = Logger.getLogger(Game.class);
+  private static final int      TICKS_PER_SECOND = 60;
 
-  public static final int       GAME_WIDTH                  = 64;
-  public static final int       SCALE                       = 24;
-  public static final int       GAME_HEIGHT                 = GAME_WIDTH / 16 * 9;
-  public static final Dimension SIZE                        = new Dimension(GAME_WIDTH * SCALE, GAME_HEIGHT * SCALE);
-  public static final String    TITLE                       = "The Intolerable Suffering of the Programmer called Machine";
-
-  public static int             currentTicks                = 0;
+  public static final int       GAME_WIDTH       = 64;
+  public static final int       SCALE            = 24;
+  public static final int       GAME_HEIGHT      = GAME_WIDTH / 16 * 9;
+  public static final Dimension SIZE             = new Dimension(GAME_WIDTH * SCALE, GAME_HEIGHT * SCALE);
+  public static final String    TITLE            = "The Intolerable Suffering of the Programmer called Machine";
 
   private Thread                thread;
   private boolean               isRunning;
@@ -68,10 +66,10 @@ public class Game extends Canvas implements Runnable {
     long lastTime = System.nanoTime();
     long timer = System.currentTimeMillis();
     double delta = 0.0;
-    double ns = 1000000000.0 / TICKS_AND_FRAMES_PER_SECOND;
+    double ns = 1000000000.0 / TICKS_PER_SECOND;
     int currentFrames = 0;
     int lastSecondFrames = 0;
-    currentTicks = 0;
+    int currentTicks = 0;
     int lastSecondTicks = 0;
 
     while (this.isRunning) {

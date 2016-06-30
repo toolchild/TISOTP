@@ -15,13 +15,14 @@ import org.toolchild.suffering.gfx.Sprite;
 
 public class Player extends Entity {
   private static final Logger log                  = Logger.getLogger(Player.class);
-
+private static final int PLAYER_DEFAULT_SIZE = 63;
+  
   private int                 frame                = 0;
   private int                 frameDelay           = 0;
   private int                 jumpCount            = 0;
   private int                 jumpTimeCount        = 0;
   private int                 jumpStartY;
-  private int                 maxJumpHeight        = 64 * 3;
+  private int                 maxJumpHeight        = PLAYER_DEFAULT_SIZE * 3;
   private int                 jumpHeight           = 0;
   private boolean             isValnurable         = true;
   private int                 isValnurableCount    = 0;
@@ -166,7 +167,7 @@ public class Player extends Entity {
 
   private void handleBlueCrystalInteraction(Entity entity) {
     if (entity.getId() == Id.blueCrystal) {
-      if (this.height <= 2 * 64) {
+      if (this.height <= 1.8 * 63) {
         if (getBounds().intersects(entity.getBounds())) {
           this.y = this.y - (int) (this.height * 0.2);
           this.height = (int) (this.height * 1.2);
@@ -208,8 +209,8 @@ public class Player extends Entity {
   private boolean handleAllTileInteraction() {
     ArrayList<Tile> tilesInteracting = new ArrayList<>();
     for (GameObject tile : this.handler.getTiles()) {
-      if (tile.getX() >= this.x - 5 * 64 && tile.getX() <= this.x + 5 * 64) {
-        if (tile.getY() >= this.y - 5 * 64 && tile.getY() <= this.y + 5 * 64) {
+      if (tile.getX() >= this.x - 5 * PLAYER_DEFAULT_SIZE && tile.getX() <= this.x + 5 * PLAYER_DEFAULT_SIZE) {
+        if (tile.getY() >= this.y - 5 * PLAYER_DEFAULT_SIZE && tile.getY() <= this.y + 5 * PLAYER_DEFAULT_SIZE) {
           Tile tileInstance = (Tile) tile;
           String singleTileInteractionStatusMessage = handleSingleTileInteraction(tileInstance);
           if (singleTileInteractionStatusMessage != null) {

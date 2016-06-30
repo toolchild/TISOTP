@@ -16,7 +16,7 @@ import org.toolchild.suffering.input.KeyInputManager;
 public class Game extends Canvas implements Runnable {
   private static final long     serialVersionUID            = 5680154129348532365L;
   private static final Logger   log                         = Logger.getLogger(Game.class);
-  private static final int      TICKS_AND_FRAMES_PER_SECOND = 60;
+  private static final int      TICKS_AND_FRAMES_PER_SECOND = 20;
 
   public static final int       GAME_WIDTH                  = 64;
   public static final int       SCALE                       = 24;

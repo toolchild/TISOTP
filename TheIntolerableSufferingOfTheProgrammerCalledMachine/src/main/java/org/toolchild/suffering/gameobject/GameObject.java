@@ -50,7 +50,7 @@ public abstract class GameObject {
   }
 
   public Rectangle getBoundsBottom() {
-    return new Rectangle(this.x + this.boundsOffset, this.y + this.height, this.width - 2 * this.boundsOffset, this.boundsWidth);
+    return new Rectangle(this.x + this.boundsOffset, this.y + this.height - this.boundsWidth, this.width - 2 * this.boundsOffset, this.boundsWidth);
   }
 
   public Rectangle getBoundsLeft() {

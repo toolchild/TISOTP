@@ -136,11 +136,11 @@ public class Game extends Canvas implements Runnable {
       createBufferStrategy(3);
       return;
     }
-    Graphics graphics = bufferStrategy.getDrawGraphics();
+    Graphics graphics = bufferStrategy.getDrawGraphics(); // TODO: Is this necessary? 
     Graphics2D graphics2d = (Graphics2D) graphics;
     graphics2d.setFont(getFont().deriveFont(Font.BOLD));
     graphics2d.setColor(Color.GRAY);
-    graphics2d.fillRect(0, 0, getWidth(), getHeight());
+//    graphics2d.fillRect(0, 0, getWidth(), getHeight()); this isn't overdrawn by other graphics.
     handler.render(graphics2d, lastSecondTicks, lastSecondFrames);
     bufferStrategy.show();
     graphics.dispose();

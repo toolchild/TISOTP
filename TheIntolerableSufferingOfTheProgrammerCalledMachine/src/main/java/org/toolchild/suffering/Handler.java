@@ -1,7 +1,12 @@
 package org.toolchild.suffering;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.geom.Area;
+import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
@@ -75,10 +80,6 @@ public class Handler {
     int tilesRendered = renderTiles(graphics2d);
     log.trace("tilesRendered: " + tilesRendered);
 
-    this.camera.lockGraphicsToCamera(graphics2d);
-    renderDebug(graphics2d, lastSecondTicks, lastSecondFrames, tilesRendered);
-    this.camera.releaseGraphicsFromCamera(graphics2d);
-
     for (GameObject entity : this.entities) {
       entity.render(graphics2d);
     }
@@ -93,7 +94,22 @@ public class Handler {
       ((Player) player).render(graphics2d, this.camera);
     }
     log.trace("entities: " + this.entities.size());
+    this.camera.lockGraphicsToCamera(graphics2d);
+    // renderLense(graphics2d); // this is ugly
 
+    renderDebug(graphics2d, lastSecondTicks, lastSecondFrames, tilesRendered);
+
+  }
+
+  @SuppressWarnings("unused") // TODO: work in progress
+  private void renderLense(Graphics2D graphics2d) {
+    Area outter = new Area(new Rectangle(0, 0, this.levelWidth * 64, this.levelHeight * 64));
+    int x = (int) Game.SIZE.getWidth() / 10;
+    int y = (int) Game.SIZE.getHeight() / 10;
+    Rectangle inner = new Rectangle(x, y, x * 8, y * 8);
+    outter.subtract(new Area(inner));
+    graphics2d.setColor(Color.BLACK);
+    graphics2d.fill(outter);
   }
 
   private int renderTiles(Graphics2D graphics2d) {
@@ -108,8 +124,8 @@ public class Handler {
         }
       }
     }
-    for (GameObject tile : this.tiles) { // after releasing the camera, draw the tiles, not relative to player
-      this.camera.lockGraphicsToCamera(graphics2d);
+    for (GameObject tile : this.tiles) { 
+      this.camera.lockGraphicsToCamera(graphics2d); // locked to screen/camera
       graphics2d.setColor(Color.WHITE);
       graphics2d.fillRect(Game.getFrameWidth() - 500 + tile.getX() / 32, tile.getY() / 32, 2, 2);
       graphics2d.setColor(Color.RED);

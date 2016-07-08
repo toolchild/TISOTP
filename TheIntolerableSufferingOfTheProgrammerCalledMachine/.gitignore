@@ -1,10 +1,10 @@
 /bin/
 /target/
 /.project
-
+/.settings/
 *.class
 
 *.jar
 *.war
 *.ear
-/.classpath
+/.classpath 

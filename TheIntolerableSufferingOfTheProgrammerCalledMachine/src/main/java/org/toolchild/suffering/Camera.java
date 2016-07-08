@@ -29,7 +29,7 @@ public class Camera {
   }
 
   private void moveY(Player player) {
-    int middleY = (-player.getY() - player.getHeight()) + (int) (Game.SIZE.getHeight() / 2.5); // lowest end of the player y in the middleY of the camera
+    int middleY = (-player.getY() - player.getHeight()) + (int) (Game.SIZE.getHeight() / 2.5); // lowest end of the player y in the middleY of the camera // locked to feet
     this.y = (int) (this.y + (middleY - this.y) * 0.1);
   }
 

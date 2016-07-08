@@ -1,12 +1,9 @@
 package org.toolchild.suffering;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
 import java.awt.geom.Area;
-import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
 import org.apache.log4j.Logger;

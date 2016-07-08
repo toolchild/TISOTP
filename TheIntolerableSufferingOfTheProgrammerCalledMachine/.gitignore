@@ -7,5 +7,4 @@
 *.jar
 *.war
 *.ear
-*.project
 /.classpath

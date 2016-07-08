@@ -9,7 +9,7 @@ public abstract class Tile extends GameObject {
   protected boolean isSolid;
   protected boolean activated = false;
 
-  public Tile(int x, int y, int width, int height, boolean isSolid, Id id, Handler handler, Sprite[] sprites) {
+  public Tile(int x, int y, int width, int height, Id id, Handler handler, Sprite[] sprites, boolean isSolid) {
     super(x, y, width, height, id, handler, sprites);
     this.isSolid = isSolid;
   }

@@ -8,18 +8,15 @@ import org.toolchild.suffering.gfx.Sprite;
 
 public class Grass extends Tile{
 
-  public Grass(int x, int y, int width, int height, boolean isSolid, Id id, Handler handler, Sprite[] sprites) {
-    super(x, y, width, height, isSolid, id, handler, sprites);
+  public Grass(int x, int y, int width, int height, Id id, Handler handler, Sprite[] sprites, boolean isSolid) {
+    super(x, y, width, height, id, handler, sprites, isSolid);
   }
 
-  @Override
-  public void tick() {
-  }
 
   @Override
-  public void render(Graphics2D graphics2D) {
-  
-    graphics2D.drawImage(this.sprites[0].getImage(), this.x, this.y,this.width, this.height, null);
+  public void render(Graphics2D graphics2d) {
+    graphics2d.drawImage(this.sprites[0].getImage(), this.x, this.y,this.width, this.height, null);
   }
+
 
 }

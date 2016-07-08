@@ -20,7 +20,7 @@ public abstract class GameObject {
 
   protected Id       id;
 
-  public abstract void tick();
+//  public abstract void tick();
 
   public abstract void render(Graphics2D graphics2D);
 

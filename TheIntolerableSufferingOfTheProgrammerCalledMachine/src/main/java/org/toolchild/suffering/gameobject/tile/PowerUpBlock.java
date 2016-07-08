@@ -12,12 +12,11 @@ public class PowerUpBlock extends Tile {
   private boolean used    = false;
   private int     spriteY = getY();
 
-  public PowerUpBlock(int x, int y, int width, int height, boolean isSolid, Id id, Handler handler, Sprite[] sprites) {
-    super(x, y, width, height, isSolid, id, handler, sprites);
-    this.sprites = sprites;
+  public PowerUpBlock(int x, int y, int width, int height, Id id, Handler handler, Sprite[] sprites, boolean isSolid) {
+    super(x, y, width, height, id, handler, sprites, isSolid);
+    this.sprites = sprites; // This should be obsolete.
   }
 
-  @Override
   public void tick() {
     if (this.activated && !this.used) {
       this.spriteY--;

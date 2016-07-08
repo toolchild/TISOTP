@@ -23,6 +23,7 @@ public class SpriteManager {
 
   public Sprite[]             grass;
   public Sprite[]             powerUpBlock;
+  public Sprite[] finish;
 
   public Sprite[]             player;
   public Sprite[]             mob1;
@@ -36,6 +37,7 @@ public class SpriteManager {
     initMob1();
     initGrass();
     initPowerUpBlock();
+    initFinish();
   }
 
   private void initLevelImage() {
@@ -96,6 +98,11 @@ public class SpriteManager {
       this.powerUpBlock[i] = this.blueCrystal[i - 2];
     }
   }
+  
+  private void initFinish(){
+    this.finish = new Sprite[1];
+    this.finish[0] = new Sprite(this.spriteSheet, 5 , 0, false); 
+  }
 
   public BufferedImage getLevelImage() {
     return this.levelImage;
@@ -127,6 +134,10 @@ public class SpriteManager {
 
   public BufferedImage getBackground() {
     return this.background;
+  }
+
+  public Sprite[] getFinish() {
+    return this.finish;
   }
 
 }

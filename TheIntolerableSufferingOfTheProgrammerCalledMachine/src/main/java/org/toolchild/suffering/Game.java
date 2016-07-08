@@ -14,35 +14,40 @@ import org.apache.log4j.Logger;
 import org.toolchild.suffering.input.KeyInputManager;
 
 public class Game extends Canvas implements Runnable {
-  private static final long     serialVersionUID = 5680154129348532365L;
-  private static final Logger   log              = Logger.getLogger(Game.class);
-  private static final int      TICKS_PER_SECOND = 60;
+  private static final long         serialVersionUID = 5680154129348532365L;
+  private static final Logger       log              = Logger.getLogger(Game.class);
+  private static final int          TICKS_PER_SECOND = 60;
 
-  public static final int       GAME_WIDTH       = 64;
-  public static final int       SCALE            = 24;
-  public static final int       GAME_HEIGHT      = GAME_WIDTH / 16 * 9;
-  public static final Dimension SIZE             = new Dimension(GAME_WIDTH * SCALE, GAME_HEIGHT * SCALE);
-  public static final String    TITLE            = "The Intolerable Suffering of the Programmer called Machine";
+  public static final int           GAME_WIDTH       = 64;
+  public static final int           SCALE            = 24;
+  public static final int           GAME_HEIGHT      = GAME_WIDTH / 16 * 9;
+  public static final Dimension     SIZE             = new Dimension(GAME_WIDTH * SCALE, GAME_HEIGHT * SCALE);
+  public static final String        TITLE            = "The Intolerable Suffering of the Programmer called Machine";
+  public static final SpriteManager SPRITE_MANAGER   = new SpriteManager();
+  
+  public static final Game GAME = new Game();
 
-  private Thread                thread;
-  private boolean               isRunning;
 
-  public static Handler         handler;
-  public static SpriteManager   spriteManager;
+  private Thread                    thread;
+  public boolean                   isRunning;
 
-  public static KeyInputManager keyInput;
+ 
+
+  public static Handler             handler;
+  public static KeyInputManager     keyInput;
 
   public Game() {
     setPreferredSize(SIZE);
     setMaximumSize(SIZE);
     setMinimumSize(SIZE);
   }
-
+/**
+ * This is the entry point of the program.
+ * @param args There are no arguments implemented.
+ */
   public static void main(String[] args) {
-    Game game = new Game();
-    @SuppressWarnings("unused")
-    JFrame frame = Game.initAndGetJFrame(game);
-    game.start();
+    Game.initAndGetJFrame(GAME);
+    GAME.start();
   }
 
   private synchronized boolean start() {
@@ -76,7 +81,6 @@ public class Game extends Canvas implements Runnable {
       long nowTime = System.nanoTime();
       delta = delta + (nowTime - lastTime) / ns;
       lastTime = nowTime;
-      // log.info(lastTime - nowTime);
       while (delta >= 1) {
         delta--;
         tick();
@@ -86,44 +90,37 @@ public class Game extends Canvas implements Runnable {
       render(lastSecondTicks, lastSecondFrames);
 
       if (System.currentTimeMillis() - timer >= 1000) {
-
         timer = timer + 1000;
         log.info("FPS: " + currentFrames + " Ticks: " + currentTicks);
-
         lastSecondFrames = currentFrames;
         currentFrames = 0;
         lastSecondTicks = currentTicks;
         currentTicks = 0;
-      }
+      }     
     }
-    log.debug("stop: " + stop());
+    this.stop();
   }
 
   private boolean init() {
-
-    spriteManager = new SpriteManager();
-    spriteManager.init();
-    handler = new Handler(spriteManager);
+    SPRITE_MANAGER.init();
+    handler = new Handler(SPRITE_MANAGER);
     addKeyListener(new KeyInputManager());
     keyInput = (KeyInputManager) getKeyListeners()[0];
     keyInput.init();
     return true;
   }
 
-  private synchronized boolean stop() {
-    boolean hasStopped = false;
-    if (this.isRunning) {
-      this.isRunning = false;
+  private synchronized void stop() {
+    if (!this.isRunning) {
       try {
+        log.info("Game about to stop properly.");
         this.thread.join();
       }
       catch (InterruptedException e) {
-        log.error("The " + this.thread.getName() + " did non stop properly.");
+        log.error("The " + this.thread.getName() + " did not stop properly.");
         e.printStackTrace();
       }
-      hasStopped = true;
     }
-    return hasStopped;
   }
 
   private static void tick() {
@@ -136,11 +133,11 @@ public class Game extends Canvas implements Runnable {
       createBufferStrategy(3);
       return;
     }
-    Graphics graphics = bufferStrategy.getDrawGraphics(); // TODO: Is this necessary? 
+    Graphics graphics = bufferStrategy.getDrawGraphics(); // TODO: Is this necessary?
     Graphics2D graphics2d = (Graphics2D) graphics;
     graphics2d.setFont(getFont().deriveFont(Font.BOLD));
     graphics2d.setColor(Color.GRAY);
-//    graphics2d.fillRect(0, 0, getWidth(), getHeight()); this isn't overdrawn by other graphics.
+    // graphics2d.fillRect(0, 0, getWidth(), getHeight()); this isn't overdrawn by other graphics.
     handler.render(graphics2d, lastSecondTicks, lastSecondFrames);
     bufferStrategy.show();
     graphics.dispose();
@@ -164,6 +161,14 @@ public class Game extends Canvas implements Runnable {
 
   public static int getFrameHeight() {
     return GAME_HEIGHT * SCALE;
+  }
+  
+  public boolean isRunning() {
+    return this.isRunning;
+  }
+
+  public void setRunning(boolean isRunning) {
+    this.isRunning = isRunning;
   }
 
 }

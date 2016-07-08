@@ -13,8 +13,10 @@ import org.toolchild.suffering.gfx.Sprite;
 
 public abstract class Entity extends GameObject {
   private static final Logger log    = Logger.getLogger(Entity.class);
-  protected int               facing = 0;                                                                                        // 0 = left; 1 = right
+  protected int               facing = 0;// 0 = left; 1 = right
   protected Movement          movement;
+
+  public abstract void tick();
 
   public Entity(int x, int y, int width, int height, Id id, Handler handler, Sprite[] sprites) {
     super(x, y, width, height, id, handler, sprites);
@@ -78,7 +80,7 @@ public abstract class Entity extends GameObject {
     if (getBoundsTop().intersects(tile.getBounds())) {
       statusMessage = "wall interaction: hitTop";
       this.y = tile.getY() + tile.getHeight();
-      // movement.setVelocityY(0); 
+      // movement.setVelocityY(0);
       if (this.movement.isJumping()) {
         // isJumping = false;
         this.movement.setGravity(0.0);

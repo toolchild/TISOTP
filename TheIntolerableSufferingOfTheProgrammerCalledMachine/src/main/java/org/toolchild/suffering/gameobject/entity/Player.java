@@ -15,8 +15,8 @@ import org.toolchild.suffering.gfx.Sprite;
 
 public class Player extends Entity {
   private static final Logger log                  = Logger.getLogger(Player.class);
-private static final int PLAYER_DEFAULT_SIZE = 63;
-  
+  private static final int    PLAYER_DEFAULT_SIZE  = 63;
+
   private int                 frame                = 0;
   private int                 frameDelay           = 0;
   private int                 jumpCount            = 0;
@@ -142,8 +142,10 @@ private static final int PLAYER_DEFAULT_SIZE = 63;
   }
 
   private void handleSingleEntityInteraction(Entity entity) {
+    
     handleBlueCrystalInteraction(entity);
     handleMob1Interaction(entity);
+    
   }
 
   private void handleMob1Interaction(Entity entity) {
@@ -177,6 +179,8 @@ private static final int PLAYER_DEFAULT_SIZE = 63;
       }
     }
   }
+
+
 
   @Override
   public void die() {
@@ -236,7 +240,9 @@ private static final int PLAYER_DEFAULT_SIZE = 63;
       statusMessage = handlePowerUpBlockInteraction(tile);
     } else if (tile.getId() == Id.wall) {
       statusMessage = handleLevelTileInteraction(tile);
-    } else statusMessage = "false, tile id not recognized";
+    } else if (tile.getId() == Id.finish) {
+      statusMessage = handleFinishInteraction(tile); 
+    }  else statusMessage = "false, tile id not recognized";
 
     return statusMessage;
   }
@@ -248,6 +254,15 @@ private static final int PLAYER_DEFAULT_SIZE = 63;
       powerUpBlock.setActivated(true);
     }
     handleLevelTileInteraction(powerUpBlock);
+    return statusMessage;
+  }
+  
+  private String handleFinishInteraction(Tile finish) {
+    String statusMessage = null;
+    if (getBounds().intersects(finish.getBounds())) {
+      statusMessage = "finish interaction: Finish touched";
+      Game.GAME.setRunning(false);
+    }
     return statusMessage;
   }
 
@@ -351,8 +366,5 @@ private static final int PLAYER_DEFAULT_SIZE = 63;
     graphics2D.drawString("player isRunning: " + this.movement.isMoving(), 0, 9 * this.lineHeight);
     graphics2D.translate(camera.getX(), camera.getY()); // untying graphics from camera TODO: replace by camera.unlock function
   }
-
-  
- 
 
 }

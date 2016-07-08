@@ -2,8 +2,6 @@ package org.toolchild.suffering;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.geom.Area;
 import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
@@ -86,23 +84,32 @@ public class Handler {
 
     int tilesRendered = renderTiles(graphics2d);
     log.trace("tilesRendered: " + tilesRendered);
+    int entitiesRendered = renderEntities(graphics2d);
+    log.trace("entitiesRendered: " + entitiesRendered);
 
-    for (GameObject entity : this.entities) {
-      entity.render(graphics2d);
-    }
-    for (GameObject entity : this.entities) { // after releasing the camera, draw the tiles, not relative to player
-      this.camera.lockGraphicsToCamera(graphics2d);
-      graphics2d.setColor(Color.YELLOW);
-      graphics2d.fillRect(Game.getFrameWidth() - 500 + entity.getX() / 32, (entity.getY() / 32) - 2, 4, 4);
-      this.camera.releaseGraphicsFromCamera(graphics2d);
-    }
-
-    for (GameObject player : this.players) {
-      ((Player) player).render(graphics2d, this.camera);
+    for (Player player : this.players) { // more than 1 player compatible
+      player.render(graphics2d, this.camera);
     }
     log.trace("entities: " + this.entities.size());
     this.camera.lockGraphicsToCamera(graphics2d);
-    renderDebug(graphics2d, lastSecondTicks, lastSecondFrames, tilesRendered);
+    renderMinimap(graphics2d);
+    renderDebug(graphics2d, lastSecondTicks, lastSecondFrames, tilesRendered, entitiesRendered);
+  }
+
+  private void renderMinimap(Graphics2D graphics2d) {
+    for (GameObject entity : this.entities) { // after releasing the camera, draw the tiles, not relative to player
+      graphics2d.setColor(Color.YELLOW);
+      graphics2d.fillRect(Game.getFrameWidth() - 500 + entity.getX() / 32, (entity.getY() / 32) - 2, 4, 4);
+    }
+  }
+
+  private int renderEntities(Graphics2D graphics2d) {
+    int entitiesRendered = 0;
+    for (GameObject entity : this.entities) {
+      entity.render(graphics2d);
+      entitiesRendered++;
+    }
+    return entitiesRendered;
   }
 
   private int renderTiles(Graphics2D graphics2d) {
@@ -126,7 +133,7 @@ public class Handler {
     return tilesRendered;
   }
 
-  private void renderDebug(Graphics2D graphics, int lastSecondTicks, int lastSecondFrames, int tilesRendered) {
+  private void renderDebug(Graphics2D graphics, int lastSecondTicks, int lastSecondFrames, int tilesRendered, int entitiesRendered) {
     int column = 150;
     int lineHeight = 20;
     graphics.setColor(Color.WHITE);
@@ -134,6 +141,9 @@ public class Handler {
     graphics.drawString("Frames: " + lastSecondFrames, 0, 2 * lineHeight);
     graphics.drawString("tiles rendered: " + tilesRendered, 2 * column, 3 * lineHeight);
     graphics.drawString("tiles ticked: " + this.tilesTicked, 2 * column, 4 * lineHeight);
+    graphics.drawString("entities rendered: " + entitiesRendered, 2 * column, 5 * lineHeight);
+    graphics.drawString("entities ticked: " + this.entitiesTicked, 2 * column, 6 * lineHeight);
+
   }
 
   private void createLevel() {
@@ -147,11 +157,11 @@ public class Handler {
         int blue = (pixel) & 0xff;
         int size = 64;
         if (red == 0 && green == 0 && blue == 255) addPlayer(new Player(x * size, y * size, size, size, Id.player, this, Game.SPRITE_MANAGER.getPlayer()));
-        if (red == 0 && green == 0 && blue == 0) addTile(new Grass(x * size, y * size, size, size, Id.wall, this, Game.SPRITE_MANAGER.getGrass(), true));
-        if (red == 255 && green == 255 && blue == 0) addTile(new PowerUpBlock(x * size, y * size, size, size, Id.powerUpBlock, this, Game.SPRITE_MANAGER.powerUpBlock, true));
-        if (red == 100 && green == 100 && blue == 100) addTile(new Finish(x * size, y * size, size, size, Id.finish, this, Game.SPRITE_MANAGER.getFinish(), true));
-        if (red == 66 && green == 66 && blue == 66) addEntity(new Mob1(x * size, y * size, size, size, Id.mob1, this, Game.SPRITE_MANAGER.getMob1()));
-        if (red == 255 && green == 0 && blue == 0) addEntity(new BlueCrystal(x * size, y * size, size, size, Id.blueCrystal, this, Game.SPRITE_MANAGER.getBlueCrystal()));
+        else if (red == 0 && green == 0 && blue == 0) addTile(new Grass(x * size, y * size, size, size, Id.wall, this, Game.SPRITE_MANAGER.getGrass(), true));
+        else if (red == 255 && green == 255 && blue == 0) addTile(new PowerUpBlock(x * size, y * size, size, size, Id.powerUpBlock, this, Game.SPRITE_MANAGER.getPowerUpBlock(), true));
+        else if (red == 100 && green == 100 && blue == 100) addTile(new Finish(x * size, y * size, size, size, Id.finish, this, Game.SPRITE_MANAGER.getFinish(), true));
+        else if (red == 66 && green == 66 && blue == 66) addEntity(new Mob1(x * size, y * size, size, size, Id.mob1, this, Game.SPRITE_MANAGER.getMob1()));
+        else if (red == 255 && green == 0 && blue == 0) addEntity(new BlueCrystal(x * size, y * size, size, size, Id.blueCrystal, this, Game.SPRITE_MANAGER.getBlueCrystal()));
       }
     }
   }

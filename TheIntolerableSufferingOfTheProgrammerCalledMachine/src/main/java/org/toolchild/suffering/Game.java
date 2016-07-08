@@ -27,7 +27,7 @@ public class Game extends Canvas implements Runnable {
   public static final Game          GAME             = new Game();
 
   private Thread                    thread;
-  public boolean                    isRunning;
+  private boolean                    isRunning;
 
   public static final Handler       HANDLER          = new Handler();
   public static KeyInputManager     keyInput;

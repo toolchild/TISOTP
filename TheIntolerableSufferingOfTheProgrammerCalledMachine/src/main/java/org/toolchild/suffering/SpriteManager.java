@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
 import org.toolchild.suffering.gfx.Sprite;
 import org.toolchild.suffering.gfx.SpriteSheet;
+
 /**
  * Loads the sprites and provides them in the needed object form.
  * 
@@ -26,13 +27,13 @@ public class SpriteManager {
   private BufferedImage       background;
   private BufferedImage       levelImage;
 
-  public Sprite[]             grass;
-  public Sprite[]             powerUpBlock;
-  public Sprite[] finish;
+  private Sprite[]            grass;
+  private Sprite[]            powerUpBlock;
+  private Sprite[]            finish;
 
-  public Sprite[]             player;
-  public Sprite[]             mob1;
-  public Sprite[]             blueCrystal;
+  private Sprite[]            player;
+  private Sprite[]            mob1;
+  private Sprite[]            blueCrystal;
 
   public void init() {
     initSpriteSheets();
@@ -50,7 +51,8 @@ public class SpriteManager {
       this.levelImage = ImageIO.read(getClass().getResource("/level1.png"));
     }
     catch (IOException e) {
-      log.error("LevelImage not found: '" + e.getMessage() + "'");    }
+      log.error("LevelImage not found: '" + e.getMessage() + "'");
+    }
   }
 
   private void initSpriteSheets() {
@@ -103,10 +105,10 @@ public class SpriteManager {
       this.powerUpBlock[i] = this.blueCrystal[i - 2];
     }
   }
-  
-  private void initFinish(){
+
+  private void initFinish() {
     this.finish = new Sprite[1];
-    this.finish[0] = new Sprite(this.spriteSheet, 5 , 0, false); 
+    this.finish[0] = new Sprite(this.spriteSheet, 5, 0, false);
   }
 
   public BufferedImage getLevelImage() {

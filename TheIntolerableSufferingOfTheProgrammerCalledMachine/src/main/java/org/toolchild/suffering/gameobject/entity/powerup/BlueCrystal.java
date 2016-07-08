@@ -9,6 +9,11 @@ import org.toolchild.suffering.Id;
 import org.toolchild.suffering.gameobject.entity.Entity;
 import org.toolchild.suffering.gfx.Sprite;
 
+/**
+ * Can be picked up by touch and makes the player grow.
+ * @author Bob
+ *
+ */
 public class BlueCrystal extends Entity {
   private static final Logger log        = Logger.getLogger(BlueCrystal.class);
   private int                 frame      = 0;

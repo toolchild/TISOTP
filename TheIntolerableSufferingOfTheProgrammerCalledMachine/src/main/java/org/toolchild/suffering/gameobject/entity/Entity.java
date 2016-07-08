@@ -17,7 +17,16 @@ public abstract class Entity extends GameObject {
   protected Movement          movement;
 
   public abstract void tick();
-
+/**
+ * 
+ * @param x x-coordinate
+ * @param y y-coordinate
+ * @param width
+ * @param height
+ * @param id
+ * @param handler
+ * @param sprites
+ */
   public Entity(int x, int y, int width, int height, Id id, Handler handler, Sprite[] sprites) {
     super(x, y, width, height, id, handler, sprites);
     this.movement = new Movement();

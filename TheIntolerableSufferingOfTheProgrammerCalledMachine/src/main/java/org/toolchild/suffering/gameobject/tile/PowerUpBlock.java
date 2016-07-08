@@ -6,7 +6,11 @@ import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
 import org.toolchild.suffering.gameobject.entity.powerup.BlueCrystal;
 import org.toolchild.suffering.gfx.Sprite;
-
+/**
+ * The PowerUpBlock holds a {@link BlueCrystal}.
+ * @author Bob
+ *
+ */
 public class PowerUpBlock extends Tile {
 
   private boolean used    = false;

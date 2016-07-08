@@ -42,9 +42,6 @@ public class BlueCrystal extends Entity {
   private boolean updatePosition() {
     this.x = this.x + this.movement.getVelocityX();
     this.y = this.y + this.movement.getVelocityY();
-    // TODO: use for level bounds
-    // if (x <= 0) x = 0;
-    // if (x + this.width >= Game.SIZE.getWidth()) x = (int) (Game.SIZE.getWidth() - this.width);
     return true;
   }
 

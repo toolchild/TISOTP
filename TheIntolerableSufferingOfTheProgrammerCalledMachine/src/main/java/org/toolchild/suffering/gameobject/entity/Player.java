@@ -13,6 +13,12 @@ import org.toolchild.suffering.gameobject.GameObject;
 import org.toolchild.suffering.gameobject.tile.Tile;
 import org.toolchild.suffering.gfx.Sprite;
 
+/**
+ * The {@link Entity} controlled by the person playing this game.
+ * 
+ * @author Bob
+ *
+ */
 public class Player extends Entity {
   private static final Logger log                  = Logger.getLogger(Player.class);
   private static final int    PLAYER_DEFAULT_SIZE  = 63;
@@ -87,7 +93,7 @@ public class Player extends Entity {
 
   @Override
   public void render(Graphics2D graphics2D) {
-    // TODO Auto-generated method stub
+    // a special render method is needed.
   }
 
   public void render(Graphics2D graphics2D, Camera camera) {
@@ -136,16 +142,14 @@ public class Player extends Entity {
 
   private void handleAllEntityInteraction() {
     for (int e = 0; e < this.handler.getEntities().size(); e++) { // need to use this for loop and
-      Entity entity = (Entity) this.handler.getEntities().get(e); // get the entity to avoid an UnconcurrentModificationException
+      Entity entity = this.handler.getEntities().get(e); // get the entity to avoid an UnconcurrentModificationException
       handleSingleEntityInteraction(entity);
     }
   }
 
   private void handleSingleEntityInteraction(Entity entity) {
-    
     handleBlueCrystalInteraction(entity);
     handleMob1Interaction(entity);
-    
   }
 
   private void handleMob1Interaction(Entity entity) {
@@ -179,8 +183,6 @@ public class Player extends Entity {
       }
     }
   }
-
-
 
   @Override
   public void die() {
@@ -241,8 +243,8 @@ public class Player extends Entity {
     } else if (tile.getId() == Id.wall) {
       statusMessage = handleLevelTileInteraction(tile);
     } else if (tile.getId() == Id.finish) {
-      statusMessage = handleFinishInteraction(tile); 
-    }  else statusMessage = "false, tile id not recognized";
+      statusMessage = handleFinishInteraction(tile);
+    } else statusMessage = "false, tile id not recognized";
 
     return statusMessage;
   }
@@ -256,7 +258,7 @@ public class Player extends Entity {
     handleLevelTileInteraction(powerUpBlock);
     return statusMessage;
   }
-  
+
   private String handleFinishInteraction(Tile finish) {
     String statusMessage = null;
     if (getBounds().intersects(finish.getBounds())) {
@@ -345,13 +347,11 @@ public class Player extends Entity {
     graphics2D.drawString("player y : " + this.y, this.column, 3 * this.lineHeight);
     graphics2D.drawString("camera x : " + camera.getX(), 0, 4 * this.lineHeight);
     graphics2D.drawString("camera y : " + camera.getY(), this.column, 4 * this.lineHeight);
-    // graphics.drawString("camera y * player y : " + ((double)camera.y * (double)y), 3*column, 4 * lineHeight);
 
     graphics2D.drawLine(Game.getFrameWidth() - 500, Game.getFrameHeight(), Game.getFrameWidth() - 500, Game.getFrameHeight() - 300);
     graphics2D.drawLine(Game.getFrameWidth() - 500, Game.getFrameHeight(), Game.getFrameWidth(), Game.getFrameHeight());
     graphics2D.fillRect(Game.getFrameWidth() - 500 + 5 * this.jumpTimeCount, Game.getFrameHeight() - 10 - this.jumpHeight, 10, 10);
     graphics2D.drawString("" + this.jumpHeight, Game.getFrameWidth() - 500 + 5 * this.jumpTimeCount, Game.getFrameHeight() - 10 - this.jumpHeight);
-    graphics2D.finalize();
 
     graphics2D.drawString("player velocity x : " + this.movement.getVelocityX(), 0, 5 * this.lineHeight);
     graphics2D.drawString("player velocity y : " + this.movement.getVelocityY(), 0, 6 * this.lineHeight);
@@ -364,7 +364,7 @@ public class Player extends Entity {
     graphics2D.drawString("player gravity : " + Double.toString(this.movement.getGravity()).substring(0, gravityStringLength), 0, 7 * this.lineHeight);
     graphics2D.drawString("player facing : " + (this.facing == 0 ? "Left" : "Right"), 0, 8 * this.lineHeight);
     graphics2D.drawString("player isRunning: " + this.movement.isMoving(), 0, 9 * this.lineHeight);
-    graphics2D.translate(camera.getX(), camera.getY()); // untying graphics from camera TODO: replace by camera.unlock function
+    camera.releaseGraphicsFromCamera(graphics2D);
   }
 
 }

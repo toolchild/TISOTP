@@ -8,7 +8,13 @@ import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Id;
 import org.toolchild.suffering.gameobject.GameObject;
 import org.toolchild.suffering.gameobject.entity.Player;
-
+/**
+ * 
+ * The KeyInputManager adds functionality to the {@link KeyListener}.
+ * 
+ * @author Bob
+ *
+ */
 public class KeyInputManager implements KeyListener {
 
   private static final Logger log = Logger.getLogger(KeyInputManager.class);
@@ -61,7 +67,7 @@ public class KeyInputManager implements KeyListener {
   @Override
   public void keyPressed(KeyEvent e) {
     int key = e.getKeyCode();
-    for (GameObject player : Game.handler.getPlayers()) {
+    for (GameObject player : Game.HANDLER.getPlayers()) {
       if (player.getId() == Id.player) {
         switch (key) {
           case KeyEvent.VK_W: {
@@ -87,7 +93,7 @@ public class KeyInputManager implements KeyListener {
   @Override
   public void keyReleased(KeyEvent e) {
     int key = e.getKeyCode();
-    for (GameObject player : Game.handler.getPlayers()) {
+    for (GameObject player : Game.HANDLER.getPlayers()) {
       if (player.getId() == Id.player) {
         switch (key) {
           case KeyEvent.VK_W: {
@@ -111,6 +117,8 @@ public class KeyInputManager implements KeyListener {
   }
 
   @Override
-  public void keyTyped(KeyEvent e) {}
+  public void keyTyped(KeyEvent e) {
+    // inherited but not used
+  }
 
 }

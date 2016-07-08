@@ -8,7 +8,12 @@ import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
 import org.toolchild.suffering.gameobject.entity.Entity;
 import org.toolchild.suffering.gfx.Sprite;
-
+/**
+ * Mob1 is a standard mob.
+ * 
+ * @author Bob
+ *
+ */
 public class Mob1 extends Entity {
   private static final Logger log        = Logger.getLogger(Mob1.class);
 

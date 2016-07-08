@@ -17,34 +17,40 @@ import org.toolchild.suffering.gameobject.tile.Grass;
 import org.toolchild.suffering.gameobject.tile.PowerUpBlock;
 import org.toolchild.suffering.gameobject.tile.Tile;
 
+/**
+ * The Handler for every {@link GameObject}, the {@link SpriteManager} and the {@link Camera}.
+ * 
+ * @author toolchild
+ *
+ */
 public class Handler {
   private static final Logger log      = Logger.getLogger(Handler.class);
   private Camera              camera;
   private LinkedList<Entity>  entities = new LinkedList<>();
   private LinkedList<Tile>    tiles    = new LinkedList<>();
   private LinkedList<Player>  players  = new LinkedList<>();
-  private SpriteManager       spriteManager;
-  public int                  tilesTicked;
-  public int                  entitiesTicked;
+  private int                 tilesTicked;
+  private int                 entitiesTicked;
+  private int                 levelWidth;
+  private int                 levelHeight;
 
-  int                         levelWidth;
-  int                         levelHeight;
-
-  public Handler(SpriteManager spriteManager) {
+  public Handler() {
     this.camera = new Camera(); // the new camera is locked to the player from start
-    this.spriteManager = spriteManager;
+  }
+
+  public void init() {
     createLevel();
   }
 
   public void tick() {
-    for (Entity player : this.players) {
+    for (Player player : this.players) {
       if (player.getId() == Id.player) {
-        this.camera.tick((Player) player);
+        this.camera.tick(player);
       }
     }
 
     for (int e = 0; e < this.players.size(); e++) {
-      Entity player = (Entity) this.players.get(e);
+      Player player = this.players.get(e);
       player.tick();
     }
 
@@ -76,7 +82,7 @@ public class Handler {
    */
   public void render(Graphics2D graphics2d, int lastSecondTicks, int lastSecondFrames) {
     this.camera.releaseGraphicsFromCamera(graphics2d);
-    graphics2d.drawImage(this.spriteManager.getBackground(), 0, 0, this.levelWidth * 64, this.levelHeight * 64, null);
+    graphics2d.drawImage(Game.SPRITE_MANAGER.getBackground(), 0, 0, this.levelWidth * 64, this.levelHeight * 64, null);
 
     int tilesRendered = renderTiles(graphics2d);
     log.trace("tilesRendered: " + tilesRendered);
@@ -96,28 +102,12 @@ public class Handler {
     }
     log.trace("entities: " + this.entities.size());
     this.camera.lockGraphicsToCamera(graphics2d);
-    // renderLense(graphics2d); // this is ugly
-
     renderDebug(graphics2d, lastSecondTicks, lastSecondFrames, tilesRendered);
-
-  }
-
-  @SuppressWarnings("unused") // TODO: work in progress
-  private void renderLense(Graphics2D graphics2d) {
-    Area outter = new Area(new Rectangle(0, 0, this.levelWidth * 64, this.levelHeight * 64));
-    int x = (int) Game.SIZE.getWidth() / 10;
-    int y = (int) Game.SIZE.getHeight() / 10;
-    Rectangle inner = new Rectangle(x, y, x * 8, y * 8);
-    outter.subtract(new Area(inner));
-    graphics2d.setColor(Color.BLACK);
-    graphics2d.fill(outter);
   }
 
   private int renderTiles(Graphics2D graphics2d) {
-
     int tilesRendered = 0;
     for (GameObject tile : this.tiles) { // after releasing the camera, draw the tiles, not relative to player
-
       if (tile.getX() >= this.players.getFirst().getX() - Game.SIZE.getWidth() - 64 && tile.getX() <= this.players.getFirst().getX() + Game.SIZE.getWidth() + 64) { // only render visible tiles, relative to top left edge of the shown screen -64
         if (tile.getY() >= this.players.getFirst().getY() - Game.SIZE.getHeight() - 64 && tile.getY() <= this.players.getFirst().getY() + Game.SIZE.getHeight() + 64) {
           tile.render(graphics2d);
@@ -146,22 +136,22 @@ public class Handler {
     graphics.drawString("tiles ticked: " + this.tilesTicked, 2 * column, 4 * lineHeight);
   }
 
-  public void createLevel() {
-    this.levelWidth = this.spriteManager.getLevelImage().getWidth();
-    this.levelHeight = this.spriteManager.getLevelImage().getHeight();
+  private void createLevel() {
+    this.levelWidth = Game.SPRITE_MANAGER.getLevelImage().getWidth();
+    this.levelHeight = Game.SPRITE_MANAGER.getLevelImage().getHeight();
     for (int y = 0; y < this.levelHeight; y++) {
       for (int x = 0; x < this.levelWidth; x++) {
-        int pixel = this.spriteManager.getLevelImage().getRGB(x, y);
+        int pixel = Game.SPRITE_MANAGER.getLevelImage().getRGB(x, y);
         int red = (pixel >> 16) & 0xff;
         int green = (pixel >> 8) & 0xff;
         int blue = (pixel) & 0xff;
         int size = 64;
-        if (red == 0 && green == 0 && blue == 255) addPlayer(new Player(x * size, y * size, size, size, Id.player, this, this.spriteManager.getPlayer()));
-        if (red == 0 && green == 0 && blue == 0) addTile(new Grass(x * size, y * size, size, size, Id.wall, this, this.spriteManager.getGrass(), true));
-        if (red == 255 && green == 255 && blue == 0) addTile(new PowerUpBlock(x * size, y * size, size, size, Id.powerUpBlock, this, this.spriteManager.powerUpBlock, true));
-        if (red == 100 && green == 100 && blue == 100) addTile(new Finish(x * size, y * size, size, size, Id.finish, this, this.spriteManager.getFinish(), true));
-        if (red == 66 && green == 66 && blue == 66) addEntity(new Mob1(x * size, y * size, size, size, Id.mob1, this, this.spriteManager.getMob1()));
-        if (red == 255 && green == 0 && blue == 0) addEntity(new BlueCrystal(x * size, y * size, size, size, Id.blueCrystal, this, this.spriteManager.getBlueCrystal()));
+        if (red == 0 && green == 0 && blue == 255) addPlayer(new Player(x * size, y * size, size, size, Id.player, this, Game.SPRITE_MANAGER.getPlayer()));
+        if (red == 0 && green == 0 && blue == 0) addTile(new Grass(x * size, y * size, size, size, Id.wall, this, Game.SPRITE_MANAGER.getGrass(), true));
+        if (red == 255 && green == 255 && blue == 0) addTile(new PowerUpBlock(x * size, y * size, size, size, Id.powerUpBlock, this, Game.SPRITE_MANAGER.powerUpBlock, true));
+        if (red == 100 && green == 100 && blue == 100) addTile(new Finish(x * size, y * size, size, size, Id.finish, this, Game.SPRITE_MANAGER.getFinish(), true));
+        if (red == 66 && green == 66 && blue == 66) addEntity(new Mob1(x * size, y * size, size, size, Id.mob1, this, Game.SPRITE_MANAGER.getMob1()));
+        if (red == 255 && green == 0 && blue == 0) addEntity(new BlueCrystal(x * size, y * size, size, size, Id.blueCrystal, this, Game.SPRITE_MANAGER.getBlueCrystal()));
       }
     }
   }

@@ -5,6 +5,12 @@ import org.toolchild.suffering.Id;
 import org.toolchild.suffering.gameobject.GameObject;
 import org.toolchild.suffering.gfx.Sprite;
 
+/**
+ * Base for all Tiles used in the game.
+ * 
+ * @author Bob
+ *
+ */
 public abstract class Tile extends GameObject {
   protected boolean isSolid;
   protected boolean activated = false;

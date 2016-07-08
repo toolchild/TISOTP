@@ -4,7 +4,6 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 
@@ -24,16 +23,13 @@ public class Game extends Canvas implements Runnable {
   public static final Dimension     SIZE             = new Dimension(GAME_WIDTH * SCALE, GAME_HEIGHT * SCALE);
   public static final String        TITLE            = "The Intolerable Suffering of the Programmer called Machine";
   public static final SpriteManager SPRITE_MANAGER   = new SpriteManager();
-  
-  public static final Game GAME = new Game();
 
+  public static final Game          GAME             = new Game();
 
   private Thread                    thread;
-  public boolean                   isRunning;
+  public boolean                    isRunning;
 
- 
-
-  public static Handler             handler;
+  public static final Handler       HANDLER          = new Handler();
   public static KeyInputManager     keyInput;
 
   public Game() {
@@ -41,10 +37,12 @@ public class Game extends Canvas implements Runnable {
     setMaximumSize(SIZE);
     setMinimumSize(SIZE);
   }
-/**
- * This is the entry point of the program.
- * @param args There are no arguments implemented.
- */
+
+  /**
+   * This is the entry point of the program.
+   * 
+   * @param args There are no arguments implemented.
+   */
   public static void main(String[] args) {
     Game.initAndGetJFrame(GAME);
     GAME.start();
@@ -96,14 +94,14 @@ public class Game extends Canvas implements Runnable {
         currentFrames = 0;
         lastSecondTicks = currentTicks;
         currentTicks = 0;
-      }     
+      }
     }
     this.stop();
   }
 
   private boolean init() {
     SPRITE_MANAGER.init();
-    handler = new Handler(SPRITE_MANAGER);
+    HANDLER.init();
     addKeyListener(new KeyInputManager());
     keyInput = (KeyInputManager) getKeyListeners()[0];
     keyInput.init();
@@ -124,28 +122,32 @@ public class Game extends Canvas implements Runnable {
   }
 
   private static void tick() {
-    handler.tick();
+    HANDLER.tick();
   }
 
+  /**
+   * Renders all graphics.
+   * 
+   * @param lastSecondTicks
+   * @param lastSecondFrames
+   */
   public void render(int lastSecondTicks, int lastSecondFrames) {
     BufferStrategy bufferStrategy = getBufferStrategy();
     if (bufferStrategy == null) {
       createBufferStrategy(3);
       return;
     }
-    Graphics graphics = bufferStrategy.getDrawGraphics(); // TODO: Is this necessary?
-    Graphics2D graphics2d = (Graphics2D) graphics;
+    Graphics2D graphics2d = (Graphics2D) bufferStrategy.getDrawGraphics();
     graphics2d.setFont(getFont().deriveFont(Font.BOLD));
     graphics2d.setColor(Color.GRAY);
-    // graphics2d.fillRect(0, 0, getWidth(), getHeight()); this isn't overdrawn by other graphics.
-    handler.render(graphics2d, lastSecondTicks, lastSecondFrames);
+    HANDLER.render(graphics2d, lastSecondTicks, lastSecondFrames);
     bufferStrategy.show();
-    graphics.dispose();
+    graphics2d.dispose();
   }
 
   private static JFrame initAndGetJFrame(Game game) {
     JFrame frame = new JFrame(TITLE);
-    // frame.setUndecorated(true);
+    // frame.setUndecorated(true); this must be switched by a configuration.
     frame.add(game);
     frame.pack();
     frame.setResizable(false);
@@ -162,7 +164,7 @@ public class Game extends Canvas implements Runnable {
   public static int getFrameHeight() {
     return GAME_HEIGHT * SCALE;
   }
-  
+
   public boolean isRunning() {
     return this.isRunning;
   }

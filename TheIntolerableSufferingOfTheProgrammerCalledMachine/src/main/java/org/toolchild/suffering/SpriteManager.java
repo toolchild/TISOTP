@@ -8,7 +8,12 @@ import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
 import org.toolchild.suffering.gfx.Sprite;
 import org.toolchild.suffering.gfx.SpriteSheet;
-
+/**
+ * Loads the sprites and provides them in the needed object form.
+ * 
+ * @author Bob
+ *
+ */
 public class SpriteManager {
   private static final Logger log = Logger.getLogger(SpriteManager.class);
 

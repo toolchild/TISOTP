@@ -81,8 +81,5 @@ public abstract class GameObject {
     return this.id;
   }
 
-  public Handler getHandler() {
-    return this.handler;
-  }
 
 }

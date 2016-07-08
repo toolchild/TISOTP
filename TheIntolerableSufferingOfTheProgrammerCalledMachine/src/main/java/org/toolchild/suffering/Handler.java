@@ -22,15 +22,15 @@ import org.toolchild.suffering.gameobject.tile.Tile;
  *
  */
 public class Handler {
-  private static final Logger log      = Logger.getLogger(Handler.class);
-  private Camera              camera;
-  private LinkedList<Entity>  entities = new LinkedList<>();
-  private LinkedList<Tile>    tiles    = new LinkedList<>();
-  private LinkedList<Player>  players  = new LinkedList<>();
-  private int                 tilesTicked;
-  private int                 entitiesTicked;
-  private int                 levelWidth;
-  private int                 levelHeight;
+  private static final Logger    log      = Logger.getLogger(Handler.class);
+  private Camera                 camera;
+  private LinkedList<GameObject> entities = new LinkedList<>();
+  private LinkedList<GameObject> tiles    = new LinkedList<>();
+  private LinkedList<GameObject> players  = new LinkedList<>();
+  private int                    tilesTicked;
+  private int                    entitiesTicked;
+  private int                    levelWidth;
+  private int                    levelHeight;
 
   public Handler() {
     this.camera = new Camera(); // the new camera is locked to the player from start
@@ -41,24 +41,25 @@ public class Handler {
   }
 
   public void tick() {
-    for (Player player : this.players) {
+    for (GameObject player : this.players) {
       if (player.getId() == Id.player) {
-        this.camera.tick(player);
+        this.camera.tick((Player) player);
       }
     }
 
     for (int e = 0; e < this.players.size(); e++) {
-      Player player = this.players.get(e);
+      Player player = (Player) this.players.get(e);
       player.tick();
     }
 
     this.entitiesTicked = 0;
     for (int e = 0; e < this.entities.size(); e++) {
-      this.entities.get(e).tick();
+      Entity entity = (Entity) this.entities.get(e);
+      entity.tick();
       this.entitiesTicked++;
     }
     this.tilesTicked = 0;
-    for (Tile tile : this.tiles) {
+    for (GameObject tile : this.tiles) {
       if (tile.getId() == Id.powerUpBlock) {
         PowerUpBlock powerUpBlock = (PowerUpBlock) tile;
         if (powerUpBlock.getX() >= this.players.getFirst().getX() - Game.SIZE.getWidth() - 64 && tile.getX() <= this.players.getFirst().getX() + Game.SIZE.getWidth() + 64) { // only ticks visible tiles, relative to top left edge of the shown screen -64
@@ -87,8 +88,8 @@ public class Handler {
     int entitiesRendered = renderEntities(graphics2d);
     log.trace("entitiesRendered: " + entitiesRendered);
 
-    for (Player player : this.players) { // more than 1 player compatible
-      player.render(graphics2d, this.camera);
+    for (GameObject player : this.players) { // more than 1 player compatible
+      ((Player) player).render(graphics2d, this.camera);
     }
     log.trace("entities: " + this.entities.size());
     this.camera.lockGraphicsToCamera(graphics2d);
@@ -197,11 +198,11 @@ public class Handler {
     return this.camera;
   }
 
-  public LinkedList<Entity> getEntities() {
+  public LinkedList<GameObject> getEntities() {
     return this.entities;
   }
 
-  public LinkedList<Tile> getTiles() {
+  public LinkedList<GameObject> getTiles() {
     return this.tiles;
   }
 
@@ -209,7 +210,7 @@ public class Handler {
     this.players.remove(player);
   }
 
-  public LinkedList<Player> getPlayers() {
+  public LinkedList<GameObject> getPlayers() {
     return this.players;
   }
 

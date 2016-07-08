@@ -142,7 +142,7 @@ public class Player extends Entity {
 
   private void handleAllEntityInteraction() {
     for (int e = 0; e < this.handler.getEntities().size(); e++) { // need to use this for loop and
-      Entity entity = this.handler.getEntities().get(e); // get the entity to avoid an UnconcurrentModificationException
+      Entity entity = (Entity)this.handler.getEntities().get(e); // get the entity to avoid an UnconcurrentModificationException
       handleSingleEntityInteraction(entity);
     }
   }

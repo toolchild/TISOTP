@@ -150,9 +150,9 @@ public abstract class Entity extends GameObject {
   }
 
   private void handleAllEntityInteraction() {
-    for (Entity entity : this.handler.getEntities()) {
+    for (GameObject entity : this.handler.getEntities()) {
       if (isAroundPlayer(entity)) {
-        Entity entityInstance = entity;
+        Entity entityInstance = (Entity)entity;
         String singleTileInteractionStatusMessage = handleSingleEntityInteraction(entityInstance);
         if (singleTileInteractionStatusMessage != null) {
           log.trace("single tile interaction: " + singleTileInteractionStatusMessage);

@@ -27,7 +27,7 @@ public class Game extends Canvas implements Runnable {
   public static final Game          GAME             = new Game();
 
   private Thread                    thread;
-  private boolean                    isRunning;
+  private boolean                   isRunning;
 
   public static final Handler       HANDLER          = new Handler();
   public static KeyInputManager     keyInput;
@@ -49,7 +49,7 @@ public class Game extends Canvas implements Runnable {
   }
 
   private synchronized boolean start() {
-    boolean hasStarted = false;
+    boolean hasStarted;
     if (this.isRunning) {
       hasStarted = false;
     } else {
@@ -112,11 +112,11 @@ public class Game extends Canvas implements Runnable {
     if (!this.isRunning) {
       try {
         log.info("Game about to stop properly.");
-        this.thread.join();
+        // this.thread.join();
+        this.thread.wait();
       }
       catch (InterruptedException e) {
         log.error("The " + this.thread.getName() + " did not stop properly.");
-        e.printStackTrace();
       }
     }
   }

@@ -5,7 +5,11 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.apache.log4j.Logger;
+import org.toolchild.suffering.SpriteManager;
+
 public class SpriteSheet {
+  private static final Logger log = Logger.getLogger(SpriteSheet.class);
 
   private BufferedImage spriteSheet;
 
@@ -21,8 +25,8 @@ public class SpriteSheet {
     try {
       this.spriteSheet = ImageIO.read(getClass().getResource(path));
     }
-    catch (IOException e) {
-      e.printStackTrace();
+    catch (Exception e) {
+      log.error("Image not found: '" + e.getMessage() + "' path: " + path);
     }
   }
 
@@ -35,5 +39,6 @@ public class SpriteSheet {
     int factor = 64;
     return this.spriteSheet.getSubimage(x * factor, y * factor, factor, factor);
   }
+  
 
 }

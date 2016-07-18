@@ -135,8 +135,6 @@ public class Player extends Entity {
   private boolean updatePosition() {
     this.x = this.x + this.movement.getVelocityX();
     this.y = this.y + this.movement.getVelocityY();
-    // if (x <= 0) x = 0;
-    // if (x + this.width >= Game.SIZE.getWidth()) x = (int) (Game.SIZE.getWidth() - this.width);
     return true;
   }
 
@@ -197,8 +195,12 @@ public class Player extends Entity {
   }
 
   private boolean handleAnimationCycle() {
-    if (this.movement.getVelocityX() != 0) this.movement.setMoving(true);
-    else this.movement.setMoving(false);
+    if (this.movement.getVelocityX() != 0)  {
+      this.movement.setMoving(true);
+    }
+    else{
+      this.movement.setMoving(false);
+    }
     if (this.movement.isMoving()) {
       this.frameDelay++;
       if (this.frameDelay >= 3) {
@@ -263,7 +265,7 @@ public class Player extends Entity {
     String statusMessage = null;
     if (getBounds().intersects(finish.getBounds())) {
       statusMessage = "finish interaction: Finish touched";
-      Game.GAME.setRunning(false);
+      handler.setPaused(true);
     }
     return statusMessage;
   }

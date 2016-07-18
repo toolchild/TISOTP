@@ -2,7 +2,7 @@ package org.toolchild.suffering.gfx;
 
 import java.awt.image.BufferedImage;
 
-public class Sprite {
+public class Sprite{
 
   public BufferedImage image;
 
@@ -21,5 +21,9 @@ public class Sprite {
   public void setImage(BufferedImage image) {
     this.image = image;
   }
-
+  
+  public Sprite getFullSpriteSheet(SpriteSheet spriteSheet){
+    this.image = spriteSheet.getSpriteSheet();
+    return this;
+  }
 }

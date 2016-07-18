@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
 import org.toolchild.suffering.gameobject.GameObject;
+import org.toolchild.suffering.gameobject.Menu;
 import org.toolchild.suffering.gameobject.entity.Entity;
 import org.toolchild.suffering.gameobject.entity.Player;
 import org.toolchild.suffering.gameobject.entity.mob.Mob1;
@@ -27,6 +28,9 @@ public class Handler {
   private LinkedList<GameObject> entities = new LinkedList<>();
   private LinkedList<GameObject> tiles    = new LinkedList<>();
   private LinkedList<GameObject> players  = new LinkedList<>();
+  private Menu                   menu;
+
+  private boolean                isPaused;
   private int                    tilesTicked;
   private int                    entitiesTicked;
   private int                    levelWidth;
@@ -34,6 +38,7 @@ public class Handler {
 
   public Handler() {
     this.camera = new Camera(); // the new camera is locked to the player from start
+    this.menu = new Menu(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, Id.menu, this, Game.SPRITE_MANAGER.getMenuBackground());
   }
 
   public void init() {
@@ -41,31 +46,37 @@ public class Handler {
   }
 
   public void tick() {
-    for (GameObject player : this.players) {
-      if (player.getId() == Id.player) {
-        this.camera.tick((Player) player);
+
+    if (isPaused) {
+      menu.tick();
+    } else {
+
+      for (GameObject player : this.players) {
+        if (player.getId() == Id.player) {
+          this.camera.tick((Player) player);
+        }
       }
-    }
 
-    for (int e = 0; e < this.players.size(); e++) {
-      Player player = (Player) this.players.get(e);
-      player.tick();
-    }
+      for (int e = 0; e < this.players.size(); e++) {
+        Player player = (Player) this.players.get(e);
+        player.tick();
+      }
 
-    this.entitiesTicked = 0;
-    for (int e = 0; e < this.entities.size(); e++) {
-      Entity entity = (Entity) this.entities.get(e);
-      entity.tick();
-      this.entitiesTicked++;
-    }
-    this.tilesTicked = 0;
-    for (GameObject tile : this.tiles) {
-      if (tile.getId() == Id.powerUpBlock) {
-        PowerUpBlock powerUpBlock = (PowerUpBlock) tile;
-        if (powerUpBlock.getX() >= this.players.getFirst().getX() - Game.SIZE.getWidth() - 64 && tile.getX() <= this.players.getFirst().getX() + Game.SIZE.getWidth() + 64) { // only ticks visible tiles, relative to top left edge of the shown screen -64
-          if (powerUpBlock.getY() >= this.players.getFirst().getY() - Game.SIZE.getHeight() - 64 && tile.getY() <= this.players.getFirst().getY() + Game.SIZE.getHeight() + 64) {
-            powerUpBlock.tick();
-            this.tilesTicked++;
+      this.entitiesTicked = 0;
+      for (int e = 0; e < this.entities.size(); e++) {
+        Entity entity = (Entity) this.entities.get(e);
+        entity.tick();
+        this.entitiesTicked++;
+      }
+      this.tilesTicked = 0;
+      for (GameObject tile : this.tiles) {
+        if (tile.getId() == Id.powerUpBlock) {
+          PowerUpBlock powerUpBlock = (PowerUpBlock) tile;
+          if (powerUpBlock.getX() >= this.players.getFirst().getX() - Game.SIZE.getWidth() - 64 && tile.getX() <= this.players.getFirst().getX() + Game.SIZE.getWidth() + 64) { // only ticks visible tiles, relative to top left edge of the shown screen -64
+            if (powerUpBlock.getY() >= this.players.getFirst().getY() - Game.SIZE.getHeight() - 64 && tile.getY() <= this.players.getFirst().getY() + Game.SIZE.getHeight() + 64) {
+              powerUpBlock.tick();
+              this.tilesTicked++;
+            }
           }
         }
       }
@@ -212,6 +223,14 @@ public class Handler {
 
   public LinkedList<GameObject> getPlayers() {
     return this.players;
+  }
+
+  public boolean isPaused() {
+    return this.isPaused;
+  }
+
+  public void setPaused(boolean isPaused) {
+    this.isPaused = isPaused;
   }
 
 }

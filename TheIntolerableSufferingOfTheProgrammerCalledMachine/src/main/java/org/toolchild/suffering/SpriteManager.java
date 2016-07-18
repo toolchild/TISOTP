@@ -24,8 +24,15 @@ public class SpriteManager {
   private SpriteSheet         mob1SpriteSheetLeft;
   private SpriteSheet         mob1SpriteSheetRight;
 
+  private SpriteSheet         backgroundSprites;
+
   private BufferedImage       background;
   private BufferedImage       levelImage;
+
+  private Sprite[]            menuBackground;
+  
+
+
 
   private Sprite[]            grass;
   private Sprite[]            powerUpBlock;
@@ -63,6 +70,7 @@ public class SpriteManager {
     this.mob1SpriteSheetRight = new SpriteSheet("/wellingtonRight.png");
     try {
       this.background = ImageIO.read(getClass().getResource("/trip.jpg"));
+      this.backgroundSprites = new SpriteSheet("/spriteSheet2.jpg");
     }
     catch (IOException e) {
       log.error("Background image not found: '" + e.getMessage() + "'");
@@ -111,6 +119,15 @@ public class SpriteManager {
     this.finish[0] = new Sprite(this.spriteSheet, 5, 0, false);
   }
 
+  public void initMenuBackground() {
+    this.menuBackground = new Sprite[1];
+    this.menuBackground[0] = new Sprite(this.backgroundSprites, 0, 0, false).getFullSpriteSheet(this.backgroundSprites);
+  }
+  
+  public Sprite[] getMenuBackground() {
+    return this.menuBackground;
+  }
+  
   public BufferedImage getLevelImage() {
     return this.levelImage;
   }
@@ -142,6 +159,8 @@ public class SpriteManager {
   public BufferedImage getBackground() {
     return this.background;
   }
+
+  
 
   public Sprite[] getFinish() {
     return this.finish;

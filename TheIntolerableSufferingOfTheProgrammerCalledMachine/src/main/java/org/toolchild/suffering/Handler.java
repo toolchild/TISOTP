@@ -38,7 +38,7 @@ public class Handler {
 
   public Handler() {
     this.camera = new Camera(); // the new camera is locked to the player from start
-    this.menu = new Menu(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, Id.menu, this, Game.SPRITE_MANAGER.getMenuBackground());
+    this.menu = new Menu(0, 0, (int)Game.SIZE.getWidth(), (int)Game.SIZE.getHeight(), Id.menu, this, Game.SPRITE_MANAGER.getMenuBackground());
   }
 
   public void init() {
@@ -91,21 +91,26 @@ public class Handler {
    * @param lastSecondFrames The frames for debug display.
    */
   public void render(Graphics2D graphics2d, int lastSecondTicks, int lastSecondFrames) {
-    this.camera.releaseGraphicsFromCamera(graphics2d);
-    graphics2d.drawImage(Game.SPRITE_MANAGER.getBackground(), 0, 0, this.levelWidth * 64, this.levelHeight * 64, null);
+    if (isPaused) {
+      menu.render(graphics2d);
+    } else {
 
-    int tilesRendered = renderTiles(graphics2d);
-    log.trace("tilesRendered: " + tilesRendered);
-    int entitiesRendered = renderEntities(graphics2d);
-    log.trace("entitiesRendered: " + entitiesRendered);
+      this.camera.releaseGraphicsFromCamera(graphics2d);
+      graphics2d.drawImage(Game.SPRITE_MANAGER.getBackground(), 0, 0, this.levelWidth * 64, this.levelHeight * 64, null);
 
-    for (GameObject player : this.players) { // more than 1 player compatible
-      ((Player) player).render(graphics2d, this.camera);
+      int tilesRendered = renderTiles(graphics2d);
+      log.trace("tilesRendered: " + tilesRendered);
+      int entitiesRendered = renderEntities(graphics2d);
+      log.trace("entitiesRendered: " + entitiesRendered);
+
+      for (GameObject player : this.players) { // more than 1 player compatible
+        ((Player) player).render(graphics2d, this.camera);
+      }
+      log.trace("entities: " + this.entities.size());
+      this.camera.lockGraphicsToCamera(graphics2d);
+      renderMinimap(graphics2d);
+      renderDebug(graphics2d, lastSecondTicks, lastSecondFrames, tilesRendered, entitiesRendered);
     }
-    log.trace("entities: " + this.entities.size());
-    this.camera.lockGraphicsToCamera(graphics2d);
-    renderMinimap(graphics2d);
-    renderDebug(graphics2d, lastSecondTicks, lastSecondFrames, tilesRendered, entitiesRendered);
   }
 
   private void renderMinimap(Graphics2D graphics2d) {

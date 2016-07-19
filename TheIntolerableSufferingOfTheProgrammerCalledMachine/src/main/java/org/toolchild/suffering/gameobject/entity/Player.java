@@ -73,9 +73,9 @@ public class Player extends Entity {
     if (isActive) {
       this.movement.setVelocityX(this.movement.getMoveSpeed());
       this.facing = 1;
-      log.trace("Went Right!");
+      log.debug("Went Right!");
     } else {
-      log.trace("Right Released");
+      log.debug("Right Released");
       this.movement.setVelocityX(0);
     }
   }
@@ -84,10 +84,17 @@ public class Player extends Entity {
     if (isActive) {
       this.facing = 0;
       this.movement.setVelocityX(-this.movement.getMoveSpeed());
-      log.trace("Went Left!");
+      log.debug("Went Left!");
     } else {
       log.trace("Left Released");
       this.movement.setVelocityX(0);
+    }
+  }
+
+  public void handleSpaceKeyEvent(boolean isActive) {
+    if (isActive) {
+      this.handler.setPaused(true);
+      log.debug("Game Paused");
     }
   }
 
@@ -104,7 +111,7 @@ public class Player extends Entity {
 
   @Override
   public void tick() {
-    Game.keyInput.updateKeyEvents(this);
+    Game.keyInput.updateKeyEvents(this, null);
     log.trace("handle gravity and movement " + handleGravityAndMovement());
     log.trace("update position: " + updatePosition());
     log.trace("handle all tile interaction: " + handleAllTileInteraction());
@@ -140,7 +147,7 @@ public class Player extends Entity {
 
   private void handleAllEntityInteraction() {
     for (int e = 0; e < this.handler.getEntities().size(); e++) { // need to use this for loop and
-      Entity entity = (Entity)this.handler.getEntities().get(e); // get the entity to avoid an UnconcurrentModificationException
+      Entity entity = (Entity) this.handler.getEntities().get(e); // get the entity to avoid an UnconcurrentModificationException
       handleSingleEntityInteraction(entity);
     }
   }
@@ -195,10 +202,9 @@ public class Player extends Entity {
   }
 
   private boolean handleAnimationCycle() {
-    if (this.movement.getVelocityX() != 0)  {
+    if (this.movement.getVelocityX() != 0) {
       this.movement.setMoving(true);
-    }
-    else{
+    } else {
       this.movement.setMoving(false);
     }
     if (this.movement.isMoving()) {
@@ -222,7 +228,7 @@ public class Player extends Entity {
           Tile tileInstance = (Tile) tile;
           String singleTileInteractionStatusMessage = handleSingleTileInteraction(tileInstance);
           if (singleTileInteractionStatusMessage != null) {
-            log.debug("single tile interaction: " + singleTileInteractionStatusMessage);
+            log.trace("single tile interaction: " + singleTileInteractionStatusMessage);
             if (singleTileInteractionStatusMessage.contains("Top")) {
               tilesInteracting.add(tileInstance);
             }
@@ -263,9 +269,10 @@ public class Player extends Entity {
 
   private String handleFinishInteraction(Tile finish) {
     String statusMessage = null;
-    if (getBounds().intersects(finish.getBounds())) {
+    if (getBounds().intersects(finish.getBounds()) && this.isValnurable) {
       statusMessage = "finish interaction: Finish touched";
-      handler.setPaused(true);
+      this.isValnurable = false;
+      this.handler.setPaused(true);
     }
     return statusMessage;
   }

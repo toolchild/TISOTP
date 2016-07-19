@@ -44,6 +44,7 @@ public class SpriteManager {
 
   public void init() {
     initSpriteSheets();
+    initMenuBackground();
     initLevelImage();
     initPlayer();
     initBlueCrystal();
@@ -70,7 +71,7 @@ public class SpriteManager {
     this.mob1SpriteSheetRight = new SpriteSheet("/wellingtonRight.png");
     try {
       this.background = ImageIO.read(getClass().getResource("/trip.jpg"));
-      this.backgroundSprites = new SpriteSheet("/spriteSheet2.jpg");
+      this.backgroundSprites = new SpriteSheet("/trip.jpg");
     }
     catch (IOException e) {
       log.error("Background image not found: '" + e.getMessage() + "'");

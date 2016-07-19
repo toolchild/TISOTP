@@ -8,9 +8,9 @@ public class Sprite{
 
   public Sprite(SpriteSheet spriteSheet, int x, int y, boolean isBigger) {
     if (isBigger) {
-      this.image = spriteSheet.getBiggerSprite(x, y);
+      this.image = spriteSheet.getBiggerSpriteImage(x, y);
     } else {
-      this.image = spriteSheet.getSprite(x, y);
+      this.image = spriteSheet.getSpriteImage(x, y);
     }
   }
 
@@ -23,7 +23,7 @@ public class Sprite{
   }
   
   public Sprite getFullSpriteSheet(SpriteSheet spriteSheet){
-    this.image = spriteSheet.getSpriteSheet();
+    this.image = spriteSheet.getSpriteSheetImage();
     return this;
   }
 }

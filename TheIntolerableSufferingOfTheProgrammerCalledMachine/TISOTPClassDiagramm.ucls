@@ -6,7 +6,7 @@
     project="TheIntolerableSufferingOfTheProgrammerCalledMachine" 
     file="/TheIntolerableSufferingOfTheProgrammerCalledMachine/src/main/java/org/toolchild/suffering/Camera.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1132" y="592"/>    
+    <position height="-1" width="-1" x="141" y="617"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="true" static="false"/>      
@@ -28,7 +28,7 @@
     project="TheIntolerableSufferingOfTheProgrammerCalledMachine" 
     file="/TheIntolerableSufferingOfTheProgrammerCalledMachine/src/main/java/org/toolchild/suffering/Handler.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="788" y="592"/>    
+    <position height="-1" width="-1" x="952" y="651"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="true" static="false"/>      
@@ -39,7 +39,7 @@
     project="TheIntolerableSufferingOfTheProgrammerCalledMachine" 
     file="/TheIntolerableSufferingOfTheProgrammerCalledMachine/src/main/java/org/toolchild/suffering/Id.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="788" y="1442"/>    
+    <position height="-1" width="-1" x="990" y="946"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="true" static="false"/>      
@@ -72,7 +72,7 @@
     project="TheIntolerableSufferingOfTheProgrammerCalledMachine" 
     file="/TheIntolerableSufferingOfTheProgrammerCalledMachine/src/main/java/org/toolchild/suffering/gameobject/entity/Entity.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1082" y="1120"/>    
+    <position height="-1" width="-1" x="1079" y="1120"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="true" static="false"/>      
@@ -178,18 +178,7 @@
       <operations public="true" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="17" language="java" name="org.toolchild.suffering.gameobject.entity.Player" 
-    project="TheIntolerableSufferingOfTheProgrammerCalledMachine" 
-    file="/TheIntolerableSufferingOfTheProgrammerCalledMachine/src/main/java/org/toolchild/suffering/gameobject/entity/Player.java" 
-    binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1084" y="1472"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="false" package="false" protected="false" private="true" static="false"/>      
-      <operations public="true" package="false" protected="false" private="false" static="false"/>    
-    </display>  
-  </class>  
-  <class id="18" language="java" name="org.toolchild.suffering.gameobject.tile.Grass" 
+  <class id="17" language="java" name="org.toolchild.suffering.gameobject.tile.Grass" 
     project="TheIntolerableSufferingOfTheProgrammerCalledMachine" 
     file="/TheIntolerableSufferingOfTheProgrammerCalledMachine/src/main/java/org/toolchild/suffering/gameobject/tile/Grass.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -200,7 +189,7 @@
       <operations public="true" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="19" language="java" name="org.toolchild.suffering.gameobject.tile.Finish" 
+  <class id="18" language="java" name="org.toolchild.suffering.gameobject.tile.Finish" 
     project="TheIntolerableSufferingOfTheProgrammerCalledMachine" 
     file="/TheIntolerableSufferingOfTheProgrammerCalledMachine/src/main/java/org/toolchild/suffering/gameobject/tile/Finish.java" 
     binary="false" corner="BOTTOM_RIGHT">    
@@ -211,233 +200,263 @@
       <operations public="true" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <association id="20">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="21" name="HANDLER"/>      
-      <multiplicity id="22" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="23">    
+  <class id="19" language="java" name="org.toolchild.suffering.gameobject.entity.Player" 
+    project="TheIntolerableSufferingOfTheProgrammerCalledMachine" 
+    file="/TheIntolerableSufferingOfTheProgrammerCalledMachine/src/main/java/org/toolchild/suffering/gameobject/entity/Player.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1079" y="1481"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="true" static="false"/>      
+      <operations public="true" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="20" language="java" name="org.toolchild.suffering.gameobject.Menu" 
+    project="TheIntolerableSufferingOfTheProgrammerCalledMachine" 
+    file="/TheIntolerableSufferingOfTheProgrammerCalledMachine/src/main/java/org/toolchild/suffering/gameobject/Menu.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="143" y="315"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="true" static="false"/>      
+      <operations public="true" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <association id="21">    
     <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="24" name="entities"/>      
-      <multiplicity id="25" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="26">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="27" name="movement">        
-        <position height="0" width="0" x="0" y="0"/>      
+      <attribute id="22" name="menu">        
+        <position height="0" width="0" x="-283" y="-521"/>      
       </attribute>      
-      <multiplicity id="28" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
+      <multiplicity id="23" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-283" y="-521"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
+    <end type="TARGET" refId="20" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="29">    
-    <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="30" name="spriteSheet">        
-        <position height="0" width="0" x="651" y="-38"/>      
-      </attribute>      
-      <multiplicity id="31" minimum="0" maximum="1">        
-        <position height="0" width="0" x="651" y="-38"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="32">    
-    <end type="SOURCE" refId="18"/>    
-    <end type="TARGET" refId="8"/>  
-  </generalization>  
-  <association id="33">    
-    <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="34" name="jumpKeyStatus">        
-        <position height="18" width="80" x="1228" y="291"/>      
-      </attribute>      
-      <multiplicity id="35" minimum="0" maximum="1">        
-        <position height="16" width="23" x="1307" y="293"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="12" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="36">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="37" name="SPRITE_MANAGER">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="38" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="16" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="39">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="40" name="players"/>      
-      <multiplicity id="41" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="17" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="42">    
-    <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="43" name="blueCrystal">        
-        <position height="0" width="0" x="-640" y="-134"/>      
-      </attribute>      
-      <multiplicity id="44" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="-640" y="-134"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="45">    
-    <end type="SOURCE" refId="13"/>    
+  <generalization id="24">    
+    <end type="SOURCE" refId="19"/>    
     <end type="TARGET" refId="7"/>  
   </generalization>  
-  <association id="46">    
-    <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="47" name="mob1">        
-        <position height="0" width="0" x="-640" y="-134"/>      
+  <association id="25">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="26" name="camera">        
+        <position height="0" width="0" x="-294" y="39"/>      
       </attribute>      
-      <multiplicity id="48" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="-640" y="-134"/>      
+      <multiplicity id="27" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-294" y="39"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
+    <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="49">    
-    <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="50" name="powerUpBlock">        
-        <position height="0" width="0" x="-640" y="-134"/>      
-      </attribute>      
-      <multiplicity id="51" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-640" y="-134"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="52">    
-    <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="53" name="grass">        
-        <position height="0" width="0" x="-640" y="-134"/>      
-      </attribute>      
-      <multiplicity id="54" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-640" y="-134"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="55">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="56" name="handler">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="57" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="58">    
+  <association id="28">    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="59" name="keyInput">        
+      <attribute id="29" name="keyInput">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="60" minimum="0" maximum="1">        
+      <multiplicity id="30" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="11" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="61">    
+  <generalization id="31">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="6"/>  
+  </generalization>  
+  <association id="32">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="33" name="jumpKeyStatus">        
+        <position height="18" width="80" x="1228" y="291"/>      
+      </attribute>      
+      <multiplicity id="34" minimum="0" maximum="1">        
+        <position height="16" width="23" x="1307" y="293"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="35">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="7"/>  
+  </generalization>  
+  <dependency id="36">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="19"/>  
+  </dependency>  
+  <association id="37">    
     <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="62" name="finish">        
+      <attribute id="38" name="spriteSheet">        
+        <position height="0" width="0" x="651" y="-38"/>      
+      </attribute>      
+      <multiplicity id="39" minimum="0" maximum="1">        
+        <position height="0" width="0" x="651" y="-38"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="40">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <association id="41">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="42" name="mob1">        
+        <position height="0" width="0" x="-640" y="-134"/>      
+      </attribute>      
+      <multiplicity id="43" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="-640" y="-134"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="44">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="15"/>  
+  </dependency>  
+  <generalization id="45">    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="8"/>  
+  </generalization>  
+  <dependency id="46">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="14"/>  
+  </dependency>  
+  <generalization id="47">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="6"/>  
+  </generalization>  
+  <association id="48">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="49" name="powerUpBlock">        
+        <position height="0" width="0" x="-640" y="-134"/>      
+      </attribute>      
+      <multiplicity id="50" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-640" y="-134"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="51">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <dependency id="52">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="16"/>  
+  </dependency>  
+  <generalization id="53">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="8"/>  
+  </generalization>  
+  <association id="54">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="55" name="finish">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="63" minimum="0" maximum="2147483647">        
+      <multiplicity id="56" minimum="0" maximum="2147483647">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="64">    
+  <association id="57">    
     <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="65" name="tiles"/>      
-      <multiplicity id="66" minimum="0" maximum="2147483647"/>    
+      <attribute id="58" name="players"/>      
+      <multiplicity id="59" minimum="0" maximum="2147483647"/>    
     </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
+    <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="67">    
+  <association id="60">    
     <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="68" name="leftKeyStatus">        
+      <attribute id="61" name="leftKeyStatus">        
         <position height="18" width="73" x="1222" y="197"/>      
       </attribute>      
-      <multiplicity id="69" minimum="0" maximum="1">        
+      <multiplicity id="62" minimum="0" maximum="1">        
         <position height="16" width="23" x="1298" y="200"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="12" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="70">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="71" name="camera">        
-        <position height="0" width="0" x="697" y="14"/>      
-      </attribute>      
-      <multiplicity id="72" minimum="0" maximum="1">        
-        <position height="0" width="0" x="697" y="14"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="73">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="74" name="id">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="75" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="76">    
-    <end type="SOURCE" refId="15"/>    
-    <end type="TARGET" refId="8"/>  
-  </generalization>  
-  <association id="77">    
+  <association id="63">    
     <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="78" name="player">        
+      <attribute id="64" name="characterSpriteSheet">        
+        <position height="0" width="0" x="651" y="-38"/>      
+      </attribute>      
+      <multiplicity id="65" minimum="0" maximum="1">        
+        <position height="0" width="0" x="651" y="-38"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="66">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="18"/>  
+  </dependency>  
+  <dependency id="67">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <association id="68">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="69" name="player">        
         <position height="0" width="0" x="-640" y="-134"/>      
       </attribute>      
-      <multiplicity id="79" minimum="0" maximum="2147483647">        
+      <multiplicity id="70" minimum="0" maximum="2147483647">        
         <position height="0" width="0" x="-640" y="-134"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <association id="71">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="72" name="id">        
+        <position height="0" width="0" x="202" y="-496"/>      
+      </attribute>      
+      <multiplicity id="73" minimum="0" maximum="1">        
+        <position height="0" width="0" x="202" y="-496"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="74">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="75" name="handler">        
+        <position height="0" width="0" x="164" y="59"/>      
+      </attribute>      
+      <multiplicity id="76" minimum="0" maximum="1">        
+        <position height="0" width="0" x="164" y="59"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="77">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="78" name="mob1SpriteSheetRight">        
+        <position height="0" width="0" x="651" y="-38"/>      
+      </attribute>      
+      <multiplicity id="79" minimum="0" maximum="1">        
+        <position height="0" width="0" x="651" y="-38"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <association id="80">    
     <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="81" name="mob1SpriteSheetLeft">        
+      <attribute id="81" name="blueCrystalSpriteSheet">        
         <position height="0" width="0" x="651" y="-38"/>      
       </attribute>      
       <multiplicity id="82" minimum="0" maximum="1">        
@@ -448,73 +467,133 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="83">    
-    <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="84" name="mob1SpriteSheetRight">        
-        <position height="0" width="0" x="651" y="-38"/>      
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="84" name="HANDLER">        
+        <position height="0" width="0" x="164" y="59"/>      
       </attribute>      
       <multiplicity id="85" minimum="0" maximum="1">        
+        <position height="0" width="0" x="164" y="59"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="86">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="87" name="grass">        
+        <position height="0" width="0" x="-640" y="-134"/>      
+      </attribute>      
+      <multiplicity id="88" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-640" y="-134"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="89">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="90" name="SPRITE_MANAGER">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="91" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="92">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="93" name="movement">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="94" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="95">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="96" name="blueCrystal">        
+        <position height="0" width="0" x="-640" y="-134"/>      
+      </attribute>      
+      <multiplicity id="97" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="-640" y="-134"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="98">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="99" name="entities"/>      
+      <multiplicity id="100" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="101">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="102" name="mob1SpriteSheetLeft">        
+        <position height="0" width="0" x="651" y="-38"/>      
+      </attribute>      
+      <multiplicity id="103" minimum="0" maximum="1">        
         <position height="0" width="0" x="651" y="-38"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="10" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="86">    
+  <dependency id="104">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <generalization id="105">    
     <end type="SOURCE" refId="14"/>    
     <end type="TARGET" refId="7"/>  
   </generalization>  
-  <association id="87">    
-    <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="88" name="blueCrystalSpriteSheet">        
-        <position height="0" width="0" x="651" y="-38"/>      
-      </attribute>      
-      <multiplicity id="89" minimum="0" maximum="1">        
-        <position height="0" width="0" x="651" y="-38"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="90">    
-    <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="91" name="characterSpriteSheet">        
-        <position height="0" width="0" x="651" y="-38"/>      
-      </attribute>      
-      <multiplicity id="92" minimum="0" maximum="1">        
-        <position height="0" width="0" x="651" y="-38"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="93">    
+  <generalization id="106">    
     <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="8"/>  
+  </generalization>  
+  <association id="107">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="108" name="tiles"/>      
+      <multiplicity id="109" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="110">    
+    <end type="SOURCE" refId="3"/>    
     <end type="TARGET" refId="7"/>  
-  </generalization>  
-  <generalization id="94">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="6"/>  
-  </generalization>  
-  <association id="95">    
+  </dependency>  
+  <dependency id="111">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="8"/>  
+  </dependency>  
+  <dependency id="112">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="11"/>  
+  </dependency>  
+  <dependency id="113">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="17"/>  
+  </dependency>  
+  <association id="114">    
     <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="96" name="rightKeyStatus">        
+      <attribute id="115" name="rightKeyStatus">        
         <position height="18" width="79" x="1222" y="233"/>      
       </attribute>      
-      <multiplicity id="97" minimum="0" maximum="1">        
+      <multiplicity id="116" minimum="0" maximum="1">        
         <position height="16" width="23" x="1301" y="234"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="12" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="98">    
-    <end type="SOURCE" refId="8"/>    
-    <end type="TARGET" refId="6"/>  
-  </generalization>  
-  <generalization id="99">    
-    <end type="SOURCE" refId="19"/>    
-    <end type="TARGET" refId="8"/>  
-  </generalization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="false" package="false" protected="false" private="true" static="false"/>    

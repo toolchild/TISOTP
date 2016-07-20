@@ -3,8 +3,10 @@ package org.toolchild.suffering.input;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.toolchild.suffering.Game;
+import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
 import org.toolchild.suffering.gameobject.GameObject;
 import org.toolchild.suffering.gameobject.Menu;
@@ -14,12 +16,12 @@ import org.toolchild.suffering.gameobject.entity.Player;
  * 
  * The KeyInputManager adds functionality to the {@link KeyListener}.
  * 
- * @author Bob
+ * @author toolchild
  *
  */
 public class KeyInputManager implements KeyListener {
 
-  private static final Logger log = Logger.getLogger(KeyInputManager.class);
+  private static final Logger log = LogManager.getLogger(KeyInputManager.class);
 
   private KeyStatus           jumpKeyStatus;
   private KeyStatus           leftKeyStatus;
@@ -34,8 +36,9 @@ public class KeyInputManager implements KeyListener {
 
   }
 
-  public boolean updateKeyEvents(Player player, Menu menu) {
+  public boolean updateKeyEvents(Player player, Menu menu, Handler handler) {
 
+    
     if (!this.leftKeyStatus.isActive) leftKeyReleaseEvent(player);
     if (!this.rightKeyStatus.isActive) rightKeyReleaseEvent(player);
     // keep releaseEvent and Event separated for left and right key. You will break your brain if you don't.
@@ -45,8 +48,8 @@ public class KeyInputManager implements KeyListener {
     if (!this.jumpKeyStatus.isActive) jumpKeyReleaseEvent(player);
     else jumpKeyEvent(player);
 
-    if (!this.spaceKeyStatus.isActive) spaceKeyReleaseEvent(player, menu);
-    else if (this.spaceKeyStatus.canActivate) spaceKeyEvent(player, menu);
+    if (!this.spaceKeyStatus.isActive) spaceKeyReleaseEvent(handler);
+    else if (this.spaceKeyStatus.canActivate) spaceKeyEvent(handler);
 
     return true;
   }
@@ -58,40 +61,38 @@ public class KeyInputManager implements KeyListener {
     }
   }
 
-  private void jumpKeyReleaseEvent(Player player) {
+  private static void jumpKeyReleaseEvent(Player player) {
     if (player != null) player.handleJumpKeyEvent(false);
     log.trace("Jump Released");
   }
 
-  private void leftKeyEvent(Player player) {
+  private static void leftKeyEvent(Player player) {
     if (player != null) player.handleLeftKeyEvent(true);
   }
 
   private void leftKeyReleaseEvent(Player player) {
-    log.info("LeftKeyReleaseEvent: canActivate: " + this.spaceKeyStatus.canActivate + " isActive:" + this.spaceKeyStatus.isActive);
+    log.trace("LeftKeyReleaseEvent: canActivate: " + this.spaceKeyStatus.canActivate + " isActive:" + this.spaceKeyStatus.isActive);
     if (player != null) player.handleLeftKeyEvent(false);
   }
 
-  private void rightKeyEvent(Player player) {
-
+  private static void rightKeyEvent(Player player) {
     if (player != null) player.handleRightKeyEvent(true);
   }
 
-  private void rightKeyReleaseEvent(Player player) {
+  private static void rightKeyReleaseEvent(Player player) {
     if (player != null) player.handleRightKeyEvent(false);
   }
 
-  private void spaceKeyEvent(Player player, Menu menu) {
+  private void spaceKeyEvent(Handler handler) {
     this.spaceKeyStatus.canActivate = false;
-    log.info("canActivate: " + this.spaceKeyStatus.canActivate + " isActive:" + this.spaceKeyStatus.isActive);
-    if (player != null) player.handleSpaceKeyEvent(true);
-    else if (menu != null) menu.handleSpaceKeyEvent(true);
+    log.debug("SpaceKeyEvent: canActivate: " + this.spaceKeyStatus.canActivate + " isActive:" + this.spaceKeyStatus.isActive);
+    handler.handleSpaceKeyEvent(true);
   }
 
-  private void spaceKeyReleaseEvent(Player player, Menu menu) {
+  private void spaceKeyReleaseEvent(Handler handler) {
     this.spaceKeyStatus.canActivate = true;
-    if (player != null) player.handleSpaceKeyEvent(false);
-    else if (menu != null) menu.handleSpaceKeyEvent(false);
+    log.debug("SpaceKeyReleaseEvent: canActivate: " + this.spaceKeyStatus.canActivate + " isActive:" + this.spaceKeyStatus.isActive);    
+    handler.handleSpaceKeyEvent(false);
   }
 
   @Override
@@ -105,16 +106,17 @@ public class KeyInputManager implements KeyListener {
             break;
           }
           case KeyEvent.VK_A: {
-            log.info("LeftKeyPressed: left time: " + this.leftKeyStatus.timeStamp + " right Time:" + this.rightKeyStatus.timeStamp);
+            log.trace("LeftKeyPressed: left time: " + this.leftKeyStatus.timeStamp + " right Time:" + this.rightKeyStatus.timeStamp);
             this.leftKeyStatus.isActive = true;
             break;
           }
           case KeyEvent.VK_D: {
-            log.info("RightKeyPressed: left time: " + this.leftKeyStatus.timeStamp + " right Time:" + this.rightKeyStatus.timeStamp);
+            log.trace("RightKeyPressed: left time: " + this.leftKeyStatus.timeStamp + " right Time:" + this.rightKeyStatus.timeStamp);
             this.rightKeyStatus.isActive = true;
             break;
           }
           case KeyEvent.VK_SPACE: {
+            log.debug("SpaceKeyPressed");
             this.spaceKeyStatus.isActive = true;
             break;
           }
@@ -139,18 +141,18 @@ public class KeyInputManager implements KeyListener {
           }
           case KeyEvent.VK_A: {
             this.leftKeyStatus.timeStamp = System.nanoTime();
-            log.info("LeftKeyReleased: left time: " + this.leftKeyStatus.timeStamp + " right Time:" + this.rightKeyStatus.timeStamp);
+            log.trace("LeftKeyReleased: left time: " + this.leftKeyStatus.timeStamp + " right Time:" + this.rightKeyStatus.timeStamp);
             this.leftKeyStatus.isActive = false;
             break;
           }
           case KeyEvent.VK_D: {
             this.rightKeyStatus.timeStamp = System.nanoTime();
-            log.info("RightKeyRelease: left time: " + this.leftKeyStatus.timeStamp + " right Time:" + this.rightKeyStatus.timeStamp);
+            log.trace("RightKeyRelease: left time: " + this.leftKeyStatus.timeStamp + " right Time:" + this.rightKeyStatus.timeStamp);
             this.rightKeyStatus.isActive = false;
             break;
           }
           case KeyEvent.VK_SPACE: {
-            log.info("SpaceKeyReleased");
+            log.debug("SpaceKeyReleased");
             this.spaceKeyStatus.isActive = false;
             break;
           }

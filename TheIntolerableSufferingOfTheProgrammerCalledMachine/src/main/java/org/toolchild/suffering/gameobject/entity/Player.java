@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-import org.apache.log4j.Logger;
-import org.toolchild.suffering.Camera;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;import org.toolchild.suffering.Camera;
 import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
@@ -20,7 +20,7 @@ import org.toolchild.suffering.gfx.Sprite;
  *
  */
 public class Player extends Entity {
-  private static final Logger log                  = Logger.getLogger(Player.class);
+  private static final Logger log                  = LogManager.getLogger(Player.class);
   private static final int    PLAYER_DEFAULT_SIZE  = 63;
 
   private int                 frame                = 0;
@@ -73,9 +73,9 @@ public class Player extends Entity {
     if (isActive) {
       this.movement.setVelocityX(this.movement.getMoveSpeed());
       this.facing = 1;
-      log.debug("Went Right!");
+      log.trace("Went Right!");
     } else {
-      log.debug("Right Released");
+      log.trace("Right Released");
       this.movement.setVelocityX(0);
     }
   }
@@ -84,19 +84,13 @@ public class Player extends Entity {
     if (isActive) {
       this.facing = 0;
       this.movement.setVelocityX(-this.movement.getMoveSpeed());
-      log.debug("Went Left!");
+      log.trace("Went Left!");
     } else {
       log.trace("Left Released");
       this.movement.setVelocityX(0);
     }
   }
 
-  public void handleSpaceKeyEvent(boolean isActive) {
-    if (isActive) {
-      this.handler.setPaused(true);
-      log.debug("Game Paused");
-    }
-  }
 
   @Override
   public void render(Graphics2D graphics2D) {
@@ -111,7 +105,7 @@ public class Player extends Entity {
 
   @Override
   public void tick() {
-    Game.keyInput.updateKeyEvents(this, null);
+    Game.keyInput.updateKeyEvents(this, null, this.handler);
     log.trace("handle gravity and movement " + handleGravityAndMovement());
     log.trace("update position: " + updatePosition());
     log.trace("handle all tile interaction: " + handleAllTileInteraction());

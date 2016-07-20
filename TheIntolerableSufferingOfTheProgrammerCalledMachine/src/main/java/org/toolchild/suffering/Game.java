@@ -9,12 +9,13 @@ import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.toolchild.suffering.input.KeyInputManager;
 
 public class Game extends Canvas implements Runnable {
   private static final long         serialVersionUID = 5680154129348532365L;
-  private static final Logger       log              = Logger.getLogger(Game.class);
+  private static final Logger       log              = LogManager.getLogger(Game.class);
   private static final int          TICKS_PER_SECOND = 60;
 
   public static final int           GAME_WIDTH       = 64;
@@ -117,6 +118,7 @@ public class Game extends Canvas implements Runnable {
       }
       catch (InterruptedException e) {
         log.error("The " + this.thread.getName() + " did not stop properly.");
+        e.printStackTrace();
       }
     }
   }
@@ -145,16 +147,16 @@ public class Game extends Canvas implements Runnable {
     graphics2d.dispose();
   }
 
-  private static JFrame initAndGetJFrame(Game game) {
+  private static void initAndGetJFrame(Game game) {
     JFrame frame = new JFrame(TITLE);
-    // frame.setUndecorated(true); this must be switched by a configuration.
+//     frame.setUndecorated(true); //this must be switched by a configuration.
     frame.add(game);
-    frame.pack();
+    
     frame.setResizable(false);
-    // frame.setLocationRelativeTo(null); // put the frame in the middle of the screen
+//     frame.setLocationRelativeTo(null); // put the frame in the middle of the screen
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.pack();
     frame.setVisible(true);
-    return frame;
   }
 
   public static int getFrameWidth() {

@@ -4,10 +4,11 @@ import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class SpriteSheet {
-  private static final Logger log = Logger.getLogger(SpriteSheet.class);
+  private static final Logger log = LogManager.getLogger(SpriteSheet.class);
 
   private BufferedImage       spriteSheetImage;
 

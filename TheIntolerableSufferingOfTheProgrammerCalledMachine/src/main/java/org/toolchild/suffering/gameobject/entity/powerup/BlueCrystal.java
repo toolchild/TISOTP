@@ -3,7 +3,8 @@ package org.toolchild.suffering.gameobject.entity.powerup;
 import java.awt.Graphics2D;
 import java.util.Random;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
 import org.toolchild.suffering.gameobject.entity.Entity;
@@ -15,7 +16,7 @@ import org.toolchild.suffering.gfx.Sprite;
  *
  */
 public class BlueCrystal extends Entity {
-  private static final Logger log        = Logger.getLogger(BlueCrystal.class);
+  private static final Logger log        = LogManager.getLogger(BlueCrystal.class);
   private int                 frame      = 0;
   private int                 frameDelay = 0;
 

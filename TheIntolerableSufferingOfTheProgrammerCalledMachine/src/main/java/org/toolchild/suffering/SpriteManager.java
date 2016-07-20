@@ -5,7 +5,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.toolchild.suffering.gfx.Sprite;
 import org.toolchild.suffering.gfx.SpriteSheet;
 
@@ -16,23 +17,16 @@ import org.toolchild.suffering.gfx.SpriteSheet;
  *
  */
 public class SpriteManager {
-  private static final Logger log = Logger.getLogger(SpriteManager.class);
+  private static final Logger log = LogManager.getLogger(SpriteManager.class);
 
   private SpriteSheet         spriteSheet;
   private SpriteSheet         characterSpriteSheet;
   private SpriteSheet         blueCrystalSpriteSheet;
   private SpriteSheet         mob1SpriteSheetLeft;
   private SpriteSheet         mob1SpriteSheetRight;
-
-  private SpriteSheet         backgroundSprites;
-
-  private BufferedImage       background;
-  private BufferedImage       levelImage;
-
-  private Sprite[]            menuBackground;
   
-
-
+  private BufferedImage       menuBackgroundImage;
+  private BufferedImage       levelImage;
 
   private Sprite[]            grass;
   private Sprite[]            powerUpBlock;
@@ -44,7 +38,6 @@ public class SpriteManager {
 
   public void init() {
     initSpriteSheets();
-    initMenuBackground();
     initLevelImage();
     initPlayer();
     initBlueCrystal();
@@ -70,8 +63,8 @@ public class SpriteManager {
     this.mob1SpriteSheetLeft = new SpriteSheet("/wellingtonLeft.png");
     this.mob1SpriteSheetRight = new SpriteSheet("/wellingtonRight.png");
     try {
-      this.background = ImageIO.read(getClass().getResource("/trip.jpg"));
-      this.backgroundSprites = new SpriteSheet("/trip.jpg");
+      this.menuBackgroundImage = ImageIO.read(getClass().getResource("/trip.jpg"));
+      log.info("menuBackgroundImage: " + this.menuBackgroundImage);
     }
     catch (IOException e) {
       log.error("Background image not found: '" + e.getMessage() + "'");
@@ -120,15 +113,10 @@ public class SpriteManager {
     this.finish[0] = new Sprite(this.spriteSheet, 5, 0, false);
   }
 
-  public void initMenuBackground() {
-    this.menuBackground = new Sprite[1];
-    this.menuBackground[0] = new Sprite(this.backgroundSprites, 0, 0, false).getFullSpriteSheet(this.backgroundSprites);
+  public BufferedImage getMenuBackgroundImage() {
+    return this.menuBackgroundImage;
   }
-  
-  public Sprite[] getMenuBackground() {
-    return this.menuBackground;
-  }
-  
+
   public BufferedImage getLevelImage() {
     return this.levelImage;
   }
@@ -156,12 +144,6 @@ public class SpriteManager {
   public Sprite[] getBlueCrystal() {
     return this.blueCrystal;
   }
-
-  public BufferedImage getBackground() {
-    return this.background;
-  }
-
-  
 
   public Sprite[] getFinish() {
     return this.finish;

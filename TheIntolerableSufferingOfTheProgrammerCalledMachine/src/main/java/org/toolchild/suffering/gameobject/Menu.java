@@ -3,41 +3,32 @@ package org.toolchild.suffering.gameobject;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import org.apache.log4j.Logger;
-import org.toolchild.suffering.Game;
-import org.toolchild.suffering.Handler;
-import org.toolchild.suffering.Id;
-import org.toolchild.suffering.gfx.Sprite;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class Menu extends GameObject {
-  private static final Logger log = Logger.getLogger(Menu.class);
+public class Menu{
+  private static final Logger log = LogManager.getLogger(Menu.class);
+  private int                 x;
+  private int                 y;
+  private int                 width;
+  private int                 height;
+  private BufferedImage       menuBackgroundImage;
 
-  public Menu(int x, int y, int width, int height, Id id, Handler handler, Sprite[] sprites) {
-    super(x, y, width, height, id, handler, sprites);
+  public Menu(int x, int y, int width, int height, BufferedImage backgroundImage) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.menuBackgroundImage = backgroundImage;
+
   }
 
-  @Override
+  
   public void render(Graphics2D graphics2d) {
-    BufferedImage menuBackground = Game.SPRITE_MANAGER.getBackground();
-    graphics2d.drawImage(menuBackground, 0, 0, (int) Game.SIZE.getWidth(), (int) Game.SIZE.getHeight(), null);
+    log.trace("backgRoundImage: " + this.menuBackgroundImage);
+    graphics2d.drawImage(this.menuBackgroundImage, this.x, this.y, this.width, this.height, null);
 
-  }
-
-  public void tick() {
-    Game.keyInput.updateKeyEvents(null, this);
-//    log.info("tick");
-  }
-
-  public void handleSpaceKeyEvent(boolean isActive) {
-    if (isActive) {
-      log.info("Game Resumed");
-      this.handler.setPaused(false);
-    }
-  }
-
-  public void handleSpaceKeyReleaseEvent(boolean isActive) {
-    // TODO Auto-generated method stub
-    
   }
 
 }
+

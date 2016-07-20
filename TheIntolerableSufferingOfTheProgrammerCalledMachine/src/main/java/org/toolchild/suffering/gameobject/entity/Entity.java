@@ -3,7 +3,8 @@ package org.toolchild.suffering.gameobject.entity;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
 import org.toolchild.suffering.entity.movement.Movement;
@@ -18,7 +19,7 @@ import org.toolchild.suffering.gfx.Sprite;
  *
  */
 public abstract class Entity extends GameObject {
-  private static final Logger log    = Logger.getLogger(Entity.class);
+  private static final Logger log    = LogManager.getLogger(Entity.class);
   protected int               facing = 0;                                                                                       // 0 = left; 1 = right
   protected Movement          movement;
 

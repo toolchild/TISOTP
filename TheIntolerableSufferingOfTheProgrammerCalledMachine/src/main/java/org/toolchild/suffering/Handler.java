@@ -4,7 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.LinkedList;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.toolchild.suffering.gameobject.GameObject;
 import org.toolchild.suffering.gameobject.Menu;
 import org.toolchild.suffering.gameobject.entity.Entity;
@@ -17,13 +18,13 @@ import org.toolchild.suffering.gameobject.tile.PowerUpBlock;
 import org.toolchild.suffering.gameobject.tile.Tile;
 
 /**
- * The Handler for every {@link GameObject}, the {@link SpriteManager} and the {@link Camera}.
+ * The Handler for every {@link GameObject} and the {@link Camera}.
  * 
  * @author toolchild
  *
  */
 public class Handler {
-  private static final Logger    log      = Logger.getLogger(Handler.class);
+  private static final Logger    log      = LogManager.getLogger(Handler.class);
   private Camera                 camera;
   private LinkedList<GameObject> entities = new LinkedList<>();
   private LinkedList<GameObject> tiles    = new LinkedList<>();
@@ -38,19 +39,26 @@ public class Handler {
 
   public Handler() {
     this.camera = new Camera(); // the new camera is locked to the player from start
-    this.menu = new Menu(0, 0, (int)Game.SIZE.getWidth(), (int)Game.SIZE.getHeight(), Id.menu, this, Game.SPRITE_MANAGER.getMenuBackground());
+  }
+
+  public void handleSpaceKeyEvent(boolean isActive) {
+    if (this.isPaused && isActive) {
+      log.info("Game Resumed");
+      setPaused(false);
+    } else if (isActive) {
+      setPaused(true);
+      log.debug("Game Paused");
+    }
   }
 
   public void init() {
     createLevel();
+    this.menu = new Menu(0, 0, (int) Game.SIZE.getWidth(), (int) Game.SIZE.getHeight(), Game.SPRITE_MANAGER.getMenuBackgroundImage());
   }
 
   public void tick() {
-
-    if (isPaused) {
-      menu.tick();
-    } else {
-
+    Game.keyInput.updateKeyEvents(null, null, this);
+    if (!this.isPaused) {
       for (GameObject player : this.players) {
         if (player.getId() == Id.player) {
           this.camera.tick((Player) player);
@@ -91,12 +99,12 @@ public class Handler {
    * @param lastSecondFrames The frames for debug display.
    */
   public void render(Graphics2D graphics2d, int lastSecondTicks, int lastSecondFrames) {
-    if (isPaused) {
-      menu.render(graphics2d);
+    if (this.isPaused) {
+      this.menu.render(graphics2d);
     } else {
 
       this.camera.releaseGraphicsFromCamera(graphics2d);
-      graphics2d.drawImage(Game.SPRITE_MANAGER.getBackground(), 0, 0, this.levelWidth * 64, this.levelHeight * 64, null);
+      graphics2d.drawImage(Game.SPRITE_MANAGER.getMenuBackgroundImage(), 0, 0, this.levelWidth * 64, this.levelHeight * 64, null);
 
       int tilesRendered = renderTiles(graphics2d);
       log.trace("tilesRendered: " + tilesRendered);

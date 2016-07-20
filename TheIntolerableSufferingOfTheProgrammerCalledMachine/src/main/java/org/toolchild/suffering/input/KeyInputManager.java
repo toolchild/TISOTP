@@ -85,13 +85,13 @@ public class KeyInputManager implements KeyListener {
 
   private void spaceKeyEvent(Handler handler) {
     this.spaceKeyStatus.canActivate = false;
-    log.debug("SpaceKeyEvent: canActivate: " + this.spaceKeyStatus.canActivate + " isActive:" + this.spaceKeyStatus.isActive);
+    log.trace("SpaceKeyEvent: canActivate: " + this.spaceKeyStatus.canActivate + " isActive:" + this.spaceKeyStatus.isActive);
     handler.handleSpaceKeyEvent(true);
   }
 
   private void spaceKeyReleaseEvent(Handler handler) {
     this.spaceKeyStatus.canActivate = true;
-    log.debug("SpaceKeyReleaseEvent: canActivate: " + this.spaceKeyStatus.canActivate + " isActive:" + this.spaceKeyStatus.isActive);    
+    log.trace("SpaceKeyReleaseEvent: canActivate: " + this.spaceKeyStatus.canActivate + " isActive:" + this.spaceKeyStatus.isActive);    
     handler.handleSpaceKeyEvent(false);
   }
 
@@ -116,7 +116,7 @@ public class KeyInputManager implements KeyListener {
             break;
           }
           case KeyEvent.VK_SPACE: {
-            log.debug("SpaceKeyPressed");
+            log.trace("SpaceKeyPressed");
             this.spaceKeyStatus.isActive = true;
             break;
           }
@@ -152,7 +152,7 @@ public class KeyInputManager implements KeyListener {
             break;
           }
           case KeyEvent.VK_SPACE: {
-            log.debug("SpaceKeyReleased");
+            log.trace("SpaceKeyReleased");
             this.spaceKeyStatus.isActive = false;
             break;
           }

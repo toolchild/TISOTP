@@ -2,6 +2,7 @@ package org.toolchild.suffering;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
 import org.apache.logging.log4j.LogManager;
@@ -32,6 +33,9 @@ public class Handler {
   private Menu                   menu;
 
   private boolean                isPaused;
+  private int                    level = 1;
+  
+
   private int                    tilesTicked;
   private int                    entitiesTicked;
   private int                    levelWidth;
@@ -52,7 +56,12 @@ public class Handler {
   }
 
   public void init() {
-    createLevel();
+    if (this.level > 1){
+      this.entities = new LinkedList<>();
+      this.tiles    = new LinkedList<>();
+      this.players  = new LinkedList<>();  
+    }   
+    createLevel(this.level);
     this.menu = new Menu(0, 0, (int) Game.SIZE.getWidth(), (int) Game.SIZE.getHeight(), Game.SPRITE_MANAGER.getMenuBackgroundImage());
   }
 
@@ -171,12 +180,29 @@ public class Handler {
 
   }
 
-  private void createLevel() {
-    this.levelWidth = Game.SPRITE_MANAGER.getLevelImage().getWidth();
-    this.levelHeight = Game.SPRITE_MANAGER.getLevelImage().getHeight();
+  private void createLevel(int level) {
+    BufferedImage levelImage = null;
+    switch (level) {
+      case 1: {
+        levelImage = Game.SPRITE_MANAGER.getLevel1Image();
+        this.levelWidth = Game.SPRITE_MANAGER.getLevel1Image().getWidth();
+        this.levelHeight = Game.SPRITE_MANAGER.getLevel1Image().getHeight();
+        break;
+      }
+      case 2: {
+        levelImage = Game.SPRITE_MANAGER.getLevel2Image();
+        this.levelWidth = levelImage.getWidth();
+        this.levelHeight = levelImage.getHeight();
+        break;
+      }
+      default: {
+        log.error("LevelImage was not loaded.");
+      }
+
+    }
     for (int y = 0; y < this.levelHeight; y++) {
       for (int x = 0; x < this.levelWidth; x++) {
-        int pixel = Game.SPRITE_MANAGER.getLevelImage().getRGB(x, y);
+        int pixel = levelImage.getRGB(x, y);
         int red = (pixel >> 16) & 0xff;
         int green = (pixel >> 8) & 0xff;
         int blue = (pixel) & 0xff;
@@ -189,6 +215,10 @@ public class Handler {
         else if (red == 255 && green == 0 && blue == 0) addEntity(new BlueCrystal(x * size, y * size, size, size, Id.blueCrystal, this, Game.SPRITE_MANAGER.getBlueCrystal()));
       }
     }
+  }
+  
+  public void nextLevel(){
+    this.level++;   
   }
 
   public void addEntity(Entity entity) {
@@ -245,5 +275,5 @@ public class Handler {
   public void setPaused(boolean isPaused) {
     this.isPaused = isPaused;
   }
-
+  
 }

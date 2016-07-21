@@ -26,7 +26,9 @@ public class SpriteManager {
   private SpriteSheet         mob1SpriteSheetRight;
   
   private BufferedImage       menuBackgroundImage;
-  private BufferedImage       levelImage;
+  private BufferedImage       level1Image;
+  private BufferedImage       level2Image;
+  
 
   private Sprite[]            grass;
   private Sprite[]            powerUpBlock;
@@ -49,7 +51,8 @@ public class SpriteManager {
 
   private void initLevelImage() {
     try {
-      this.levelImage = ImageIO.read(getClass().getResource("/level1.png"));
+      this.level1Image = ImageIO.read(getClass().getResource("/level1.png"));
+      this.level2Image = ImageIO.read(getClass().getResource("/level2.png"));
     }
     catch (IOException e) {
       log.error("LevelImage not found: '" + e.getMessage() + "'");
@@ -117,8 +120,12 @@ public class SpriteManager {
     return this.menuBackgroundImage;
   }
 
-  public BufferedImage getLevelImage() {
-    return this.levelImage;
+  public BufferedImage getLevel1Image() {
+    return this.level1Image;
+  }
+
+  public BufferedImage getLevel2Image() {
+    return this.level2Image;
   }
 
   public Sprite[] getPowerUpBlock() {

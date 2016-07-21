@@ -216,7 +216,8 @@ public class Player extends Entity {
 
   private boolean handleAllTileInteraction() {
     ArrayList<Tile> tilesInteracting = new ArrayList<>();
-    for (GameObject tile : this.handler.getTiles()) {
+    for (int t  =0 ; t < this.handler.getTiles().size(); t++) {
+      Tile tile = (Tile) this.handler.getTiles().get(t);
       if (tile.getX() >= this.x - 5 * PLAYER_DEFAULT_SIZE && tile.getX() <= this.x + 5 * PLAYER_DEFAULT_SIZE) {
         if (tile.getY() >= this.y - 5 * PLAYER_DEFAULT_SIZE && tile.getY() <= this.y + 5 * PLAYER_DEFAULT_SIZE) {
           Tile tileInstance = (Tile) tile;
@@ -267,6 +268,10 @@ public class Player extends Entity {
       statusMessage = "finish interaction: Finish touched";
       this.isValnurable = false;
       this.handler.setPaused(true);
+      this.handler.nextLevel();
+      this.handler.init();
+      this.handler.setPaused(false);
+      
     }
     return statusMessage;
   }

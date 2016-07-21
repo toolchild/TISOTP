@@ -37,8 +37,6 @@ public class KeyInputManager implements KeyListener {
   }
 
   public boolean updateKeyEvents(Player player, Menu menu, Handler handler) {
-
-    
     if (!this.leftKeyStatus.isActive) leftKeyReleaseEvent(player);
     if (!this.rightKeyStatus.isActive) rightKeyReleaseEvent(player);
     // keep releaseEvent and Event separated for left and right key. You will break your brain if you don't.

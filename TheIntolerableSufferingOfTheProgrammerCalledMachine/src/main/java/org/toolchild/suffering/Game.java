@@ -16,7 +16,8 @@ import org.toolchild.suffering.input.KeyInputManager;
 public class Game extends Canvas implements Runnable {
   private static final long         serialVersionUID = 5680154129348532365L;
   private static final Logger       log              = LogManager.getLogger(Game.class);
-  private static final int          TICKS_PER_SECOND = 60;
+  public static final int           TICKS_PER_SECOND = 120;
+  public static final double        SPEED_MODIFIER   = 60.0 / TICKS_PER_SECOND; // not done yet 
 
   public static final int           GAME_WIDTH       = 64;
   public static final int           SCALE            = 24;
@@ -149,11 +150,11 @@ public class Game extends Canvas implements Runnable {
 
   private static void initAndGetJFrame(Game game) {
     JFrame frame = new JFrame(TITLE);
-//     frame.setUndecorated(true); //this must be switched by a configuration.
+    // frame.setUndecorated(true); //this must be switched by a configuration.
     frame.add(game);
-    
+
     frame.setResizable(false);
-//     frame.setLocationRelativeTo(null); // put the frame in the middle of the screen
+    // frame.setLocationRelativeTo(null); // put the frame in the middle of the screen
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.pack();
     frame.setVisible(true);

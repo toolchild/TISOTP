@@ -26,7 +26,6 @@ public class Menu{
 
   
   public void render(Graphics2D graphics2d) {
-    log.trace("backgRoundImage: " + this.menuBackgroundImage);
     graphics2d.setFont(new Font("TimesRoman", Font.BOLD, 60)); // the 60 should be derived from Game.Size
     graphics2d.drawImage(this.menuBackgroundImage, this.x, this.y, this.width, this.height, null);
     graphics2d.drawString("Game Paused", Game.getFrameWidth()/3, Game.getFrameHeight()/2); //is this clean?

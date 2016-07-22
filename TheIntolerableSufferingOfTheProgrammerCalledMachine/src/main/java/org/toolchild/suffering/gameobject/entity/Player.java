@@ -5,11 +5,11 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;import org.toolchild.suffering.Camera;
+import org.apache.logging.log4j.Logger;
+import org.toolchild.suffering.Camera;
 import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
-import org.toolchild.suffering.gameobject.GameObject;
 import org.toolchild.suffering.gameobject.tile.Tile;
 import org.toolchild.suffering.gfx.Sprite;
 
@@ -21,8 +21,8 @@ import org.toolchild.suffering.gfx.Sprite;
  */
 public class Player extends Entity {
   private static final Logger log                  = LogManager.getLogger(Player.class);
-  private static final int    PLAYER_DEFAULT_SIZE  = 63;
-
+  private static final int    PLAYER_DEFAULT_SIZE  = 64;
+  private final int           GROWTH_MODIFIER      = 16;
   private int                 frame                = 0;
   private int                 frameDelay           = 0;
   private int                 jumpCount            = 0;
@@ -36,36 +36,36 @@ public class Player extends Entity {
 
   public Player(int x, int y, int width, int height, Id id, Handler handler, Sprite[] sprites) {
     super(x, y, width, height, id, handler, sprites);
-    this.movement.setMoveSpeed(10);
+    this.movement.setMoveSpeed((int) ((8.0) * Game.SPEED_MODIFIER));
     this.jumpStartY = y;
   }
 
   public void handleJumpKeyEvent(boolean isActive) {
-    log.trace("y '" + this.y + "' jumpStartY '" + this.jumpStartY + "'");
+    // log.trace("y '" + this.y + "' jumpStartY '" + this.jumpStartY + "'");
     this.jumpHeight = this.jumpStartY - this.y;
-    boolean canJump = this.jumpCount < 100 && this.movement.getGravity() < 1.0 && this.jumpHeight < this.maxJumpHeight;
+    boolean canJump = this.jumpCount < 100 / Game.SPEED_MODIFIER && this.movement.getGravity() < 1.0 && this.jumpHeight < this.maxJumpHeight;
     boolean initJump = this.jumpCount < 1;
-    log.trace("jump height : '" + this.jumpHeight + "' key active : '" + isActive + "'count : '" + this.jumpCount + "' canjump : '" + canJump + "' init jump : '" + initJump + "' is jumping : '" + this.movement.isJumping() + "' is falling : '" + this.movement.isFalling() + "'");
+    // log.trace("jump height : '" + this.jumpHeight + "' key active : '" + isActive + "'count : '" + this.jumpCount + "' canjump : '" + canJump + "' init jump : '" + initJump + "' is jumping : '" + this.movement.isJumping() + "' is falling : '" + this.movement.isFalling() + "'");
 
     if (isActive && canJump && initJump) {
       this.movement.setJumping(true);
-      this.movement.setGravity(-10);
+      this.movement.setGravity(-10 * Game.SPEED_MODIFIER);
       this.jumpCount++;
-      log.trace("init jump!");
+      // log.trace("init jump!");
       this.jumpStartY = this.y;
     } else if (isActive && canJump) {
-      this.movement.setGravity(this.movement.getGravity() - 0.5);
+      this.movement.setGravity(this.movement.getGravity() - 0.5 * Game.SPEED_MODIFIER);
       this.jumpCount++;
-      log.trace("Jumped!");
-    } else if (!isActive && this.movement.isJumping() && this.jumpCount != 100) {
-      this.jumpCount = 100;
-      this.movement.setGravity(this.movement.getGravity() + 0.5);
-      log.trace("Jump Stop!");
+      // log.trace("Jumped!");
+    } else if (!isActive && this.movement.isJumping() && this.jumpCount != 100 * Game.SPEED_MODIFIER) {
+      this.jumpCount = (int) (100 / Game.SPEED_MODIFIER);
+      this.movement.setGravity(this.movement.getGravity() + 0.5 * Game.SPEED_MODIFIER);
+      // log.trace("Jump Stop!");
     } else if (!isActive && !this.movement.isJumping()) {
       this.jumpCount = 0;
       this.jumpHeight = 0;
       this.jumpStartY = this.y;
-      this.movement.setGravity(this.movement.getGravity() + 0.5);
+      this.movement.setGravity(this.movement.getGravity() + 0.5 * Game.SPEED_MODIFIER);
     }
   }
 
@@ -75,7 +75,7 @@ public class Player extends Entity {
       this.facing = 1;
       log.trace("Went Right!");
     } else {
-      log.trace("Right Released");
+      log.trace("Stop Right!");
       this.movement.setVelocityX(0);
     }
   }
@@ -86,11 +86,10 @@ public class Player extends Entity {
       this.movement.setVelocityX(-this.movement.getMoveSpeed());
       log.trace("Went Left!");
     } else {
-      log.trace("Left Released");
+      log.trace("Sto Left!");
       this.movement.setVelocityX(0);
     }
   }
-
 
   @Override
   public void render(Graphics2D graphics2D) {
@@ -106,10 +105,10 @@ public class Player extends Entity {
   @Override
   public void tick() {
     Game.keyInput.updateKeyEvents(this, null, this.handler);
-    log.trace("handle gravity and movement " + handleGravityAndMovement());
-    log.trace("update position: " + updatePosition());
-    log.trace("handle all tile interaction: " + handleAllTileInteraction());
-    log.trace("handle Animation " + handleAnimationCycle());
+    handleGravityAndMovement();
+    updatePosition();
+    handleAllTileInteraction();
+    handleAnimationCycle();
 
     if (this.movement.isJumping()) {
       this.jumpTimeCount++;
@@ -158,10 +157,10 @@ public class Player extends Entity {
         entity.die();
         log.debug("mob1 interaction bottom");
       } else if (getBounds().intersects(entity.getBounds()) && this.isValnurable) {
-        this.height = (int) (this.height * (1.0 / 1.2));
-        this.width = (int) (this.width * (1.0 / 1.2));
+        this.height = (int) (this.height - GROWTH_MODIFIER);
+        this.width = (int) (this.width - GROWTH_MODIFIER);
         this.isValnurable = false;
-        if (this.height < 40) {
+        if (this.height < 30) {
           die();
         }
         log.debug("mob1 interaction");
@@ -172,11 +171,11 @@ public class Player extends Entity {
 
   private void handleBlueCrystalInteraction(Entity entity) {
     if (entity.getId() == Id.blueCrystal) {
-      if (this.height <= 1.8 * 63) {
+      if (this.height < PLAYER_DEFAULT_SIZE * 2) {
         if (getBounds().intersects(entity.getBounds())) {
-          this.y = this.y - (int) (this.height * 0.2);
-          this.height = (int) (this.height * 1.2);
-          this.width = (int) (this.width * 1.2);
+          this.height = this.height + GROWTH_MODIFIER;
+          this.width = this.width + GROWTH_MODIFIER;
+          this.y = this.y - GROWTH_MODIFIER;
           entity.die();
         }
       }
@@ -188,14 +187,13 @@ public class Player extends Entity {
     this.handler.removePlayer(this);
   }
 
-  private boolean handleGravityAndMovement() {
-    log.trace("handle Jumping " + this.movement.handlePlayerJumping());
-    log.trace("handle Falling " + this.movement.handleFalling());
-    log.trace("handle Floating " + this.movement.handleFloating());
-    return true;
+  private void handleGravityAndMovement() {
+    this.movement.handlePlayerJumping();
+    this.movement.handleFalling();
+    this.movement.handleFloating();
   }
 
-  private boolean handleAnimationCycle() {
+  private void handleAnimationCycle() {
     if (this.movement.getVelocityX() != 0) {
       this.movement.setMoving(true);
     } else {
@@ -203,7 +201,7 @@ public class Player extends Entity {
     }
     if (this.movement.isMoving()) {
       this.frameDelay++;
-      if (this.frameDelay >= 3) {
+      if (this.frameDelay >= 4) {
         this.frame++;
         if (this.frame >= this.sprites.length / 2) {
           this.frame = 0;
@@ -211,22 +209,17 @@ public class Player extends Entity {
         this.frameDelay = 0;
       }
     }
-    return true;
   }
 
-  private boolean handleAllTileInteraction() {
+  private void handleAllTileInteraction() {
     ArrayList<Tile> tilesInteracting = new ArrayList<>();
-    for (int t  =0 ; t < this.handler.getTiles().size(); t++) {
+    for (int t = 0; t < this.handler.getTiles().size(); t++) {
       Tile tile = (Tile) this.handler.getTiles().get(t);
       if (tile.getX() >= this.x - 5 * PLAYER_DEFAULT_SIZE && tile.getX() <= this.x + 5 * PLAYER_DEFAULT_SIZE) {
         if (tile.getY() >= this.y - 5 * PLAYER_DEFAULT_SIZE && tile.getY() <= this.y + 5 * PLAYER_DEFAULT_SIZE) {
-          Tile tileInstance = (Tile) tile;
-          String singleTileInteractionStatusMessage = handleSingleTileInteraction(tileInstance);
-          if (singleTileInteractionStatusMessage != null) {
-            log.trace("single tile interaction: " + singleTileInteractionStatusMessage);
-            if (singleTileInteractionStatusMessage.contains("Top")) {
-              tilesInteracting.add(tileInstance);
-            }
+          boolean topTileInteraction = handleSingleTileInteraction(tile);
+          if (topTileInteraction) {
+            tilesInteracting.add(tile);
           }
         }
       }
@@ -234,26 +227,24 @@ public class Player extends Entity {
     for (Tile tile : tilesInteracting) {
       this.y = tile.getY() + tile.getHeight();
     }
-    return true;
   }
 
-  private String handleSingleTileInteraction(Tile tile) {  // handleAllTileInteraction sub-method
-    String statusMessage;
-    if (!tile.isSolid()) {
-      statusMessage = "false, tile not solid";
-    } else if (tile.getId() == Id.powerUpBlock) {
-      statusMessage = handlePowerUpBlockInteraction(tile);
-    } else if (tile.getId() == Id.wall) {
-      statusMessage = handleLevelTileInteraction(tile);
-    } else if (tile.getId() == Id.finish) {
-      statusMessage = handleFinishInteraction(tile);
-    } else statusMessage = "false, tile id not recognized";
-
-    return statusMessage;
+  private boolean handleSingleTileInteraction(Tile tile) {  // handleAllTileInteraction sub-method
+    boolean topTileInteraction = false;
+    if (tile.isSolid()) {
+      if (tile.getId() == Id.powerUpBlock) {
+        handlePowerUpBlockInteraction(tile);
+      } else if (tile.getId() == Id.wall) {
+        handleLevelTileInteraction(tile);
+      } else if (tile.getId() == Id.finish) {
+        handleFinishInteraction(tile);
+      }
+    }
+    return topTileInteraction;
   }
 
   private String handlePowerUpBlockInteraction(Tile powerUpBlock) {
-    String statusMessage = null;
+    String statusMessage = "";
     if (getBoundsTop().intersects(powerUpBlock.getBounds())) {
       statusMessage = "powerUpBlock interaction: hitTop";
       powerUpBlock.setActivated(true);
@@ -271,7 +262,7 @@ public class Player extends Entity {
       this.handler.nextLevel();
       this.handler.init();
       this.handler.setPaused(false);
-      
+
     }
     return statusMessage;
   }
@@ -282,36 +273,46 @@ public class Player extends Entity {
    * @param tile the Tile to interact with.
    * @return The statusMessage
    */
-  private String handleLevelTileInteraction(Tile tile) {
-    String statusMessage = null;
+  private boolean handleLevelTileInteraction(Tile tile) {
+    boolean hitTop = false;
     if (getBoundsTop().intersects(tile.getBounds())) {
-      statusMessage = "level tile interaction: hitTop";
+      log.debug("Top Hit! player.y: " + this.y + " tile.y (bottum) " + (tile.getY() + tile.getHeight()));
+      log.debug("Top Hit! player.x: " + this.x + " tile.x (right corner) " + (tile.getX() + tile.getWidth()));
+      hitTop = true;
+      this.y = tile.getY() + tile.getHeight(); // reset height, looks cleaner
+      log.debug("Top Reposition! player.y: " + this.y + " tile.y (bottum) " + (tile.getY() + tile.getHeight()));
+      log.debug("Top Reposition! player.x: " + this.x + " tile.x (right corner) " + (tile.getX() + tile.getWidth()));
       this.movement.setVelocityY(0);
       if (this.movement.isJumping()) {
         this.movement.setGravity(1.0);
         this.movement.setFalling(true);
       }
-    } else if (getBoundsBottom().intersects(tile.getBounds()) && this.movement.getGravity() > 0) {
-      statusMessage = "level tile interaction: hitBottom";
+    }
+    if (getBoundsBottom().intersects(tile.getBounds()) && this.movement.getGravity() > 0) {
       this.movement.setVelocityY(0);
       this.movement.setJumping(false);
+      if (this.movement.getGravity() > this.movement.getMoveSpeed()) {
+        log.debug("gravity set to 0");
+        this.movement.setGravity(1.0);
+      }
       this.jumpCount = 0;
       this.y = tile.getY() - this.height; // reset height, looks cleaner
       this.jumpStartY = this.y;
       if (this.movement.isFalling()) {
         this.movement.setFalling(false);
       }
-    } else if (getBoundsLeft().intersects(tile.getBounds())) {
-      statusMessage = "level tile interaction: hitLeft";
+    }
+    if (getBoundsLeft().intersects(tile.getBounds())) {
+      log.debug("Left Hit! player.x: " + this.x + " tile.x (right corner) " + (tile.getX() + tile.getWidth()));
       this.movement.setVelocityY(0);
       this.x = tile.getX() + tile.getWidth();
-    } else if (getBoundsRight().intersects(tile.getBounds())) {
-      statusMessage = "level tile interaction: hitRight";
+    }
+    if (getBoundsRight().intersects(tile.getBounds())) {
+      log.debug("Right Hit player.x: " + (this.x + this.width) + " tile.x (right corner) " + tile.getX());
       this.movement.setVelocityY(0);
       this.x = tile.getX() - this.width;
     }
-
-    return statusMessage;
+    return hitTop;
   }
 
   private void renderPlayer(Graphics2D graphics2D) {
@@ -332,14 +333,12 @@ public class Player extends Entity {
   @Override
   protected void handleAnimationRendering(Graphics2D graphics) {
     if (this.facing == 0) {
-      log.trace("facing left frame " + this.frame);
       if (!this.movement.isMoving()) {
         this.frame = 0;
       }
       graphics.drawImage(this.sprites[this.frame].getImage(), this.x, this.y, this.width, this.height, null);
     }
     if (this.facing == 1) {
-      log.trace("facing right frame:" + this.frame);
       if (!this.movement.isMoving()) {
         this.frame = 0;
       }

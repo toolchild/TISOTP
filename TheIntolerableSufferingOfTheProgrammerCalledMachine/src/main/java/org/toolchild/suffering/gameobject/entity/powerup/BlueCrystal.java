@@ -12,6 +12,7 @@ import org.toolchild.suffering.gfx.Sprite;
 
 /**
  * Can be picked up by touch and makes the player grow.
+ * 
  * @author Bob
  *
  */
@@ -22,7 +23,6 @@ public class BlueCrystal extends Entity {
 
   private Random              random     = new Random();
 
-  
   public BlueCrystal(int x, int y, int width, int height, Id id, Handler handler, Sprite[] sprites) {
     super(x, y, width, height, id, handler, sprites);
     int direction = this.random.nextInt(2); // direction: 0 = left ; 1 = right
@@ -41,8 +41,8 @@ public class BlueCrystal extends Entity {
       }
       this.frameDelay = 0;
     }
-    log.trace("handle all tile interaction: " + handleAllInteraction());
-    log.trace("handle gravity and movement: " + handleGravityAndMovement());
+    handleAllInteraction();
+    handleGravityAndMovement();
   }
 
   private boolean updatePosition() {
@@ -52,11 +52,10 @@ public class BlueCrystal extends Entity {
   }
 
   private boolean handleGravityAndMovement() {
-    log.trace("handle Falling " + this.movement.handleFalling());
-    log.trace("handle Floating " + this.movement.handleFloating());
+    this.movement.handleFalling();
+    this.movement.handleFloating();
     return true;
   }
-
 
   @Override
   protected void handleAnimationRendering(Graphics2D graphics2D) {

@@ -38,27 +38,9 @@ public abstract class GameObject {
 
   }
 
-  protected int boundsOffset = 10;
-  protected int boundsWidth  = 5;
-
+ 
   public Rectangle getBounds() {
     return new Rectangle(this.x, this.y, this.width, this.height);
-  }
-
-  public Rectangle getBoundsTop() {
-    return new Rectangle(this.x + this.boundsOffset, this.y, this.width - 2 * this.boundsOffset, this.boundsWidth);
-  }
-
-  public Rectangle getBoundsBottom() {
-    return new Rectangle(this.x + this.boundsOffset, this.y + this.height - this.boundsWidth, this.width - 2 * this.boundsOffset, this.boundsWidth);
-  }
-
-  public Rectangle getBoundsLeft() {
-    return new Rectangle(this.x, this.y + this.boundsOffset, this.boundsWidth, this.height - 2 * this.boundsOffset);
-  }
-
-  public Rectangle getBoundsRight() {
-    return new Rectangle(this.x + this.width - this.boundsWidth, this.y + this.boundsOffset, this.boundsWidth, this.height - 2 * this.boundsOffset);
   }
 
   public int getX() {

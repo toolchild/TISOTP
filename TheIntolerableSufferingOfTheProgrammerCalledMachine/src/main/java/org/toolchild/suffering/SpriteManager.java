@@ -67,7 +67,7 @@ public class SpriteManager {
     this.mob1SpriteSheetRight = new SpriteSheet("/wellingtonRight.png");
     try {
       this.menuBackgroundImage = ImageIO.read(getClass().getResource("/trip.jpg"));
-      log.info("menuBackgroundImage: " + this.menuBackgroundImage);
+      log.trace("menuBackgroundImage: " + this.menuBackgroundImage);
     }
     catch (IOException e) {
       log.error("Background image not found: '" + e.getMessage() + "'");

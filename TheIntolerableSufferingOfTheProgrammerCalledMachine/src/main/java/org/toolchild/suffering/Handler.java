@@ -116,14 +116,11 @@ public class Handler {
       graphics2d.drawImage(Game.SPRITE_MANAGER.getMenuBackgroundImage(), 0, 0, this.levelWidth * 64, this.levelHeight * 64, null);
 
       int tilesRendered = renderTiles(graphics2d);
-      log.trace("tilesRendered: " + tilesRendered);
       int entitiesRendered = renderEntities(graphics2d);
-      log.trace("entitiesRendered: " + entitiesRendered);
 
       for (GameObject player : this.players) { // more than 1 player compatible
         ((Player) player).render(graphics2d, this.camera);
       }
-      log.trace("entities: " + this.entities.size());
       this.camera.lockGraphicsToCamera(graphics2d);
       renderMinimap(graphics2d);
       renderDebug(graphics2d, lastSecondTicks, lastSecondFrames, tilesRendered, entitiesRendered);

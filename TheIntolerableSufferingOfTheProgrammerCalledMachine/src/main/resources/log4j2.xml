@@ -7,7 +7,35 @@
   </Appenders>
   <Loggers>
     <Logger name="org.apache.log4j.xml" level="debug" />
-    <Root level="debug">
+    
+    <logger name="org.toolchild.suffering.Camera" level="info" />
+    <logger name="org.toolchild.suffering.Game" level="info" />
+    <logger name="org.toolchild.suffering.Handler" level="info" />
+    <logger name="org.toolchild.suffering.Id" level="info" />
+    <logger name="org.toolchild.suffering.SpriteManager" level="info" />
+    
+    <logger name="org.toolchild.suffering.input.KeyInputManager" level="info" />
+    <logger name="org.toolchild.suffering.input.KeyStatus" level="info" />
+    
+    <logger name="org.toolchild.suffering.gfx.Sprite" level="info" />
+    <logger name="org.toolchild.suffering.gfx.SpriteSheet" level="info" />
+    
+    <logger name="org.toolchild.suffering.gameobject.GameObject" level="info" />
+    <logger name="org.toolchild.suffering.gameobject.Menu" level="info" />
+    
+    <logger name="org.toolchild.suffering.gameobject.entity.Movement" level="info" />
+    <logger name="org.toolchild.suffering.gameobject.entity.Entity" level="info" />
+    <logger name="org.toolchild.suffering.gameobject.entity.Player" level="debug" />
+    
+    <logger name="org.toolchild.suffering.gameobject.entity.powerup.BlueCrystal" level="info" />
+    <logger name="org.toolchild.suffering.gameobject.entity.mob.Mob1" level="info" />
+    
+    <logger name="org.toolchild.suffering.gameobject.tile.Tile" level="info" />
+    <logger name="org.toolchild.suffering.gameobject.tile.PowerUpBlock" level="info" />
+    <logger name="org.toolchild.suffering.gameobject.tile.Grass" level="info" />
+    <logger name="org.toolchild.suffering.gameobject.tile.Finish" level="info" />
+    
+    <Root level="info">
       <AppenderRef ref="STDOUT" />
     </Root>
   </Loggers>

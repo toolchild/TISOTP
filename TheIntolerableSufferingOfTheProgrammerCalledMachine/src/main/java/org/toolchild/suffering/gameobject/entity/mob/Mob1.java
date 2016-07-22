@@ -40,10 +40,10 @@ public class Mob1 extends Entity {
     if (this.movement.getVelocityX() > 0) {
       this.facing = 1;
     }
-    log.trace("handle animation cycle: " + handleAnimationCycle());
-    log.trace("update Position: " + updatePosition());
-    log.trace("handle all tile interaction: " + handleAllInteraction());
-    log.trace("handle gravity and movement: " + handleGravityAndMovement());
+    handleAnimationCycle();
+    updatePosition();
+    handleAllInteraction();
+    handleGravityAndMovement();
   }
 
   private boolean updatePosition() {
@@ -71,8 +71,8 @@ public class Mob1 extends Entity {
   }
 
   private boolean handleGravityAndMovement() {
-    log.trace("handle Falling " + this.movement.handleFalling());
-    log.trace("handle Floating " + this.movement.handleFloating());
+    this.movement.handleFalling();
+    this.movement.handleFloating();
     return true;
   }
 
@@ -80,10 +80,8 @@ public class Mob1 extends Entity {
   protected void handleAnimationRendering(Graphics2D graphics2D) {
     if (this.facing == 0) {
       graphics2D.drawImage(this.sprites[this.frame].getImage(), this.x, this.y, this.width, this.height, null);
-      log.trace("facing left frame " + this.frame);
     } else if (this.facing == 1) {
       graphics2D.drawImage(this.sprites[this.frame + 8].getImage(), this.x, this.y, this.width, this.height, null);
-      log.trace("facing right frame:" + (this.frame + 8));
     }
   }
 

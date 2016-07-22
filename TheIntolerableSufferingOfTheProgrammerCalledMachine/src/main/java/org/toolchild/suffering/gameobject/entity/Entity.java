@@ -2,12 +2,13 @@ package org.toolchild.suffering.gameobject.entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
-import org.toolchild.suffering.entity.movement.Movement;
 import org.toolchild.suffering.gameobject.GameObject;
 import org.toolchild.suffering.gameobject.tile.Tile;
 import org.toolchild.suffering.gfx.Sprite;
@@ -23,6 +24,11 @@ public abstract class Entity extends GameObject {
   protected int               facing = 0;                                                                                       // 0 = left; 1 = right
   protected Movement          movement;
 
+  protected int boundsTrim = (int) (10 * Game.SPEED_MODIFIER);
+  protected int boundsInset= (int) (1 * Game.SPEED_MODIFIER);
+  protected int boundsWidth  = (int) (Game.SPEED_MODIFIER < 1 ? 1: Game.SPEED_MODIFIER);
+
+  
   /**
    * 
    * @param x x-coordinate
@@ -38,6 +44,23 @@ public abstract class Entity extends GameObject {
     this.movement = new Movement();
   }
 
+  public Rectangle getBoundsTop() {
+    return new Rectangle(this.x + this.boundsTrim, this.y, this.width - 2 * this.boundsTrim, this.boundsWidth);
+  }
+
+  public Rectangle getBoundsBottom() {
+    return new Rectangle(this.x + this.boundsTrim, this.y + this.height - this.boundsWidth, this.width - 2 * this.boundsTrim, this.boundsWidth);
+  }
+
+  public Rectangle getBoundsLeft() {
+    return new Rectangle(this.x, this.y + this.boundsTrim, this.boundsWidth, this.height - 2 * this.boundsTrim);
+  }
+
+  public Rectangle getBoundsRight() {
+    return new Rectangle(this.x + this.width - this.boundsWidth, this.y + this.boundsTrim, this.boundsWidth, this.height - 2 * this.boundsTrim);
+  }
+  
+  
   /**
    * handles the logic
    */
@@ -52,12 +75,8 @@ public abstract class Entity extends GameObject {
   @Override
   public void render(Graphics2D graphics2D) {
     handleAnimationRendering(graphics2D);
-
     graphics2D.setColor(Color.BLUE);
-    graphics2D.draw(getBoundsTop());
-    graphics2D.draw(getBoundsBottom());
-    graphics2D.draw(getBoundsLeft());
-    graphics2D.draw(getBoundsRight());
+    drawBounds(graphics2D);
   }
 
   protected abstract void handleAnimationRendering(Graphics2D graphics2D);
@@ -66,6 +85,13 @@ public abstract class Entity extends GameObject {
     handleAllEntityInteraction();
     handleAllTileInteraction();
     return true;
+  }
+
+  private void drawBounds(Graphics2D graphics2D) {
+    graphics2D.draw(getBoundsTop());
+    graphics2D.draw(getBoundsBottom());
+    graphics2D.draw(getBoundsLeft());
+    graphics2D.draw(getBoundsRight());
   }
 
   private void handleAllTileInteraction() {

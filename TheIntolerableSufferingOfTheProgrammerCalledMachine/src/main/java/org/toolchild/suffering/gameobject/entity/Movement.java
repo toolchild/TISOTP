@@ -1,7 +1,5 @@
 package org.toolchild.suffering.gameobject.entity;
 
-import org.toolchild.suffering.Game;
-
 public class Movement {
   // private static final Logger log = Logger.getLogger(Movement.class);
 
@@ -79,9 +77,9 @@ public class Movement {
     return true;
   }
 
-  public boolean handleFalling() {  // handleGravityAndMovement sub-method
+  public boolean handleFalling(int speedmodifier) {  // handleGravityAndMovement sub-method
     if (this.isFalling) {
-      this.gravity = this.gravity + 0.5 * Game.SPEED_MODIFIER;  // handle gravity
+      this.gravity = this.gravity + 0.5 * speedmodifier;  // handle gravity
       // log.debug("Falling gravity = " + gravity);
       this.velocityY = (int) (this.gravity);    // handle movement
     }

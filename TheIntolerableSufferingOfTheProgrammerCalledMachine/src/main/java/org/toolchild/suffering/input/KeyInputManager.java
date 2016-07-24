@@ -35,15 +35,15 @@ public class KeyInputManager implements KeyListener {
 
   }
 
-  public boolean updateKeyEvents(Player player, Handler handler) {
+  public boolean updateKeyEvents(Player player, Handler handler, int speedmodifier) {
     if (!this.leftKeyStatus.isActive) leftKeyReleaseEvent(player);
     if (!this.rightKeyStatus.isActive) rightKeyReleaseEvent(player);
     // keep releaseEvent and Event separated for left and right key. You will break your brain if you don't.
     if (this.leftKeyStatus.isActive && !this.rightKeyStatus.isActive || this.leftKeyStatus.isActive && this.leftKeyStatus.timeStamp > this.rightKeyStatus.timeStamp) leftKeyEvent(player);
     if (this.rightKeyStatus.isActive && !this.leftKeyStatus.isActive || this.rightKeyStatus.isActive && this.rightKeyStatus.timeStamp > this.leftKeyStatus.timeStamp) rightKeyEvent(player);
 
-    if (!this.jumpKeyStatus.isActive) jumpKeyReleaseEvent(player);
-    else jumpKeyEvent(player);
+    if (!this.jumpKeyStatus.isActive) jumpKeyReleaseEvent(player, speedmodifier);
+    else jumpKeyEvent(player, speedmodifier);
 
     if (!this.spaceKeyStatus.isActive) spaceKeyReleaseEvent(handler);
     else if (this.spaceKeyStatus.canActivate) spaceKeyEvent(handler);
@@ -51,15 +51,15 @@ public class KeyInputManager implements KeyListener {
     return true;
   }
 
-  private void jumpKeyEvent(Player player) {
+  private void jumpKeyEvent(Player player, int speedmodifier) {
     if (player != null) {
       this.jumpKeyStatus.timeStamp = System.nanoTime();
-      player.handleJumpKeyEvent(true);
+      player.handleJumpKeyEvent(true, speedmodifier);
     }
   }
 
-  private static void jumpKeyReleaseEvent(Player player) {
-    if (player != null) player.handleJumpKeyEvent(false);
+  private static void jumpKeyReleaseEvent(Player player, int speedmodifier) {
+    if (player != null) player.handleJumpKeyEvent(false, speedmodifier);
     log.trace("Jump Released");
   }
 

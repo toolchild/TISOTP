@@ -12,6 +12,7 @@ import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
 import org.toolchild.suffering.gameobject.tile.Tile;
+import org.toolchild.suffering.input.KeyInputManager;
 
 /**
  * The {@link Entity} controlled by the person playing this game.
@@ -36,36 +37,39 @@ public class Player extends Entity {
 
   public Player(int x, int y, int width, int height, Id id, Handler handler, BufferedImage[] bufferedImages) {
     super(x, y, width, height, id, handler, bufferedImages);
-    this.movement.setMoveSpeed((int) ((8.0) * Game.SPEED_MODIFIER));
     this.jumpStartY = y;
   }
+  
+  public void init(int speedModifier){
+    this.movement.setMoveSpeed((int) ((8.0) * speedModifier));
+  }
 
-  public void handleJumpKeyEvent(boolean isActive) {
+  public void handleJumpKeyEvent(boolean isActive, int speedModifier) {
     // log.trace("y '" + this.y + "' jumpStartY '" + this.jumpStartY + "'");
     this.jumpHeight = this.jumpStartY - this.y;
-    boolean canJump = this.jumpCount < 100 / Game.SPEED_MODIFIER && this.movement.getGravity() < 1.0 && this.jumpHeight < this.maxJumpHeight;
+    boolean canJump = this.jumpCount < 100 /speedModifier && this.movement.getGravity() < 1.0 && this.jumpHeight < this.maxJumpHeight;
     boolean initJump = this.jumpCount < 1;
     // log.trace("jump height : '" + this.jumpHeight + "' key active : '" + isActive + "'count : '" + this.jumpCount + "' canjump : '" + canJump + "' init jump : '" + initJump + "' is jumping : '" + this.movement.isJumping() + "' is falling : '" + this.movement.isFalling() + "'");
 
     if (isActive && canJump && initJump) {
       this.movement.setJumping(true);
-      this.movement.setGravity(-10 * Game.SPEED_MODIFIER);
+      this.movement.setGravity(-10 * speedModifier);
       this.jumpCount++;
       // log.trace("init jump!");
       this.jumpStartY = this.y;
     } else if (isActive && canJump) {
-      this.movement.setGravity(this.movement.getGravity() - 0.5 * Game.SPEED_MODIFIER);
+      this.movement.setGravity(this.movement.getGravity() - 0.5 * speedModifier);
       this.jumpCount++;
       // log.trace("Jumped!");
-    } else if (!isActive && this.movement.isJumping() && this.jumpCount != 100 * Game.SPEED_MODIFIER) {
-      this.jumpCount = 100 / Game.SPEED_MODIFIER;
-      this.movement.setGravity(this.movement.getGravity() + 0.5 * Game.SPEED_MODIFIER);
+    } else if (!isActive && this.movement.isJumping() && this.jumpCount != 100 * speedModifier) {
+      this.jumpCount = 100 / speedModifier;
+      this.movement.setGravity(this.movement.getGravity() + 0.5 * speedModifier);
       // log.trace("Jump Stop!");
     } else if (!isActive && !this.movement.isJumping()) {
       this.jumpCount = 0;
       this.jumpHeight = 0;
       this.jumpStartY = this.y;
-      this.movement.setGravity(this.movement.getGravity() + 0.5 * Game.SPEED_MODIFIER);
+      this.movement.setGravity(this.movement.getGravity() + 0.5 * speedModifier);
     }
   }
 
@@ -96,18 +100,17 @@ public class Player extends Entity {
     // a special render method is needed.
   }
 
-  public void render(Graphics2D graphics2D, Camera camera) {
+  public void render(Graphics2D graphics2D, Camera camera, Game game) {
     renderPlayer(graphics2D); // renders the player and everything tied to its position
     graphics2D.setColor(Color.WHITE);
-    renderDebug(graphics2D, camera); // renders the debug messages relative to player
+    renderDebug(graphics2D, camera, game); // renders the debug messages relative to player
   }
 
-  @Override
-  public void tick() throws Exception {
-    Game.keyInput.updateKeyEvents(this, this.handler);
-    handleGravityAndMovement();
+  public void tick(KeyInputManager keyInputManager, Game game, int speedModifier) throws Exception {
+    keyInputManager.updateKeyEvents(this, this.handler, speedModifier);
+    handleGravityAndMovement(speedModifier);
     updatePosition();
-    handleAllTileInteraction();
+    handleAllTileInteraction(game);
     handleAnimationCycle();
 
     if (this.movement.isJumping()) {
@@ -187,9 +190,9 @@ public class Player extends Entity {
     this.handler.removePlayer(this);
   }
 
-  private void handleGravityAndMovement() {
+  private void handleGravityAndMovement(int speedModifier) {
     this.movement.handlePlayerJumping();
-    this.movement.handleFalling();
+    this.movement.handleFalling(speedModifier);
     this.movement.handleFloating();
   }
 
@@ -211,13 +214,13 @@ public class Player extends Entity {
     }
   }
 
-  private void handleAllTileInteraction() throws Exception {
+  private void handleAllTileInteraction(Game game) throws Exception {
     ArrayList<Tile> tilesInteracting = new ArrayList<>();
     for (int t = 0; t < this.handler.getTiles().size(); t++) {
       Tile tile = (Tile) this.handler.getTiles().get(t);
       if (tile.getX() >= this.x - 5 * PLAYER_DEFAULT_SIZE && tile.getX() <= this.x + 5 * PLAYER_DEFAULT_SIZE) {
         if (tile.getY() >= this.y - 5 * PLAYER_DEFAULT_SIZE && tile.getY() <= this.y + 5 * PLAYER_DEFAULT_SIZE) {
-          boolean topTileInteraction = handleSingleTileInteraction(tile);
+          boolean topTileInteraction = handleSingleTileInteraction(tile, game);
           if (topTileInteraction) {
             tilesInteracting.add(tile);
           }
@@ -229,7 +232,7 @@ public class Player extends Entity {
     }
   }
 
-  private boolean handleSingleTileInteraction(Tile tile) throws Exception {  // handleAllTileInteraction sub-method
+  private boolean handleSingleTileInteraction(Tile tile, Game game) throws Exception {  // handleAllTileInteraction sub-method
     boolean topTileInteraction = false;
     if (tile.isSolid()) {
       if (tile.getId() == Id.powerUpBlock) {
@@ -237,7 +240,7 @@ public class Player extends Entity {
       } else if (tile.getId() == Id.wall) {
         handleLevelTileInteraction(tile);
       } else if (tile.getId() == Id.finish) {
-        handleFinishInteraction(tile);
+        handleFinishInteraction(tile, game);
       }
     }
     return topTileInteraction;
@@ -253,14 +256,14 @@ public class Player extends Entity {
     return statusMessage;
   }
 
-  private String handleFinishInteraction(Tile finish) throws Exception {
+  private String handleFinishInteraction(Tile finish, Game game) throws Exception {
     String statusMessage = null;
     if (getBounds().intersects(finish.getBounds()) && this.isValnurable) {
       statusMessage = "finish interaction: Finish touched";
       this.isValnurable = false;
       this.handler.setPaused(true);
       this.handler.nextLevel();
-      this.handler.init();
+      this.handler.init(game);
       this.handler.setPaused(false);
 
     }
@@ -347,7 +350,7 @@ public class Player extends Entity {
 
   }
 
-  private void renderDebug(Graphics2D graphics2D, Camera camera) {
+  private void renderDebug(Graphics2D graphics2D, Camera camera, Game game) {
     camera.lockGraphicsToCamera(graphics2D);// since nothing is tied to player, the graphics object is tied to camera
     graphics2D.drawString("jump height : " + this.jumpHeight, this.column, this.lineHeight);
     graphics2D.drawString("player x : " + this.x, 0, 3 * this.lineHeight);
@@ -355,10 +358,10 @@ public class Player extends Entity {
     graphics2D.drawString("camera x : " + camera.getX(), 0, 4 * this.lineHeight);
     graphics2D.drawString("camera y : " + camera.getY(), this.column, 4 * this.lineHeight);
 
-    graphics2D.drawLine(Game.getFrameWidth() - 500, Game.getFrameHeight(), Game.getFrameWidth() - 500, Game.getFrameHeight() - 300);
-    graphics2D.drawLine(Game.getFrameWidth() - 500, Game.getFrameHeight(), Game.getFrameWidth(), Game.getFrameHeight());
-    graphics2D.fillRect(Game.getFrameWidth() - 500 + 5 * this.jumpTimeCount, Game.getFrameHeight() - 10 - this.jumpHeight, 10, 10);
-    graphics2D.drawString("" + this.jumpHeight, Game.getFrameWidth() - 500 + 5 * this.jumpTimeCount, Game.getFrameHeight() - 10 - this.jumpHeight);
+    graphics2D.drawLine(game.getFrameWidth() - 500, game.getFrameHeight(), game.getFrameWidth() - 500, game.getFrameHeight() - 300);
+    graphics2D.drawLine(game.getFrameWidth() - 500, game.getFrameHeight(), game.getFrameWidth(), game.getFrameHeight());
+    graphics2D.fillRect(game.getFrameWidth() - 500 + 5 * this.jumpTimeCount, game.getFrameHeight() - 10 - this.jumpHeight, 10, 10);
+    graphics2D.drawString("" + this.jumpHeight, game.getFrameWidth() - 500 + 5 * this.jumpTimeCount, game.getFrameHeight() - 10 - this.jumpHeight);
 
     graphics2D.drawString("player velocity x : " + this.movement.getVelocityX(), 0, 5 * this.lineHeight);
     graphics2D.drawString("player velocity y : " + this.movement.getVelocityY(), 0, 6 * this.lineHeight);
@@ -372,6 +375,13 @@ public class Player extends Entity {
     graphics2D.drawString("player facing : " + (this.facing == 0 ? "Left" : "Right"), 0, 8 * this.lineHeight);
     graphics2D.drawString("player isRunning: " + this.movement.isMoving(), 0, 9 * this.lineHeight);
     camera.releaseGraphicsFromCamera(graphics2D);
+  }
+
+
+  @Override
+  public void tick(int speedModifier) throws Exception {
+    // TODO Auto-generated method stub
+    
   }
 
 }

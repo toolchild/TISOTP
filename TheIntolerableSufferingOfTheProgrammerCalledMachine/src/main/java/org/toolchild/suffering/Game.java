@@ -14,29 +14,28 @@ import org.apache.logging.log4j.Logger;
 import org.toolchild.suffering.input.KeyInputManager;
 
 public class Game extends Canvas implements Runnable {
-  private static final long      serialVersionUID = 5680154129348532365L;
-  private static final Logger    log              = LogManager.getLogger(Game.class);
-  public static final int        TICKS_PER_SECOND = 60; // multiple of 60
-  public static final int        SPEED_MODIFIER   = 60 / TICKS_PER_SECOND;                                                                                                                  // not done yet
+  private static final long     serialVersionUID = 5680154129348532365L;
+  private static final Logger   log              = LogManager.getLogger(Game.class);
 
-  public static final int        GAME_WIDTH       = 64;
-  public static final int        SCALE            = 24;
-  public static final int        GAME_HEIGHT      = GAME_WIDTH / 16 * 9;
-  private static final Dimension SIZE             = new Dimension(GAME_WIDTH * SCALE, GAME_HEIGHT * SCALE);
-  public static final String     TITLE            = "The Intolerable Suffering of the Programmer called Machine";
+  public final int              TICKS_PER_SECOND = 60;                                                                                                                                                                                                     // multiple of 60
+  public final int              SPEED_MODIFIER   = 60 / this.TICKS_PER_SECOND;                                                                                                                                                                                                                                                        // not done yet
 
-  
+  public final int              GAME_WIDTH       = 64;
+  public final int              SCALE            = 24;
+  public final int              GAME_HEIGHT      = this.GAME_WIDTH / 16 * 9;
+  private final Dimension       SIZE             = new Dimension(this.GAME_WIDTH * this.SCALE, this.GAME_HEIGHT * this.SCALE);
+  private final String          TITLE            = "The Intolerable Suffering of the Programmer called Machine";
 
-  private Thread                 thread;
-  private boolean                isRunning;
+  private Thread                thread;
+  private boolean               isRunning;
 
-  public static final Handler    HANDLER          = new Handler();
-  public static KeyInputManager  keyInput;
+  public static final Handler   HANDLER          = new Handler();
+  public static KeyInputManager keyInputManager;
 
   public Game() {
-    setPreferredSize(SIZE);
-    setMaximumSize(SIZE);
-    setMinimumSize(SIZE);
+    setPreferredSize(this.SIZE);
+    setMaximumSize(this.SIZE);
+    setMinimumSize(this.SIZE);
   }
 
   /**
@@ -72,7 +71,7 @@ public class Game extends Canvas implements Runnable {
     long lastTime = System.nanoTime();
     long timer = System.currentTimeMillis();
     double delta = 0.0;
-    double ns = 1000000000.0 / TICKS_PER_SECOND;
+    double ns = 1000000000.0 / this.TICKS_PER_SECOND;
     int currentFrames = 0;
     int lastSecondFrames = 0;
     int currentTicks = 0;
@@ -109,10 +108,10 @@ public class Game extends Canvas implements Runnable {
   }
 
   private boolean init() throws Exception {
-    HANDLER.init();
+    HANDLER.init(this);
     addKeyListener(new KeyInputManager());
-    keyInput = (KeyInputManager) getKeyListeners()[0];
-    keyInput.init();
+    keyInputManager = (KeyInputManager) getKeyListeners()[0];
+    keyInputManager.init();
     return true;
   }
 
@@ -130,8 +129,8 @@ public class Game extends Canvas implements Runnable {
     }
   }
 
-  private static void tick() throws Exception {
-    HANDLER.tick();
+  private void tick() throws Exception {
+    HANDLER.tick(this, keyInputManager);
   }
 
   /**
@@ -149,13 +148,13 @@ public class Game extends Canvas implements Runnable {
     Graphics2D graphics2d = (Graphics2D) bufferStrategy.getDrawGraphics();
     graphics2d.setFont(getFont().deriveFont(Font.BOLD));
     graphics2d.setColor(Color.GRAY);
-    HANDLER.render(graphics2d, lastSecondTicks, lastSecondFrames);
+    HANDLER.render(this, graphics2d, lastSecondTicks, lastSecondFrames);
     bufferStrategy.show();
     graphics2d.dispose();
   }
 
   public void initAndGetJFrame() {
-    JFrame frame = new JFrame(TITLE);
+    JFrame frame = new JFrame(this.TITLE);
     // frame.setUndecorated(true); //this must be switched by a configuration.
     frame.add(this);
 
@@ -166,12 +165,12 @@ public class Game extends Canvas implements Runnable {
     frame.setVisible(true);
   }
 
-  public static int getFrameWidth() {
-    return GAME_WIDTH * SCALE;
+  public int getFrameWidth() {
+    return this.GAME_WIDTH * this.SCALE;
   }
 
-  public static int getFrameHeight() {
-    return GAME_HEIGHT * SCALE;
+  public int getFrameHeight() {
+    return this.GAME_HEIGHT * this.SCALE;
   }
 
   public boolean isRunning() {

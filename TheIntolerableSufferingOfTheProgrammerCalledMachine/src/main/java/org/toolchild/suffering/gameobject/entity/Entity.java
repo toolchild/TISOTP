@@ -21,12 +21,12 @@ import org.toolchild.suffering.gameobject.tile.Tile;
  */
 public abstract class Entity extends GameObject {
   private static final Logger log         = LogManager.getLogger(Entity.class);
-  protected int               facing      = 0;                                                                                                                                               // 0 = left; 1 = right
+  protected int               facing      = 0;                                                                                                                                                                                                                 // 0 = left; 1 = right
   protected Movement          movement;
 
-  protected int               boundsTrim  = 10 * Game.SPEED_MODIFIER;
-  protected int               boundsInset = 1 * Game.SPEED_MODIFIER;
-  protected int               boundsWidth = Game.SPEED_MODIFIER;
+  private int                 boundsTrim  = 8;
+  private int                 boundsInset = 0;
+  private int                 boundsWidth = 1;
 
   /**
    * 
@@ -37,6 +37,7 @@ public abstract class Entity extends GameObject {
    * @param id
    * @param handler
    * @param bufferedImages
+   * @return
    */
   public Entity(int x, int y, int width, int height, Id id, Handler handler, BufferedImage[] bufferedImages) {
     super(x, y, width, height, id, handler, bufferedImages);
@@ -64,7 +65,7 @@ public abstract class Entity extends GameObject {
    * 
    * @throws Exception
    */
-  public abstract void tick() throws Exception;
+  public abstract void tick(int speedModifier) throws Exception;
 
   /**
    * Renders this Entity.

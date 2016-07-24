@@ -30,7 +30,7 @@ public class Mob1 extends Entity {
   }
 
   @Override
-  public void tick() {
+  public void tick(int speedModifier) {
     if (this.movement.getVelocityX() < 0) {
       this.facing = 0;
     }
@@ -40,7 +40,7 @@ public class Mob1 extends Entity {
     handleAnimationCycle();
     updatePosition();
     handleAllInteraction();
-    handleGravityAndMovement();
+    handleGravityAndMovement(speedModifier);
   }
 
   private boolean updatePosition() {
@@ -67,8 +67,8 @@ public class Mob1 extends Entity {
     return true;
   }
 
-  private boolean handleGravityAndMovement() {
-    this.movement.handleFalling();
+  private boolean handleGravityAndMovement(int speedModifier) {
+    this.movement.handleFalling(speedModifier);
     this.movement.handleFloating();
     return true;
   }

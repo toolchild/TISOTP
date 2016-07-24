@@ -18,6 +18,7 @@ import org.toolchild.suffering.gameobject.tile.Grass;
 import org.toolchild.suffering.gameobject.tile.PowerUpBlock;
 import org.toolchild.suffering.gameobject.tile.Tile;
 import org.toolchild.suffering.gfx.ImageExtractor;
+import org.toolchild.suffering.input.KeyInputManager;
 
 /**
  * The Handler for every {@link GameObject} and the {@link Camera}.
@@ -56,7 +57,7 @@ public class Handler {
     }
   }
 
-  public void init() throws Exception {
+  public void init(Game game) throws Exception {
     this.imageExtractor = new ImageExtractor();
     this.imageExtractor.init();
     if (this.level > 1) {
@@ -65,35 +66,40 @@ public class Handler {
       this.players = new LinkedList<>();
     }
     createLevel(this.level);
-    this.menu = new Menu(0, 0, Game.getFrameWidth(), Game.getFrameHeight(), this.imageExtractor.getMenuBackgroundImage());
+    this.menu = new Menu(0, 0, game.getFrameWidth(), game.getFrameHeight(), this.imageExtractor.getMenuBackgroundImage());
+    for (GameObject gameObject : this.entities) {
+      Entity entity = (Entity) gameObject;
+    }
+    ((Player)(this.players.getFirst())).init(game.SPEED_MODIFIER);
+  
   }
 
-  public void tick() throws Exception {
-    Game.keyInput.updateKeyEvents(null, this);
+  public void tick(Game game, KeyInputManager keyInputManager) throws Exception {
+    keyInputManager.updateKeyEvents(null, this, game.SPEED_MODIFIER);
     if (!this.isPaused) {
       for (GameObject player : this.players) {
         if (player.getId() == Id.player) {
-          this.camera.tick((Player) player);
+          this.camera.tick((Player) player, game.getWidth(), game.getHeight());
         }
       }
 
       for (int e = 0; e < this.players.size(); e++) {
         Player player = (Player) this.players.get(e);
-        player.tick();
+        player.tick(keyInputManager, game, game.SPEED_MODIFIER);
       }
 
       this.entitiesTicked = 0;
       for (int e = 0; e < this.entities.size(); e++) {
         Entity entity = (Entity) this.entities.get(e);
-        entity.tick();
+        entity.tick(game.SPEED_MODIFIER);
         this.entitiesTicked++;
       }
       this.tilesTicked = 0;
       for (GameObject tile : this.tiles) {
         if (tile.getId() == Id.powerUpBlock) {
           PowerUpBlock powerUpBlock = (PowerUpBlock) tile;
-          if (powerUpBlock.getX() >= this.players.getFirst().getX() - Game.getFrameWidth() - 64 && tile.getX() <= this.players.getFirst().getX() + Game.getFrameWidth() + 64) { // only ticks visible tiles, relative to top left edge of the shown screen -64
-            if (powerUpBlock.getY() >= this.players.getFirst().getY() - Game.getFrameHeight() - 64 && tile.getY() <= this.players.getFirst().getY() + Game.getFrameHeight() + 64) {
+          if (powerUpBlock.getX() >= this.players.getFirst().getX() - game.getFrameWidth() - 64 && tile.getX() <= this.players.getFirst().getX() + game.getFrameWidth() + 64) { // only ticks visible tiles, relative to top left edge of the shown screen -64
+            if (powerUpBlock.getY() >= this.players.getFirst().getY() - game.getFrameHeight() - 64 && tile.getY() <= this.players.getFirst().getY() + game.getFrameHeight() + 64) {
               powerUpBlock.tick();
               this.tilesTicked++;
             }
@@ -110,30 +116,30 @@ public class Handler {
    * @param lastSecondTicks The ticks for debug display.
    * @param lastSecondFrames The frames for debug display.
    */
-  public void render(Graphics2D graphics2d, int lastSecondTicks, int lastSecondFrames) {
+  public void render(Game game, Graphics2D graphics2d, int lastSecondTicks, int lastSecondFrames) {
     if (this.isPaused) {
-      this.menu.render(graphics2d);
+      this.menu.render(graphics2d, game.getFrameWidth(), game.getFrameHeight());
     } else {
 
       this.camera.releaseGraphicsFromCamera(graphics2d);
       graphics2d.drawImage(this.imageExtractor.getMenuBackgroundImage(), 0, 0, this.levelWidth * 64, this.levelHeight * 64, null);
 
-      int tilesRendered = renderTiles(graphics2d);
+      int tilesRendered = renderTiles(graphics2d, game);
       int entitiesRendered = renderEntities(graphics2d);
 
       for (GameObject player : this.players) { // more than 1 player compatible
-        ((Player) player).render(graphics2d, this.camera);
+        ((Player) player).render(graphics2d, this.camera, game);
       }
       this.camera.lockGraphicsToCamera(graphics2d);
-      renderMinimap(graphics2d);
+      renderMinimap(game, graphics2d);
       renderDebug(graphics2d, lastSecondTicks, lastSecondFrames, tilesRendered, entitiesRendered);
     }
   }
 
-  private void renderMinimap(Graphics2D graphics2d) {
+  private void renderMinimap(Game game, Graphics2D graphics2d) {
     for (GameObject entity : this.entities) { // after releasing the camera, draw the tiles, not relative to player
       graphics2d.setColor(Color.YELLOW);
-      graphics2d.fillRect(Game.getFrameWidth() - 500 + entity.getX() / 32, (entity.getY() / 32) - 2, 4, 4);
+      graphics2d.fillRect(game.getFrameWidth() - 500 + entity.getX() / 32, (entity.getY() / 32) - 2, 4, 4);
     }
   }
 
@@ -146,11 +152,11 @@ public class Handler {
     return entitiesRendered;
   }
 
-  private int renderTiles(Graphics2D graphics2d) {
+  private int renderTiles(Graphics2D graphics2d, Game game) {
     int tilesRendered = 0;
     for (GameObject tile : this.tiles) { // after releasing the camera, draw the tiles, not relative to player
-      if (tile.getX() >= this.players.getFirst().getX() - Game.getFrameWidth() - 64 && tile.getX() <= this.players.getFirst().getX() + Game.getFrameWidth() + 64) { // only render visible tiles, relative to top left edge of the shown screen -64
-        if (tile.getY() >= this.players.getFirst().getY() - Game.getFrameHeight() - 64 && tile.getY() <= this.players.getFirst().getY() + Game.getFrameHeight() + 64) {
+      if (tile.getX() >= this.players.getFirst().getX() - game.getFrameWidth() - 64 && tile.getX() <= this.players.getFirst().getX() + game.getFrameWidth() + 64) { // only render visible tiles, relative to top left edge of the shown screen -64
+        if (tile.getY() >= this.players.getFirst().getY() - game.getFrameHeight() - 64 && tile.getY() <= this.players.getFirst().getY() + game.getFrameHeight() + 64) {
           tile.render(graphics2d);
           tilesRendered++;
         }
@@ -159,9 +165,9 @@ public class Handler {
     for (GameObject tile : this.tiles) {
       this.camera.lockGraphicsToCamera(graphics2d); // locked to screen/camera
       graphics2d.setColor(Color.WHITE);
-      graphics2d.fillRect(Game.getFrameWidth() - 500 + tile.getX() / 32, tile.getY() / 32, 2, 2);
+      graphics2d.fillRect(game.getFrameWidth() - 500 + tile.getX() / 32, tile.getY() / 32, 2, 2);
       graphics2d.setColor(Color.RED);
-      graphics2d.fillRect(Game.getFrameWidth() - 500 + this.players.getFirst().getX() / 32, (this.players.getFirst().getY() / 32) - 2, 4 * (this.players.getFirst().getHeight() / 64), 4 * (this.players.getFirst().getHeight() / 64));
+      graphics2d.fillRect(game.getFrameWidth() - 500 + this.players.getFirst().getX() / 32, (this.players.getFirst().getY() / 32) - 2, 4 * (this.players.getFirst().getHeight() / 64), 4 * (this.players.getFirst().getHeight() / 64));
       this.camera.releaseGraphicsFromCamera(graphics2d);
     }
     return tilesRendered;

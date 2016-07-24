@@ -4,8 +4,6 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import org.toolchild.suffering.Game;
-
 public class Menu{
   private int                 x;
   private int                 y;
@@ -22,10 +20,10 @@ public class Menu{
   }
 
   
-  public void render(Graphics2D graphics2d) {
+  public void render(Graphics2D graphics2d, int frameWidth, int frameHeight) {
     graphics2d.setFont(new Font("TimesRoman", Font.BOLD, 60)); // the 60 should be derived from Game.Size
     graphics2d.drawImage(this.menuBackgroundImage, this.x, this.y, this.width, this.height, null);
-    graphics2d.drawString("Game Paused", Game.getFrameWidth()/3, Game.getFrameHeight()/2); //is this clean?
+    graphics2d.drawString("Game Paused", frameWidth/3, frameHeight/2); //is this clean?
  
 
 

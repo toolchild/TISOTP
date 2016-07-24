@@ -11,26 +11,26 @@ import org.toolchild.suffering.gameobject.entity.Player;
 public class Camera {
   private int x;
   private int y;
-
+  
   /**
    * The camera tick.
    * 
    * @param player Needs the player to follow.
    */
-  public void tick(Player player) {
+  public void tick(Player player, int gameWidth, int gameHeight) {
     if (player.getId() == Id.player) {
-      moveX(player);
-      moveY(player);
+      moveX(player, gameWidth);
+      moveY(player, gameHeight);
     }
   }
 
-  private void moveX(Player player) {
-    int middleX = (-player.getX() - player.getWidth() / 2) + Game.getFrameWidth() / 2; // middle of the player x in the middleX of the camera
+  private void moveX(Player player, int frameWidth) {
+    int middleX = (-player.getX() - player.getWidth() / 2) + frameWidth / 2; // middle of the player x in the middleX of the camera
     this.x = (int) (this.x + (middleX - this.x) * 0.04);
   }
 
-  private void moveY(Player player) {
-    int middleY = (int) ((-player.getY() - player.getHeight()) + Game.getFrameHeight() / 2.5); // lowest end of the player y in the middleY of the camera // locked to feet
+  private void moveY(Player player, int frameHeight) {
+    int middleY = (int) ((-player.getY() - player.getHeight()) + frameHeight / 2.5); // lowest end of the player y in the middleY of the camera // locked to feet
     this.y = (int) (this.y + (middleY - this.y) * 0.1);
   }
 

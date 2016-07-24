@@ -31,7 +31,7 @@ public class BlueCrystal extends Entity {
   }
 
   @Override
-  public void tick() {
+  public void tick(int speedModifier) {
     log.trace("update position: " + updatePosition() + " x: " + this.x + " y: " + this.y);
     this.frameDelay++;
     if (this.frameDelay >= 3) {
@@ -42,7 +42,7 @@ public class BlueCrystal extends Entity {
       this.frameDelay = 0;
     }
     handleAllInteraction();
-    handleGravityAndMovement();
+    handleGravityAndMovement(speedModifier);
   }
 
   private boolean updatePosition() {
@@ -51,8 +51,8 @@ public class BlueCrystal extends Entity {
     return true;
   }
 
-  private boolean handleGravityAndMovement() {
-    this.movement.handleFalling();
+  private boolean handleGravityAndMovement(int speedModifier) {
+    this.movement.handleFalling(speedModifier);
     this.movement.handleFloating();
     return true;
   }
@@ -61,4 +61,5 @@ public class BlueCrystal extends Entity {
   protected void handleAnimationRendering(Graphics2D graphics2D) {
     graphics2D.drawImage(this.bufferedImages[this.frame], this.x, this.y, this.width, this.height, null);
   }
+
 }

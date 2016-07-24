@@ -25,7 +25,7 @@ public class Game extends Canvas implements Runnable {
   private static final Dimension SIZE             = new Dimension(GAME_WIDTH * SCALE, GAME_HEIGHT * SCALE);
   public static final String     TITLE            = "The Intolerable Suffering of the Programmer called Machine";
 
-  public static final Game       GAME             = new Game();
+  
 
   private Thread                 thread;
   private boolean                isRunning;
@@ -44,12 +44,8 @@ public class Game extends Canvas implements Runnable {
    * 
    * @param args There are no arguments implemented.
    */
-  public static void main(String[] args) {
-    Game.initAndGetJFrame(GAME);
-    GAME.start();
-  }
 
-  private synchronized boolean start() {
+  protected synchronized boolean start() {
     boolean hasStarted;
     if (this.isRunning) {
       hasStarted = false;
@@ -158,10 +154,10 @@ public class Game extends Canvas implements Runnable {
     graphics2d.dispose();
   }
 
-  private static void initAndGetJFrame(Game game) {
+  public void initAndGetJFrame() {
     JFrame frame = new JFrame(TITLE);
     // frame.setUndecorated(true); //this must be switched by a configuration.
-    frame.add(game);
+    frame.add(this);
 
     frame.setResizable(false);
     // frame.setLocationRelativeTo(null); // put the frame in the middle of the screen

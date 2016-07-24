@@ -3,6 +3,7 @@ package org.toolchild.suffering.gameobject.entity;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,10 +38,10 @@ public abstract class Entity extends GameObject {
    * @param height
    * @param id
    * @param handler
-   * @param sprites
+   * @param bufferedImages
    */
-  public Entity(int x, int y, int width, int height, Id id, Handler handler, Sprite[] sprites) {
-    super(x, y, width, height, id, handler, sprites);
+  public Entity(int x, int y, int width, int height, Id id, Handler handler, BufferedImage[] bufferedImages) {
+    super(x, y, width, height, id, handler, bufferedImages);
     this.movement = new Movement();
   }
 

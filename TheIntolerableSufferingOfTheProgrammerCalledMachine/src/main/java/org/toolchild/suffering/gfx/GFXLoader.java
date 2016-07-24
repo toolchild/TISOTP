@@ -1,4 +1,4 @@
-package org.toolchild.suffering;
+package org.toolchild.suffering.gfx;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -7,8 +7,6 @@ import javax.imageio.ImageIO;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.toolchild.suffering.gfx.Sprite;
-import org.toolchild.suffering.gfx.SpriteSheet;
 
 /**
  * Loads the sprites and provides them in the needed object form.
@@ -16,8 +14,8 @@ import org.toolchild.suffering.gfx.SpriteSheet;
  * @author Bob
  *
  */
-public class SpriteManager {
-  private static final Logger log = LogManager.getLogger(SpriteManager.class);
+public class GFXLoader {
+  private static final Logger log = LogManager.getLogger(GFXLoader.class);
 
   private SpriteSheet         spriteSheet;
   private SpriteSheet         characterSpriteSheet;
@@ -25,18 +23,18 @@ public class SpriteManager {
   private SpriteSheet         mob1SpriteSheetLeft;
   private SpriteSheet         mob1SpriteSheetRight;
   
-  private BufferedImage       menuBackgroundImage;
-  private BufferedImage       level1Image;
-  private BufferedImage       level2Image;
+  protected BufferedImage       menuBackgroundImage;
+  protected BufferedImage       level1Image;
+  protected BufferedImage       level2Image;
   
 
-  private Sprite[]            grass;
-  private Sprite[]            powerUpBlock;
-  private Sprite[]            finish;
+  protected Sprite[]            grass;
+  protected Sprite[]            powerUpBlock;
+  protected Sprite[]            finish;
 
-  private Sprite[]            player;
-  private Sprite[]            mob1;
-  private Sprite[]            blueCrystal;
+  protected Sprite[]            player;
+  protected Sprite[]            mob1;
+  protected Sprite[]            blueCrystal;
 
   public void init() {
     initSpriteSheets();
@@ -116,44 +114,6 @@ public class SpriteManager {
     this.finish[0] = new Sprite(this.spriteSheet, 5, 0, false);
   }
 
-  public BufferedImage getMenuBackgroundImage() {
-    return this.menuBackgroundImage;
-  }
-
-  public BufferedImage getLevel1Image() {
-    return this.level1Image;
-  }
-
-  public BufferedImage getLevel2Image() {
-    return this.level2Image;
-  }
-
-  public Sprite[] getPowerUpBlock() {
-    return this.powerUpBlock;
-  }
-
-  public void setPowerUpBlock(Sprite[] powerUpBlock) {
-    this.powerUpBlock = powerUpBlock;
-  }
-
-  public Sprite[] getGrass() {
-    return this.grass;
-  }
-
-  public Sprite[] getPlayer() {
-    return this.player;
-  }
-
-  public Sprite[] getMob1() {
-    return this.mob1;
-  }
-
-  public Sprite[] getBlueCrystal() {
-    return this.blueCrystal;
-  }
-
-  public Sprite[] getFinish() {
-    return this.finish;
-  }
+  
 
 }

@@ -1,6 +1,7 @@
 package org.toolchild.suffering.gameobject.tile;
 
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
@@ -22,17 +23,11 @@ public class Finish extends Tile {
    * @param height
    * @param id
    * @param handler
-   * @param sprites
+   * @param bufferedImages
    * @param isSolid
    */
-  public Finish(int x, int y, int width, int height, Id id, Handler handler, Sprite[] sprites, boolean isSolid) {
-    super(x, y, width, height, id, handler, sprites, isSolid);
-  }
-
-
-  @Override
-  public void render(Graphics2D graphics2d) {
-    graphics2d.drawImage(this.sprites[0].getImage(), this.x, this.y,this.width, this.height, null);
+  public Finish(int x, int y, int width, int height, Id id, Handler handler, BufferedImage[] bufferedImages, boolean isSolid) {
+    super(x, y, width, height, id, handler, bufferedImages, isSolid);
   }
 
 }

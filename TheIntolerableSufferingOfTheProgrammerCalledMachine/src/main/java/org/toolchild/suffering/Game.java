@@ -24,7 +24,6 @@ public class Game extends Canvas implements Runnable {
   public static final int           GAME_HEIGHT      = GAME_WIDTH / 16 * 9;
   public static final Dimension     SIZE             = new Dimension(GAME_WIDTH * SCALE, GAME_HEIGHT * SCALE);
   public static final String        TITLE            = "The Intolerable Suffering of the Programmer called Machine";
-  public static final SpriteManager SPRITE_MANAGER   = new SpriteManager();
 
   public static final Game          GAME             = new Game();
 
@@ -102,7 +101,6 @@ public class Game extends Canvas implements Runnable {
   }
 
   private boolean init() {
-    SPRITE_MANAGER.init();
     HANDLER.init();
     addKeyListener(new KeyInputManager());
     keyInput = (KeyInputManager) getKeyListeners()[0];

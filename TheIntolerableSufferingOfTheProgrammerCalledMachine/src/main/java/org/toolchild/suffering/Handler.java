@@ -17,6 +17,7 @@ import org.toolchild.suffering.gameobject.tile.Finish;
 import org.toolchild.suffering.gameobject.tile.Grass;
 import org.toolchild.suffering.gameobject.tile.PowerUpBlock;
 import org.toolchild.suffering.gameobject.tile.Tile;
+import org.toolchild.suffering.gfx.ImageExtractor;
 
 /**
  * The Handler for every {@link GameObject} and the {@link Camera}.
@@ -31,6 +32,7 @@ public class Handler {
   private LinkedList<GameObject> tiles    = new LinkedList<>();
   private LinkedList<GameObject> players  = new LinkedList<>();
   private Menu                   menu;
+  private ImageExtractor  imageExtractor;
 
   private boolean                isPaused;
   private int                    level = 1;
@@ -56,13 +58,15 @@ public class Handler {
   }
 
   public void init() {
+    this.imageExtractor = new ImageExtractor();
+    this.imageExtractor.init();
     if (this.level > 1){
       this.entities = new LinkedList<>();
       this.tiles    = new LinkedList<>();
       this.players  = new LinkedList<>();  
     }   
     createLevel(this.level);
-    this.menu = new Menu(0, 0, (int) Game.SIZE.getWidth(), (int) Game.SIZE.getHeight(), Game.SPRITE_MANAGER.getMenuBackgroundImage());
+    this.menu = new Menu(0, 0, (int) Game.SIZE.getWidth(), (int) Game.SIZE.getHeight(), this.imageExtractor.getMenuBackgroundImage());
   }
 
   public void tick() {
@@ -113,7 +117,7 @@ public class Handler {
     } else {
 
       this.camera.releaseGraphicsFromCamera(graphics2d);
-      graphics2d.drawImage(Game.SPRITE_MANAGER.getMenuBackgroundImage(), 0, 0, this.levelWidth * 64, this.levelHeight * 64, null);
+      graphics2d.drawImage(this.imageExtractor.getMenuBackgroundImage(), 0, 0, this.levelWidth * 64, this.levelHeight * 64, null);
 
       int tilesRendered = renderTiles(graphics2d);
       int entitiesRendered = renderEntities(graphics2d);
@@ -181,13 +185,13 @@ public class Handler {
     BufferedImage levelImage = null;
     switch (level) {
       case 1: {
-        levelImage = Game.SPRITE_MANAGER.getLevel1Image();
-        this.levelWidth = Game.SPRITE_MANAGER.getLevel1Image().getWidth();
-        this.levelHeight = Game.SPRITE_MANAGER.getLevel1Image().getHeight();
+        levelImage = this.imageExtractor.getLevel1Image();
+        this.levelWidth = this.imageExtractor.getLevel1Image().getWidth();
+        this.levelHeight = this.imageExtractor.getLevel1Image().getHeight();
         break;
       }
       case 2: {
-        levelImage = Game.SPRITE_MANAGER.getLevel2Image();
+        levelImage = this.imageExtractor.getLevel2Image();
         this.levelWidth = levelImage.getWidth();
         this.levelHeight = levelImage.getHeight();
         break;
@@ -204,12 +208,12 @@ public class Handler {
         int green = (pixel >> 8) & 0xff;
         int blue = (pixel) & 0xff;
         int size = 64;
-        if (red == 0 && green == 0 && blue == 255) addPlayer(new Player(x * size, y * size, size, size, Id.player, this, Game.SPRITE_MANAGER.getPlayer()));
-        else if (red == 0 && green == 0 && blue == 0) addTile(new Grass(x * size, y * size, size, size, Id.wall, this, Game.SPRITE_MANAGER.getGrass(), true));
-        else if (red == 255 && green == 255 && blue == 0) addTile(new PowerUpBlock(x * size, y * size, size, size, Id.powerUpBlock, this, Game.SPRITE_MANAGER.getPowerUpBlock(), true));
-        else if (red == 100 && green == 100 && blue == 100) addTile(new Finish(x * size, y * size, size, size, Id.finish, this, Game.SPRITE_MANAGER.getFinish(), true));
-        else if (red == 66 && green == 66 && blue == 66) addEntity(new Mob1(x * size, y * size, size, size, Id.mob1, this, Game.SPRITE_MANAGER.getMob1()));
-        else if (red == 255 && green == 0 && blue == 0) addEntity(new BlueCrystal(x * size, y * size, size, size, Id.blueCrystal, this, Game.SPRITE_MANAGER.getBlueCrystal()));
+        if (red == 0 && green == 0 && blue == 255) addPlayer(new Player(x * size, y * size, size, size, Id.player, this, this.imageExtractor.getPlayer()));
+        else if (red == 0 && green == 0 && blue == 0) addTile(new Grass(x * size, y * size, size, size, Id.wall, this, this.imageExtractor.getGrass(), true));
+        else if (red == 255 && green == 255 && blue == 0) addTile(new PowerUpBlock(x * size, y * size, size, size, Id.powerUpBlock, this, this.imageExtractor.getPowerUpBlock(), true));
+        else if (red == 100 && green == 100 && blue == 100) addTile(new Finish(x * size, y * size, size, size, Id.finish, this, this.imageExtractor.getFinish(), true));
+        else if (red == 66 && green == 66 && blue == 66) addEntity(new Mob1(x * size, y * size, size, size, Id.mob1, this, this.imageExtractor.getMob1()));
+        else if (red == 255 && green == 0 && blue == 0) addEntity(new BlueCrystal(x * size, y * size, size, size, Id.blueCrystal, this, this.imageExtractor.getBlueCrystal()));
       }
     }
   }

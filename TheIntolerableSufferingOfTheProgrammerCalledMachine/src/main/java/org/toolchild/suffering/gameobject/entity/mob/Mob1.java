@@ -1,6 +1,7 @@
 package org.toolchild.suffering.gameobject.entity.mob;
 
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
@@ -22,8 +23,8 @@ public class Mob1 extends Entity {
   private int                 frame      = 0;
   private int                 frameDelay = 0;
 
-  public Mob1(int x, int y, int width, int height, Id id, Handler handler, Sprite[] sprites) {
-    super(x, y, width, height, id, handler, sprites);
+  public Mob1(int x, int y, int width, int height, Id id, Handler handler, BufferedImage[] bufferedImages) {
+    super(x, y, width, height, id, handler, bufferedImages);
     int direction = this.random.nextInt(2); // direction: 0 = left ; 1 = right
     this.movement.setVelocityX(direction == 0 ? -3 : +3);
     // movement.setVelocityX(-1);
@@ -61,7 +62,7 @@ public class Mob1 extends Entity {
       this.frameDelay++;
       if (this.frameDelay >= 3) {
         this.frame++;
-        if (this.frame >= this.sprites.length / 2) {
+        if (this.frame >= this.bufferedImages.length / 2) {
           this.frame = 0;
         }
         this.frameDelay = 0;
@@ -79,9 +80,9 @@ public class Mob1 extends Entity {
   @Override
   protected void handleAnimationRendering(Graphics2D graphics2D) {
     if (this.facing == 0) {
-      graphics2D.drawImage(this.sprites[this.frame].getImage(), this.x, this.y, this.width, this.height, null);
+      graphics2D.drawImage(this.bufferedImages[this.frame], this.x, this.y, this.width, this.height, null);
     } else if (this.facing == 1) {
-      graphics2D.drawImage(this.sprites[this.frame + 8].getImage(), this.x, this.y, this.width, this.height, null);
+      graphics2D.drawImage(this.bufferedImages[this.frame + 8], this.x, this.y, this.width, this.height, null);
     }
   }
 

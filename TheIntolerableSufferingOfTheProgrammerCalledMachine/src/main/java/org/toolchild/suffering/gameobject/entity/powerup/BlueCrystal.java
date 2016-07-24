@@ -1,6 +1,7 @@
 package org.toolchild.suffering.gameobject.entity.powerup;
 
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
@@ -23,8 +24,8 @@ public class BlueCrystal extends Entity {
 
   private Random              random     = new Random();
 
-  public BlueCrystal(int x, int y, int width, int height, Id id, Handler handler, Sprite[] sprites) {
-    super(x, y, width, height, id, handler, sprites);
+  public BlueCrystal(int x, int y, int width, int height, Id id, Handler handler, BufferedImage[] blueCrystal) {
+    super(x, y, width, height, id, handler, blueCrystal);
     int direction = this.random.nextInt(2); // direction: 0 = left ; 1 = right
     this.movement.setVelocityX(direction == 0 ? -3 : +3);
     this.movement.setMoveSpeed(3);
@@ -36,7 +37,7 @@ public class BlueCrystal extends Entity {
     this.frameDelay++;
     if (this.frameDelay >= 3) {
       this.frame++;
-      if (this.frame >= this.sprites.length / 2) {
+      if (this.frame >= this.bufferedImages.length / 2) {
         this.frame = 0;
       }
       this.frameDelay = 0;
@@ -59,6 +60,6 @@ public class BlueCrystal extends Entity {
 
   @Override
   protected void handleAnimationRendering(Graphics2D graphics2D) {
-    graphics2D.drawImage(this.sprites[this.frame].getImage(), this.x, this.y, this.width, this.height, null);
+    graphics2D.drawImage(this.bufferedImages[this.frame], this.x, this.y, this.width, this.height, null);
   }
 }

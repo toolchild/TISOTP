@@ -2,6 +2,7 @@ package org.toolchild.suffering.gameobject;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
@@ -16,7 +17,7 @@ public abstract class GameObject {
   protected int      width;
   protected int      height;
 
-  protected Sprite[] sprites;
+  protected BufferedImage[] bufferedImages;
 
   protected Id       id;
 
@@ -26,7 +27,7 @@ public abstract class GameObject {
 
   protected Handler handler;
 
-  public GameObject(int x, int y, int width, int height, Id id, Handler handler, Sprite[] sprites) {
+  public GameObject(int x, int y, int width, int height, Id id, Handler handler, BufferedImage[] bufferedImages) {
     super();
     this.x = x;
     this.y = y;
@@ -34,7 +35,7 @@ public abstract class GameObject {
     this.height = height;
     this.id = id;
     this.handler = handler;
-    this.sprites = sprites;
+    this.bufferedImages = bufferedImages;
 
   }
 

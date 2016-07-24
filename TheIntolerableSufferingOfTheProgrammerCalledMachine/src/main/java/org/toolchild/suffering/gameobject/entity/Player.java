@@ -2,6 +2,7 @@ package org.toolchild.suffering.gameobject.entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
@@ -34,8 +35,8 @@ public class Player extends Entity {
   private int                 isValnurableCount    = 0;
   private static final int    IS_INVULNERABLE_TIME = 120;
 
-  public Player(int x, int y, int width, int height, Id id, Handler handler, Sprite[] sprites) {
-    super(x, y, width, height, id, handler, sprites);
+  public Player(int x, int y, int width, int height, Id id, Handler handler, BufferedImage[] bufferedImages) {
+    super(x, y, width, height, id, handler, bufferedImages);
     this.movement.setMoveSpeed((int) ((8.0) * Game.SPEED_MODIFIER));
     this.jumpStartY = y;
   }
@@ -203,7 +204,7 @@ public class Player extends Entity {
       this.frameDelay++;
       if (this.frameDelay >= 4) {
         this.frame++;
-        if (this.frame >= this.sprites.length / 2) {
+        if (this.frame >= this.bufferedImages.length / 2) {
           this.frame = 0;
         }
         this.frameDelay = 0;
@@ -336,13 +337,13 @@ public class Player extends Entity {
       if (!this.movement.isMoving()) {
         this.frame = 0;
       }
-      graphics.drawImage(this.sprites[this.frame].getImage(), this.x, this.y, this.width, this.height, null);
+      graphics.drawImage(this.bufferedImages[this.frame], this.x, this.y, this.width, this.height, null);
     }
     if (this.facing == 1) {
       if (!this.movement.isMoving()) {
         this.frame = 0;
       }
-      graphics.drawImage(this.sprites[this.frame + 5].getImage(), this.x, this.y, this.width, this.height, null);
+      graphics.drawImage(this.bufferedImages[this.frame + 5], this.x, this.y, this.width, this.height, null);
     }
 
   }

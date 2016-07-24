@@ -59,6 +59,12 @@ public abstract class Entity extends GameObject {
   public Rectangle getBoundsRight() {
     return new Rectangle(this.x + this.width - this.boundsWidth, this.y + this.boundsTrim, this.boundsWidth, this.height - 2 * this.boundsTrim);
   }
+  
+  protected boolean updatePosition() {
+    this.x = this.x + this.movement.getVelocityX();
+    this.y = this.y + this.movement.getVelocityY();
+    return true;
+  }
 
   /**
    * handles the logic
@@ -251,6 +257,11 @@ public abstract class Entity extends GameObject {
       this.movement.setFalling(true);
     }
     return statusMessage;
+  }
+  
+  protected void handleGravityAndMovement(int speedModifier) {
+    this.movement.handleFalling(speedModifier);
+    this.movement.handleFloating();
   }
 
   /**

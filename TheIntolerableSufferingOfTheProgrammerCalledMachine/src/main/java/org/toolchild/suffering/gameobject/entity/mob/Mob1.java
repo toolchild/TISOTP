@@ -43,13 +43,6 @@ public class Mob1 extends Entity {
     handleGravityAndMovement(speedModifier);
   }
 
-  private boolean updatePosition() {
-    this.x = this.x + this.movement.getVelocityX();
-    this.y = this.y + this.movement.getVelocityY();
-    // if (x <= 0) x = 0;
-    // if (x + this.width >= Game.SIZE.getWidth()) x = (int) (Game.SIZE.getWidth() - this.width);
-    return true;
-  }
 
   private boolean handleAnimationCycle() {
     if (this.movement.getVelocityX() != 0) this.movement.setMoving(true);
@@ -67,12 +60,7 @@ public class Mob1 extends Entity {
     return true;
   }
 
-  private boolean handleGravityAndMovement(int speedModifier) {
-    this.movement.handleFalling(speedModifier);
-    this.movement.handleFloating();
-    return true;
-  }
-
+ 
   @Override
   protected void handleAnimationRendering(Graphics2D graphics2D) {
     if (this.facing == 0) {

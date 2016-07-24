@@ -45,18 +45,6 @@ public class BlueCrystal extends Entity {
     handleGravityAndMovement(speedModifier);
   }
 
-  private boolean updatePosition() {
-    this.x = this.x + this.movement.getVelocityX();
-    this.y = this.y + this.movement.getVelocityY();
-    return true;
-  }
-
-  private boolean handleGravityAndMovement(int speedModifier) {
-    this.movement.handleFalling(speedModifier);
-    this.movement.handleFloating();
-    return true;
-  }
-
   @Override
   protected void handleAnimationRendering(Graphics2D graphics2D) {
     graphics2D.drawImage(this.bufferedImages[this.frame], this.x, this.y, this.width, this.height, null);

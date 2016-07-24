@@ -130,17 +130,6 @@ public class Player extends Entity {
     handleAllEntityInteraction();
   }
 
-  /**
-   * Updates the x and y coordinates of the player.
-   * 
-   * @return true if successful, otherwise false
-   */
-  private boolean updatePosition() {
-    this.x = this.x + this.movement.getVelocityX();
-    this.y = this.y + this.movement.getVelocityY();
-    return true;
-  }
-
   private void handleAllEntityInteraction() {
     for (int e = 0; e < this.handler.getEntities().size(); e++) { // need to use this for loop and
       Entity entity = (Entity) this.handler.getEntities().get(e); // get the entity to avoid an UnconcurrentModificationException
@@ -190,7 +179,9 @@ public class Player extends Entity {
     this.handler.removePlayer(this);
   }
 
-  private void handleGravityAndMovement(int speedModifier) {
+  
+  @Override
+  protected void handleGravityAndMovement(int speedModifier) {
     this.movement.handlePlayerJumping();
     this.movement.handleFalling(speedModifier);
     this.movement.handleFloating();

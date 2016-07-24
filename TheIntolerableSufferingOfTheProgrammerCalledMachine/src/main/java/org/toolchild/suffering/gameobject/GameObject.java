@@ -6,22 +6,21 @@ import java.awt.image.BufferedImage;
 
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
-import org.toolchild.suffering.gfx.Sprite;
 
 public abstract class GameObject {
-  protected int      lineHeight = 20;
-  protected int      column     = 150;
+  protected int             lineHeight = 20;
+  protected int             column     = 150;
 
-  protected int      x;
-  protected int      y;
-  protected int      width;
-  protected int      height;
+  protected int             x;
+  protected int             y;
+  protected int             width;
+  protected int             height;
 
   protected BufferedImage[] bufferedImages;
 
-  protected Id       id;
+  protected Id              id;
 
-//  public abstract void tick();
+  // public abstract void tick();
 
   public abstract void render(Graphics2D graphics2D);
 
@@ -39,7 +38,6 @@ public abstract class GameObject {
 
   }
 
- 
   public Rectangle getBounds() {
     return new Rectangle(this.x, this.y, this.width, this.height);
   }
@@ -63,6 +61,5 @@ public abstract class GameObject {
   public Id getId() {
     return this.id;
   }
-
 
 }

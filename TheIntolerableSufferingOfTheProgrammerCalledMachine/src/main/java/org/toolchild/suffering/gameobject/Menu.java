@@ -4,12 +4,9 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.toolchild.suffering.Game;
 
 public class Menu{
-  private static final Logger log = LogManager.getLogger(Menu.class);
   private int                 x;
   private int                 y;
   private int                 width;

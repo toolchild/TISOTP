@@ -12,7 +12,6 @@ import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
 import org.toolchild.suffering.gameobject.GameObject;
 import org.toolchild.suffering.gameobject.tile.Tile;
-import org.toolchild.suffering.gfx.Sprite;
 
 /**
  * A gameobject with Movement
@@ -21,15 +20,14 @@ import org.toolchild.suffering.gfx.Sprite;
  *
  */
 public abstract class Entity extends GameObject {
-  private static final Logger log    = LogManager.getLogger(Entity.class);
-  protected int               facing = 0;                                                                                       // 0 = left; 1 = right
+  private static final Logger log         = LogManager.getLogger(Entity.class);
+  protected int               facing      = 0;                                                                                                                                               // 0 = left; 1 = right
   protected Movement          movement;
 
-  protected int boundsTrim = (int) (10 * Game.SPEED_MODIFIER);
-  protected int boundsInset= (int) (1 * Game.SPEED_MODIFIER);
-  protected int boundsWidth  = (int) (Game.SPEED_MODIFIER < 1 ? 1: Game.SPEED_MODIFIER);
+  protected int               boundsTrim  = 10 * Game.SPEED_MODIFIER;
+  protected int               boundsInset = 1 * Game.SPEED_MODIFIER;
+  protected int               boundsWidth = Game.SPEED_MODIFIER;
 
-  
   /**
    * 
    * @param x x-coordinate
@@ -60,12 +58,13 @@ public abstract class Entity extends GameObject {
   public Rectangle getBoundsRight() {
     return new Rectangle(this.x + this.width - this.boundsWidth, this.y + this.boundsTrim, this.boundsWidth, this.height - 2 * this.boundsTrim);
   }
-  
-  
+
   /**
    * handles the logic
+   * 
+   * @throws Exception
    */
-  public abstract void tick();
+  public abstract void tick() throws Exception;
 
   /**
    * Renders this Entity.
@@ -180,7 +179,7 @@ public abstract class Entity extends GameObject {
   private void handleAllEntityInteraction() {
     for (GameObject entity : this.handler.getEntities()) {
       if (isAroundPlayer(entity)) {
-        Entity entityInstance = (Entity)entity;
+        Entity entityInstance = (Entity) entity;
         String singleTileInteractionStatusMessage = handleSingleEntityInteraction(entityInstance);
         if (singleTileInteractionStatusMessage != null) {
           log.trace("single tile interaction: " + singleTileInteractionStatusMessage);

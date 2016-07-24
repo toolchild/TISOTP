@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
 import org.toolchild.suffering.gameobject.GameObject;
-import org.toolchild.suffering.gfx.Sprite;
 
 /**
  * Base for all Tiles used in the game.
@@ -34,10 +33,10 @@ public abstract class Tile extends GameObject {
   public void setActivated(boolean activated) {
     this.activated = activated;
   }
-  
+
   @Override
   public void render(Graphics2D graphics2d) {
-    graphics2d.drawImage(this.bufferedImages[0], this.x, this.y,this.width, this.height, null);
+    graphics2d.drawImage(this.bufferedImages[0], this.x, this.y, this.width, this.height, null);
   }
 
 }

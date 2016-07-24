@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
 import org.toolchild.suffering.gameobject.entity.Entity;
-import org.toolchild.suffering.gfx.Sprite;
 
 /**
  * Can be picked up by touch and makes the player grow.

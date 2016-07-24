@@ -1,11 +1,11 @@
 package org.toolchild.suffering.gameobject.tile;
 
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
-import org.toolchild.suffering.gfx.Sprite;
+import org.toolchild.suffering.gameobject.entity.Player;
+
 /**
  * When the {@link Player} touches this {@link tile} the level ends.
  * 

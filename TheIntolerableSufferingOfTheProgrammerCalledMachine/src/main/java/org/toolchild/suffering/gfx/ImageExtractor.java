@@ -43,10 +43,10 @@ public class ImageExtractor extends GFXLoader {
   }
 
   public BufferedImage[] getFinish() {
-    return this.getBufferedImageArray(finish);
+    return ImageExtractor.getBufferedImageArray(this.finish);
   }
   
-  private BufferedImage[] getBufferedImageArray(Sprite [] sprites){
+  private static BufferedImage[] getBufferedImageArray(Sprite [] sprites){
   BufferedImage[] bufferedImages= new BufferedImage[sprites.length];
     for (int i = 0; i < bufferedImages.length; i++) {      
       bufferedImages[i] = sprites[i].getImage();

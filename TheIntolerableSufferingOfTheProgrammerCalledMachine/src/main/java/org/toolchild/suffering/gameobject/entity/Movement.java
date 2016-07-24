@@ -81,7 +81,7 @@ public class Movement {
 
   public boolean handleFalling() {  // handleGravityAndMovement sub-method
     if (this.isFalling) {
-      this.gravity = this.gravity + 0.5 * Game.SPEED_MODIFIER ;  // handle gravity
+      this.gravity = this.gravity + 0.5 * Game.SPEED_MODIFIER;  // handle gravity
       // log.debug("Falling gravity = " + gravity);
       this.velocityY = (int) (this.gravity);    // handle movement
     }

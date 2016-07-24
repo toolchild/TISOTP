@@ -32,11 +32,10 @@ public class Handler {
   private LinkedList<GameObject> tiles    = new LinkedList<>();
   private LinkedList<GameObject> players  = new LinkedList<>();
   private Menu                   menu;
-  private ImageExtractor  imageExtractor;
+  private ImageExtractor         imageExtractor;
 
   private boolean                isPaused;
-  private int                    level = 1;
-  
+  private int                    level    = 1;
 
   private int                    tilesTicked;
   private int                    entitiesTicked;
@@ -57,20 +56,20 @@ public class Handler {
     }
   }
 
-  public void init() {
+  public void init() throws Exception {
     this.imageExtractor = new ImageExtractor();
     this.imageExtractor.init();
-    if (this.level > 1){
+    if (this.level > 1) {
       this.entities = new LinkedList<>();
-      this.tiles    = new LinkedList<>();
-      this.players  = new LinkedList<>();  
-    }   
+      this.tiles = new LinkedList<>();
+      this.players = new LinkedList<>();
+    }
     createLevel(this.level);
-    this.menu = new Menu(0, 0, (int) Game.SIZE.getWidth(), (int) Game.SIZE.getHeight(), this.imageExtractor.getMenuBackgroundImage());
+    this.menu = new Menu(0, 0, Game.getFrameWidth(), Game.getFrameHeight(), this.imageExtractor.getMenuBackgroundImage());
   }
 
-  public void tick() {
-    Game.keyInput.updateKeyEvents(null, null, this);
+  public void tick() throws Exception {
+    Game.keyInput.updateKeyEvents(null, this);
     if (!this.isPaused) {
       for (GameObject player : this.players) {
         if (player.getId() == Id.player) {
@@ -93,8 +92,8 @@ public class Handler {
       for (GameObject tile : this.tiles) {
         if (tile.getId() == Id.powerUpBlock) {
           PowerUpBlock powerUpBlock = (PowerUpBlock) tile;
-          if (powerUpBlock.getX() >= this.players.getFirst().getX() - Game.SIZE.getWidth() - 64 && tile.getX() <= this.players.getFirst().getX() + Game.SIZE.getWidth() + 64) { // only ticks visible tiles, relative to top left edge of the shown screen -64
-            if (powerUpBlock.getY() >= this.players.getFirst().getY() - Game.SIZE.getHeight() - 64 && tile.getY() <= this.players.getFirst().getY() + Game.SIZE.getHeight() + 64) {
+          if (powerUpBlock.getX() >= this.players.getFirst().getX() - Game.getFrameWidth() - 64 && tile.getX() <= this.players.getFirst().getX() + Game.getFrameWidth() + 64) { // only ticks visible tiles, relative to top left edge of the shown screen -64
+            if (powerUpBlock.getY() >= this.players.getFirst().getY() - Game.getFrameHeight() - 64 && tile.getY() <= this.players.getFirst().getY() + Game.getFrameHeight() + 64) {
               powerUpBlock.tick();
               this.tilesTicked++;
             }
@@ -150,8 +149,8 @@ public class Handler {
   private int renderTiles(Graphics2D graphics2d) {
     int tilesRendered = 0;
     for (GameObject tile : this.tiles) { // after releasing the camera, draw the tiles, not relative to player
-      if (tile.getX() >= this.players.getFirst().getX() - Game.SIZE.getWidth() - 64 && tile.getX() <= this.players.getFirst().getX() + Game.SIZE.getWidth() + 64) { // only render visible tiles, relative to top left edge of the shown screen -64
-        if (tile.getY() >= this.players.getFirst().getY() - Game.SIZE.getHeight() - 64 && tile.getY() <= this.players.getFirst().getY() + Game.SIZE.getHeight() + 64) {
+      if (tile.getX() >= this.players.getFirst().getX() - Game.getFrameWidth() - 64 && tile.getX() <= this.players.getFirst().getX() + Game.getFrameWidth() + 64) { // only render visible tiles, relative to top left edge of the shown screen -64
+        if (tile.getY() >= this.players.getFirst().getY() - Game.getFrameHeight() - 64 && tile.getY() <= this.players.getFirst().getY() + Game.getFrameHeight() + 64) {
           tile.render(graphics2d);
           tilesRendered++;
         }
@@ -181,8 +180,8 @@ public class Handler {
 
   }
 
-  private void createLevel(int level) {
-    BufferedImage levelImage = null;
+  private void createLevel(int level) throws Exception {
+    BufferedImage levelImage;
     switch (level) {
       case 1: {
         levelImage = this.imageExtractor.getLevel1Image();
@@ -197,7 +196,9 @@ public class Handler {
         break;
       }
       default: {
+        levelImage = null;
         log.error("LevelImage was not loaded.");
+        throw new Exception("LevelImage was not loaded.");
       }
 
     }
@@ -217,9 +218,9 @@ public class Handler {
       }
     }
   }
-  
-  public void nextLevel(){
-    this.level++;   
+
+  public void nextLevel() {
+    this.level++;
   }
 
   public void addEntity(Entity entity) {
@@ -276,5 +277,5 @@ public class Handler {
   public void setPaused(boolean isPaused) {
     this.isPaused = isPaused;
   }
-  
+
 }

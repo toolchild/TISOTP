@@ -11,4 +11,3 @@ public class KeyStatus {
     this.canActivate = true;
   }
 }
-

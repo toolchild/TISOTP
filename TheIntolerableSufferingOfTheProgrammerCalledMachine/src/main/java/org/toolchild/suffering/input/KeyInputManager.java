@@ -9,7 +9,6 @@ import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
 import org.toolchild.suffering.gameobject.GameObject;
-import org.toolchild.suffering.gameobject.Menu;
 import org.toolchild.suffering.gameobject.entity.Player;
 
 /**
@@ -36,7 +35,7 @@ public class KeyInputManager implements KeyListener {
 
   }
 
-  public boolean updateKeyEvents(Player player, Menu menu, Handler handler) {
+  public boolean updateKeyEvents(Player player, Handler handler) {
     if (!this.leftKeyStatus.isActive) leftKeyReleaseEvent(player);
     if (!this.rightKeyStatus.isActive) rightKeyReleaseEvent(player);
     // keep releaseEvent and Event separated for left and right key. You will break your brain if you don't.
@@ -89,7 +88,7 @@ public class KeyInputManager implements KeyListener {
 
   private void spaceKeyReleaseEvent(Handler handler) {
     this.spaceKeyStatus.canActivate = true;
-    log.trace("SpaceKeyReleaseEvent: canActivate: " + this.spaceKeyStatus.canActivate + " isActive:" + this.spaceKeyStatus.isActive);    
+    log.trace("SpaceKeyReleaseEvent: canActivate: " + this.spaceKeyStatus.canActivate + " isActive:" + this.spaceKeyStatus.isActive);
     handler.handleSpaceKeyEvent(false);
   }
 

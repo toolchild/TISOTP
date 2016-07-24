@@ -14,24 +14,24 @@ import org.apache.logging.log4j.Logger;
 import org.toolchild.suffering.input.KeyInputManager;
 
 public class Game extends Canvas implements Runnable {
-  private static final long         serialVersionUID = 5680154129348532365L;
-  private static final Logger       log              = LogManager.getLogger(Game.class);
-  public static final int           TICKS_PER_SECOND = 120;
-  public static final double        SPEED_MODIFIER   = 60.0 / TICKS_PER_SECOND; // not done yet 
+  private static final long      serialVersionUID = 5680154129348532365L;
+  private static final Logger    log              = LogManager.getLogger(Game.class);
+  public static final int        TICKS_PER_SECOND = 60; // multiple of 60
+  public static final int        SPEED_MODIFIER   = 60 / TICKS_PER_SECOND;                                                                                                                  // not done yet
 
-  public static final int           GAME_WIDTH       = 64;
-  public static final int           SCALE            = 24;
-  public static final int           GAME_HEIGHT      = GAME_WIDTH / 16 * 9;
-  public static final Dimension     SIZE             = new Dimension(GAME_WIDTH * SCALE, GAME_HEIGHT * SCALE);
-  public static final String        TITLE            = "The Intolerable Suffering of the Programmer called Machine";
+  public static final int        GAME_WIDTH       = 64;
+  public static final int        SCALE            = 24;
+  public static final int        GAME_HEIGHT      = GAME_WIDTH / 16 * 9;
+  private static final Dimension SIZE             = new Dimension(GAME_WIDTH * SCALE, GAME_HEIGHT * SCALE);
+  public static final String     TITLE            = "The Intolerable Suffering of the Programmer called Machine";
 
-  public static final Game          GAME             = new Game();
+  public static final Game       GAME             = new Game();
 
-  private Thread                    thread;
-  private boolean                   isRunning;
+  private Thread                 thread;
+  private boolean                isRunning;
 
-  public static final Handler       HANDLER          = new Handler();
-  public static KeyInputManager     keyInput;
+  public static final Handler    HANDLER          = new Handler();
+  public static KeyInputManager  keyInput;
 
   public Game() {
     setPreferredSize(SIZE);
@@ -64,7 +64,13 @@ public class Game extends Canvas implements Runnable {
 
   @Override
   public void run() {
-    log.debug("init: " + init());
+    try {
+      log.debug("init: " + init());
+    }
+    catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
     requestFocus();
 
     long lastTime = System.nanoTime();
@@ -82,7 +88,13 @@ public class Game extends Canvas implements Runnable {
       lastTime = nowTime;
       while (delta >= 1) {
         delta--;
-        tick();
+        try {
+          tick();
+        }
+        catch (Exception e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
         currentTicks++;
       }
       currentFrames++;
@@ -100,7 +112,7 @@ public class Game extends Canvas implements Runnable {
     this.stop();
   }
 
-  private boolean init() {
+  private boolean init() throws Exception {
     HANDLER.init();
     addKeyListener(new KeyInputManager());
     keyInput = (KeyInputManager) getKeyListeners()[0];
@@ -122,7 +134,7 @@ public class Game extends Canvas implements Runnable {
     }
   }
 
-  private static void tick() {
+  private static void tick() throws Exception {
     HANDLER.tick();
   }
 

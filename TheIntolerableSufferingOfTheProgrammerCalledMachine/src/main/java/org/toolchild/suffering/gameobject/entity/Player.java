@@ -12,7 +12,6 @@ import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
 import org.toolchild.suffering.gameobject.tile.Tile;
-import org.toolchild.suffering.gfx.Sprite;
 
 /**
  * The {@link Entity} controlled by the person playing this game.
@@ -59,7 +58,7 @@ public class Player extends Entity {
       this.jumpCount++;
       // log.trace("Jumped!");
     } else if (!isActive && this.movement.isJumping() && this.jumpCount != 100 * Game.SPEED_MODIFIER) {
-      this.jumpCount = (int) (100 / Game.SPEED_MODIFIER);
+      this.jumpCount = 100 / Game.SPEED_MODIFIER;
       this.movement.setGravity(this.movement.getGravity() + 0.5 * Game.SPEED_MODIFIER);
       // log.trace("Jump Stop!");
     } else if (!isActive && !this.movement.isJumping()) {
@@ -104,8 +103,8 @@ public class Player extends Entity {
   }
 
   @Override
-  public void tick() {
-    Game.keyInput.updateKeyEvents(this, null, this.handler);
+  public void tick() throws Exception {
+    Game.keyInput.updateKeyEvents(this, this.handler);
     handleGravityAndMovement();
     updatePosition();
     handleAllTileInteraction();
@@ -158,8 +157,8 @@ public class Player extends Entity {
         entity.die();
         log.debug("mob1 interaction bottom");
       } else if (getBounds().intersects(entity.getBounds()) && this.isValnurable) {
-        this.height = (int) (this.height - GROWTH_MODIFIER);
-        this.width = (int) (this.width - GROWTH_MODIFIER);
+        this.height = this.height - this.GROWTH_MODIFIER;
+        this.width = this.width - this.GROWTH_MODIFIER;
         this.isValnurable = false;
         if (this.height < 30) {
           die();
@@ -174,9 +173,9 @@ public class Player extends Entity {
     if (entity.getId() == Id.blueCrystal) {
       if (this.height < PLAYER_DEFAULT_SIZE * 2) {
         if (getBounds().intersects(entity.getBounds())) {
-          this.height = this.height + GROWTH_MODIFIER;
-          this.width = this.width + GROWTH_MODIFIER;
-          this.y = this.y - GROWTH_MODIFIER;
+          this.height = this.height + this.GROWTH_MODIFIER;
+          this.width = this.width + this.GROWTH_MODIFIER;
+          this.y = this.y - this.GROWTH_MODIFIER;
           entity.die();
         }
       }
@@ -212,7 +211,7 @@ public class Player extends Entity {
     }
   }
 
-  private void handleAllTileInteraction() {
+  private void handleAllTileInteraction() throws Exception {
     ArrayList<Tile> tilesInteracting = new ArrayList<>();
     for (int t = 0; t < this.handler.getTiles().size(); t++) {
       Tile tile = (Tile) this.handler.getTiles().get(t);
@@ -230,7 +229,7 @@ public class Player extends Entity {
     }
   }
 
-  private boolean handleSingleTileInteraction(Tile tile) {  // handleAllTileInteraction sub-method
+  private boolean handleSingleTileInteraction(Tile tile) throws Exception {  // handleAllTileInteraction sub-method
     boolean topTileInteraction = false;
     if (tile.isSolid()) {
       if (tile.getId() == Id.powerUpBlock) {
@@ -254,7 +253,7 @@ public class Player extends Entity {
     return statusMessage;
   }
 
-  private String handleFinishInteraction(Tile finish) {
+  private String handleFinishInteraction(Tile finish) throws Exception {
     String statusMessage = null;
     if (getBounds().intersects(finish.getBounds()) && this.isValnurable) {
       statusMessage = "finish interaction: Finish touched";

@@ -17,14 +17,12 @@ public class Game extends Canvas implements Runnable {
   private static final long     serialVersionUID = 5680154129348532365L;
   private static final Logger   log              = LogManager.getLogger(Game.class);
 
-  public final int              TICKS_PER_SECOND = 60;                                                                                                                                                                                                     // multiple of 60
-  public final int              SPEED_MODIFIER   = 60 / this.TICKS_PER_SECOND;                                                                                                                                                                                                                                                        // not done yet
+  public final int              TICKS_PER_SECOND = 60;                                                                                                                                                                                                                                                                                             // multiple of 60
+  public final int              SPEED_MODIFIER   = 60 / this.TICKS_PER_SECOND;                                                                                                                                                                                                                                                                                                // not done yet
 
   public final int              GAME_WIDTH       = 64;
   public final int              SCALE            = 24;
   public final int              GAME_HEIGHT      = this.GAME_WIDTH / 16 * 9;
-  private final Dimension       SIZE             = new Dimension(this.GAME_WIDTH * this.SCALE, this.GAME_HEIGHT * this.SCALE);
-  private final String          TITLE            = "The Intolerable Suffering of the Programmer called Machine";
 
   private Thread                thread;
   private boolean               isRunning;
@@ -33,9 +31,10 @@ public class Game extends Canvas implements Runnable {
   public static KeyInputManager keyInputManager;
 
   public Game() {
-    setPreferredSize(this.SIZE);
-    setMaximumSize(this.SIZE);
-    setMinimumSize(this.SIZE);
+    Dimension size = new Dimension(this.GAME_WIDTH * this.SCALE, this.GAME_HEIGHT * this.SCALE);
+    setPreferredSize(size);
+    setMaximumSize(size);
+    setMinimumSize(size);
   }
 
   /**
@@ -154,7 +153,7 @@ public class Game extends Canvas implements Runnable {
   }
 
   public void initAndGetJFrame() {
-    JFrame frame = new JFrame(this.TITLE);
+    JFrame frame = new JFrame("The Intolerable Suffering of the Programmer called Machine");
     // frame.setUndecorated(true); //this must be switched by a configuration.
     frame.add(this);
 

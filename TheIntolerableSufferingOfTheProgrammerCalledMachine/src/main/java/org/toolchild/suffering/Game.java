@@ -27,8 +27,8 @@ public class Game extends Canvas implements Runnable {
   private Thread                thread;
   private boolean               isRunning;
 
-  public static final Handler   HANDLER          = new Handler();
-  public static KeyInputManager keyInputManager;
+  private final Handler   HANDLER          = new Handler();
+  private KeyInputManager keyInputManager;
 
   public Game() {
     Dimension size = new Dimension(this.GAME_WIDTH * this.SCALE, this.GAME_HEIGHT * this.SCALE);
@@ -107,10 +107,10 @@ public class Game extends Canvas implements Runnable {
   }
 
   private boolean init() throws Exception {
-    HANDLER.init(this);
+    this.HANDLER.init(this);
     addKeyListener(new KeyInputManager());
-    keyInputManager = (KeyInputManager) getKeyListeners()[0];
-    keyInputManager.init();
+    this.keyInputManager = (KeyInputManager) getKeyListeners()[0];
+    this.keyInputManager.init();
     return true;
   }
 
@@ -129,7 +129,7 @@ public class Game extends Canvas implements Runnable {
   }
 
   private void tick() throws Exception {
-    HANDLER.tick(this, keyInputManager);
+    this.HANDLER.tick(this, this.keyInputManager);
   }
 
   /**
@@ -147,7 +147,7 @@ public class Game extends Canvas implements Runnable {
     Graphics2D graphics2d = (Graphics2D) bufferStrategy.getDrawGraphics();
     graphics2d.setFont(getFont().deriveFont(Font.BOLD));
     graphics2d.setColor(Color.GRAY);
-    HANDLER.render(this, graphics2d, lastSecondTicks, lastSecondFrames);
+    this.HANDLER.render(this, graphics2d, lastSecondTicks, lastSecondFrames);
     bufferStrategy.show();
     graphics2d.dispose();
   }
@@ -156,7 +156,6 @@ public class Game extends Canvas implements Runnable {
     JFrame frame = new JFrame("The Intolerable Suffering of the Programmer called Machine");
     // frame.setUndecorated(true); //this must be switched by a configuration.
     frame.add(this);
-
     frame.setResizable(false);
     // frame.setLocationRelativeTo(null); // put the frame in the middle of the screen
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

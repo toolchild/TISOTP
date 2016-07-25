@@ -95,32 +95,28 @@ public class KeyInputManager implements KeyListener {
   @Override
   public void keyPressed(KeyEvent e) {
     int key = e.getKeyCode();
-    for (GameObject player : Game.HANDLER.getPlayers()) {
-      if (player.getId() == Id.player) {
-        switch (key) {
-          case KeyEvent.VK_W: {
-            this.jumpKeyStatus.isActive = true;
-            break;
-          }
-          case KeyEvent.VK_A: {
-            log.trace("LeftKeyPressed: left time: " + this.leftKeyStatus.timeStamp + " right Time:" + this.rightKeyStatus.timeStamp);
-            this.leftKeyStatus.isActive = true;
-            break;
-          }
-          case KeyEvent.VK_D: {
-            log.trace("RightKeyPressed: left time: " + this.leftKeyStatus.timeStamp + " right Time:" + this.rightKeyStatus.timeStamp);
-            this.rightKeyStatus.isActive = true;
-            break;
-          }
-          case KeyEvent.VK_SPACE: {
-            log.trace("SpaceKeyPressed");
-            this.spaceKeyStatus.isActive = true;
-            break;
-          }
-          default: {
-            break;
-          }
-        }
+    switch (key) {
+      case KeyEvent.VK_W: {
+        this.jumpKeyStatus.isActive = true;
+        break;
+      }
+      case KeyEvent.VK_A: {
+        log.trace("LeftKeyPressed: left time: " + this.leftKeyStatus.timeStamp + " right Time:" + this.rightKeyStatus.timeStamp);
+        this.leftKeyStatus.isActive = true;
+        break;
+      }
+      case KeyEvent.VK_D: {
+        log.trace("RightKeyPressed: left time: " + this.leftKeyStatus.timeStamp + " right Time:" + this.rightKeyStatus.timeStamp);
+        this.rightKeyStatus.isActive = true;
+        break;
+      }
+      case KeyEvent.VK_SPACE: {
+        log.trace("SpaceKeyPressed");
+        this.spaceKeyStatus.isActive = true;
+        break;
+      }
+      default: {
+        break;
       }
     }
   }
@@ -128,35 +124,31 @@ public class KeyInputManager implements KeyListener {
   @Override
   public void keyReleased(KeyEvent e) {
     int key = e.getKeyCode();
-    for (GameObject player : Game.HANDLER.getPlayers()) {
-      if (player.getId() == Id.player) {
-        switch (key) {
-          case KeyEvent.VK_W: {
 
-            this.jumpKeyStatus.isActive = false;
-            break;
-          }
-          case KeyEvent.VK_A: {
-            this.leftKeyStatus.timeStamp = System.nanoTime();
-            log.trace("LeftKeyReleased: left time: " + this.leftKeyStatus.timeStamp + " right Time:" + this.rightKeyStatus.timeStamp);
-            this.leftKeyStatus.isActive = false;
-            break;
-          }
-          case KeyEvent.VK_D: {
-            this.rightKeyStatus.timeStamp = System.nanoTime();
-            log.trace("RightKeyRelease: left time: " + this.leftKeyStatus.timeStamp + " right Time:" + this.rightKeyStatus.timeStamp);
-            this.rightKeyStatus.isActive = false;
-            break;
-          }
-          case KeyEvent.VK_SPACE: {
-            log.trace("SpaceKeyReleased");
-            this.spaceKeyStatus.isActive = false;
-            break;
-          }
-          default: {
-            break;
-          }
-        }
+    switch (key) {
+      case KeyEvent.VK_W: {
+        this.jumpKeyStatus.isActive = false;
+        break;
+      }
+      case KeyEvent.VK_A: {
+        this.leftKeyStatus.timeStamp = System.nanoTime();
+        log.trace("LeftKeyReleased: left time: " + this.leftKeyStatus.timeStamp + " right Time:" + this.rightKeyStatus.timeStamp);
+        this.leftKeyStatus.isActive = false;
+        break;
+      }
+      case KeyEvent.VK_D: {
+        this.rightKeyStatus.timeStamp = System.nanoTime();
+        log.trace("RightKeyRelease: left time: " + this.leftKeyStatus.timeStamp + " right Time:" + this.rightKeyStatus.timeStamp);
+        this.rightKeyStatus.isActive = false;
+        break;
+      }
+      case KeyEvent.VK_SPACE: {
+        log.trace("SpaceKeyReleased");
+        this.spaceKeyStatus.isActive = false;
+        break;
+      }
+      default: {
+        break;
       }
     }
   }

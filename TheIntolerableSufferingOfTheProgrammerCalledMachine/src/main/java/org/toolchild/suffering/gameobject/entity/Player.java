@@ -270,12 +270,12 @@ public class Player extends Entity {
   private boolean handleLevelTileInteraction(Tile tile) {
     boolean hitTop = false;
     if (getBoundsTop().intersects(tile.getBounds())) {
-      log.debug("Top Hit! player.y: " + this.y + " tile.y (bottum) " + (tile.getY() + tile.getHeight()));
       log.debug("Top Hit! player.x: " + this.x + " tile.x (right corner) " + (tile.getX() + tile.getWidth()));
+      log.debug("Top Hit! player.y: " + this.y + " tile.y (bottum) " + (tile.getY() + tile.getHeight()));
       hitTop = true;
       this.y = tile.getY() + tile.getHeight(); // reset height, looks cleaner
-      log.debug("Top Reposition! player.y: " + this.y + " tile.y (bottum) " + (tile.getY() + tile.getHeight()));
       log.debug("Top Reposition! player.x: " + this.x + " tile.x (right corner) " + (tile.getX() + tile.getWidth()));
+      log.debug("Top Reposition! player.y: " + this.y + " tile.y (bottum) " + (tile.getY() + tile.getHeight()));
       this.movement.setVelocityY(0);
       if (this.movement.isJumping()) {
         this.movement.setGravity(1.0);

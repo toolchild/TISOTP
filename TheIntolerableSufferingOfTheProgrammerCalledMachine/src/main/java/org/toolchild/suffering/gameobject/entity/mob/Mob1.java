@@ -22,10 +22,9 @@ public class Mob1 extends Entity {
   public Mob1(int x, int y, int width, int height, Id id, Handler handler, BufferedImage[] bufferedImages) {
     super(x, y, width, height, id, handler, bufferedImages);
     int direction = this.random.nextInt(2); // direction: 0 = left ; 1 = right
-    this.movement.setVelocityX(direction == 0 ? -3 : +3);
+    this.movement.setVelocityX(direction == 0 ? -1 : +1);
     // movement.setVelocityX(-1);
-
-    this.movement.setMoveSpeed(5);
+    this.movement.setMoveSpeed(3);
     this.movement.setMoving(true);
   }
 

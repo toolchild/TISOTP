@@ -48,6 +48,12 @@ public class Player extends Entity {
   }
 
   @Override
+  public Rectangle getBounds() {
+    return new Rectangle(this.x + this.boundsInsetX, this.y + this.boundsInsetY, this.width - 2 * (this.boundsInsetX), this.height - 2*this.boundsInsetY-this.boundsTrim);
+  }
+
+  
+  @Override
   public Rectangle getBoundsTop() {
     return new Rectangle(this.x + this.boundsTrim + this.boundsInsetX, this.y + this.boundsInsetY, this.width - 2 * (this.boundsTrim + this.boundsInsetX), this.boundsWidth);
   }
@@ -55,6 +61,13 @@ public class Player extends Entity {
   @Override
   public Rectangle getBoundsBottom() {
     updateBoundsModifier();
+    return new Rectangle(this.x + this.boundsTrim + this.boundsInsetX, this.y + this.height - this.boundsWidth - this.boundsInsetY, this.width - 2 * (this.boundsTrim + this.boundsInsetX), this.boundsWidth);
+  }
+  
+  public Rectangle getBiggerBoundsBottom() {
+    this.boundsTrim = 8 * this.width / 64;
+    this.boundsInsetX = this.width / 3;
+    this.boundsInsetY = this.height / 10;
     return new Rectangle(this.x + this.boundsTrim + this.boundsInsetX, this.y + this.height - this.boundsWidth - this.boundsInsetY, this.width - 2 * (this.boundsTrim + this.boundsInsetX), this.boundsWidth);
   }
 
@@ -71,7 +84,7 @@ public class Player extends Entity {
   }
 
   private void updateBoundsModifier() {
-    this.boundsTrim = 8 * this.width / 64;
+    this.boundsTrim = 9 * this.width / 64;
     this.boundsInsetX = this.width / 3;
     this.boundsInsetY = this.height / 10;
   }
@@ -141,35 +154,44 @@ public class Player extends Entity {
   public void tick(KeyInputManager keyInputManager, Game game, int speedModifier) throws Exception {
     keyInputManager.updateKeyEvents(this, this.handler, speedModifier);
     handleGravityAndMovement(speedModifier);
+    handleJumpCount();
     updatePosition();
     handleAllTileInteraction(game);
     handleAnimationCycle();
+    handlerValnurable();
+    handleGrowing();
+    handleAllEntityInteraction();
+  }
 
-    if (this.movement.isJumping()) {
-      this.jumpTimeCount++;
-    } else {
-      this.jumpTimeCount = 0;
-    }
-
-    if (!this.isValnurable) {
-      this.isValnurableCount++;
-    }
-    if (this.isValnurableCount >= IS_INVULNERABLE_TIME) {
-      this.isValnurableCount = 0;
-      this.isValnurable = true;
-    }
-    if (this.isGrowingCount >= GROWTH_MODIFIER) {
+  private void handleGrowing() {
+    if (this.isGrowingCount >= this.GROWTH_MODIFIER) {
       this.isGrowingCount = 0;
       this.isGrowing= false;
     }
     if (this.isGrowing){
       this.height = this.height + 1;
       this.width = this.width +1;
-      this.y = this.y - 1;
+      this.y = this.y - 2;
       this.isGrowingCount++;
     }
+  }
 
-    handleAllEntityInteraction();
+  private void handlerValnurable() {
+    if (!this.isValnurable) {
+      this.isValnurableCount++;
+    }
+    if (this.isValnurableCount >= this.IS_INVULNERABLE_TIME) {
+      this.isValnurableCount = 0;
+      this.isValnurable = true;
+    }
+  }
+
+  private void handleJumpCount() {
+    if (this.movement.isJumping()) {
+      this.jumpTimeCount++;
+    } else {
+      this.jumpTimeCount = 0;
+    }
   }
 
   private void handleAllEntityInteraction() {
@@ -186,7 +208,7 @@ public class Player extends Entity {
 
   private void handleMob1Interaction(Entity entity) {
     if (entity.getId() == Id.mob1) {
-      if (getBoundsBottom().intersects(entity.getBounds()) && this.isValnurable) {
+      if (getBiggerBoundsBottom().intersects(entity.getBounds()) && this.isValnurable) {
         this.movement.setGravity(-this.movement.getGravity() * 0.8);
         entity.die();
         log.debug("mob1 interaction bottom");
@@ -355,7 +377,15 @@ public class Player extends Entity {
     }
 
     handleAnimationRendering(graphics2D);
-    // draw collision detection box
+    renderCollisionBoxes(graphics2D);
+    
+  }
+
+  private void renderCollisionBoxes(Graphics2D graphics2D) {
+    graphics2D.setColor(new Color(1f,0f,0f,.5f));
+    graphics2D.fill(getBounds());
+    graphics2D.setColor(Color.CYAN);
+    graphics2D.draw(getBiggerBoundsBottom());
     graphics2D.setColor(Color.RED);
     graphics2D.draw(getBoundsTop());
     graphics2D.draw(getBoundsBottom());

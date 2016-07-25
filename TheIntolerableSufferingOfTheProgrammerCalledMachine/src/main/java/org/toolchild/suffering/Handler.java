@@ -100,7 +100,7 @@ public class Handler {
           PowerUpBlock powerUpBlock = (PowerUpBlock) tile;
           if (powerUpBlock.getX() >= this.players.getFirst().getX() - game.getFrameWidth() - 64 && tile.getX() <= this.players.getFirst().getX() + game.getFrameWidth() + 64) { // only ticks visible tiles, relative to top left edge of the shown screen -64
             if (powerUpBlock.getY() >= this.players.getFirst().getY() - game.getFrameHeight() - 64 && tile.getY() <= this.players.getFirst().getY() + game.getFrameHeight() + 64) {
-              powerUpBlock.tick();
+              powerUpBlock.tick(this);
               this.tilesTicked++;
             }
           }
@@ -216,9 +216,9 @@ public class Handler {
         int blue = (pixel) & 0xff;
         int size = 64;
         if (red == 0 && green == 0 && blue == 255) addPlayer(new Player(x * size, y * size, size, size, Id.player, this, this.imageExtractor.getPlayer()));
-        else if (red == 0 && green == 0 && blue == 0) addTile(new Grass(x * size, y * size, size, size, Id.wall, this, this.imageExtractor.getGrass(), true));
-        else if (red == 255 && green == 255 && blue == 0) addTile(new PowerUpBlock(x * size, y * size, size, size, Id.powerUpBlock, this, this.imageExtractor.getPowerUpBlock(), true));
-        else if (red == 100 && green == 100 && blue == 100) addTile(new Finish(x * size, y * size, size, size, Id.finish, this, this.imageExtractor.getFinish(), true));
+        else if (red == 0 && green == 0 && blue == 0) addTile(new Grass(x * size, y * size, size, size, Id.wall, this.imageExtractor.getGrass(), true));
+        else if (red == 255 && green == 255 && blue == 0) addTile(new PowerUpBlock(x * size, y * size, size, size, Id.powerUpBlock, this.imageExtractor.getPowerUpBlock(), true));
+        else if (red == 100 && green == 100 && blue == 100) addTile(new Finish(x * size, y * size, size, size, Id.finish, this.imageExtractor.getFinish(), true));
         else if (red == 66 && green == 66 && blue == 66) addEntity(new Mob1(x * size, y * size, size, size, Id.mob1, this, this.imageExtractor.getMob1()));
         else if (red == 255 && green == 0 && blue == 0) addEntity(new BlueCrystal(x * size, y * size, size, size, Id.blueCrystal, this, this.imageExtractor.getBlueCrystal()));
       }

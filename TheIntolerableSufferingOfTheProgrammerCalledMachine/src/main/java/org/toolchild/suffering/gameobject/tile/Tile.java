@@ -17,8 +17,8 @@ public abstract class Tile extends GameObject {
   protected boolean isSolid;
   protected boolean activated = false;
 
-  public Tile(int x, int y, int width, int height, Id id, Handler handler, BufferedImage[] bufferedImages, boolean isSolid) {
-    super(x, y, width, height, id, handler, bufferedImages);
+  public Tile(int x, int y, int width, int height, Id id, BufferedImage[] bufferedImages, boolean isSolid) {
+    super(x, y, width, height, id, bufferedImages);
     this.isSolid = isSolid;
   }
 

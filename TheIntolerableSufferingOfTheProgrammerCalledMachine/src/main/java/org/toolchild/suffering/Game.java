@@ -18,7 +18,7 @@ public class Game extends Canvas implements Runnable {
   private static final Logger   log              = LogManager.getLogger(Game.class);
 
   public final int              TICKS_PER_SECOND = 60;                                                                                                                                                                                                                                                                                             // multiple of 60
-  public final int              SPEED_MODIFIER   = 60 / this.TICKS_PER_SECOND;                                                                                                                                                                                                                                                                                                // not done yet
+  public final int              SPEED_MODIFIER   = 1;//60 / this.TICKS_PER_SECOND;                                                                                                                                                                                                                                                                                                // not done yet
 
   public final int              GAME_WIDTH       = 64;
   public final int              SCALE            = 24;

@@ -16,12 +16,12 @@ public class PowerUpBlock extends Tile {
   private boolean used    = false;
   private int     spriteY = getY();
 
-  public PowerUpBlock(int x, int y, int width, int height, Id id, Handler handler, BufferedImage[] bufferedImages, boolean isSolid) {
-    super(x, y, width, height, id, handler, bufferedImages, isSolid);
+  public PowerUpBlock(int x, int y, int width, int height, Id id, BufferedImage[] bufferedImages, boolean isSolid) {
+    super(x, y, width, height, id, bufferedImages, isSolid);
     this.bufferedImages = bufferedImages; // This should be obsolete.
   }
 
-  public void tick() {
+  public void tick(Handler handler) {
     if (this.activated && !this.used) {
       this.spriteY--;
       BufferedImage[] blueCrystal = new BufferedImage[8];
@@ -30,7 +30,7 @@ public class PowerUpBlock extends Tile {
       }
       if (this.spriteY <= this.y - this.height) {
         this.used = true;
-        this.handler.addEntity(new BlueCrystal(this.x, this.spriteY, this.width, this.height, Id.blueCrystal, this.handler, blueCrystal));
+        handler.addEntity(new BlueCrystal(this.x, this.spriteY, this.width, this.height, Id.blueCrystal, handler, blueCrystal));
       }
     }
   }

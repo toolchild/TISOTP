@@ -2,6 +2,7 @@ package org.toolchild.suffering.gameobject.entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -33,21 +34,52 @@ public class Player extends Entity {
   private int                 jumpHeight           = 0;
   private boolean             isValnurable         = true;
   private int                 isValnurableCount    = 0;
-  private static final int    IS_INVULNERABLE_TIME = 120;
+  private boolean             isGrowing;
+  private int                 isGrowingCount       = 0;
+  private final int           IS_INVULNERABLE_TIME = 120;
 
   public Player(int x, int y, int width, int height, Id id, Handler handler, BufferedImage[] bufferedImages) {
     super(x, y, width, height, id, handler, bufferedImages);
     this.jumpStartY = y;
   }
-  
-  public void init(int speedModifier){
+
+  public void init(int speedModifier) {
     this.movement.setMoveSpeed((int) ((8.0) * speedModifier));
+  }
+
+  @Override
+  public Rectangle getBoundsTop() {
+    return new Rectangle(this.x + this.boundsTrim + this.boundsInsetX, this.y + this.boundsInsetY, this.width - 2 * (this.boundsTrim + this.boundsInsetX), this.boundsWidth);
+  }
+
+  @Override
+  public Rectangle getBoundsBottom() {
+    updateBoundsModifier();
+    return new Rectangle(this.x + this.boundsTrim + this.boundsInsetX, this.y + this.height - this.boundsWidth - this.boundsInsetY, this.width - 2 * (this.boundsTrim + this.boundsInsetX), this.boundsWidth);
+  }
+
+  @Override
+  public Rectangle getBoundsLeft() {
+    updateBoundsModifier();
+    return new Rectangle(this.x + this.boundsInsetX, this.y + this.boundsTrim + this.boundsInsetY, this.boundsWidth, this.height - 2 * (this.boundsTrim + this.boundsInsetY));
+  }
+
+  @Override
+  public Rectangle getBoundsRight() {
+    updateBoundsModifier();
+    return new Rectangle(this.x - this.boundsInsetX + this.width - this.boundsWidth, this.y + this.boundsTrim + this.boundsInsetY, this.boundsWidth, this.height - 2 * (this.boundsTrim + this.boundsInsetY));
+  }
+
+  private void updateBoundsModifier() {
+    this.boundsTrim = 8 * this.width / 64;
+    this.boundsInsetX = this.width / 3;
+    this.boundsInsetY = this.height / 10;
   }
 
   public void handleJumpKeyEvent(boolean isActive, int speedModifier) {
     // log.trace("y '" + this.y + "' jumpStartY '" + this.jumpStartY + "'");
     this.jumpHeight = this.jumpStartY - this.y;
-    boolean canJump = this.jumpCount < 100 /speedModifier && this.movement.getGravity() < 1.0 && this.jumpHeight < this.maxJumpHeight;
+    boolean canJump = this.jumpCount < 100 / speedModifier && this.movement.getGravity() < 1.0 && this.jumpHeight < this.maxJumpHeight;
     boolean initJump = this.jumpCount < 1;
     // log.trace("jump height : '" + this.jumpHeight + "' key active : '" + isActive + "'count : '" + this.jumpCount + "' canjump : '" + canJump + "' init jump : '" + initJump + "' is jumping : '" + this.movement.isJumping() + "' is falling : '" + this.movement.isFalling() + "'");
 
@@ -126,6 +158,16 @@ public class Player extends Entity {
       this.isValnurableCount = 0;
       this.isValnurable = true;
     }
+    if (this.isGrowingCount >= GROWTH_MODIFIER) {
+      this.isGrowingCount = 0;
+      this.isGrowing= false;
+    }
+    if (this.isGrowing){
+      this.height = this.height + 1;
+      this.width = this.width +1;
+      this.y = this.y - 1;
+      this.isGrowingCount++;
+    }
 
     handleAllEntityInteraction();
   }
@@ -163,11 +205,9 @@ public class Player extends Entity {
 
   private void handleBlueCrystalInteraction(Entity entity) {
     if (entity.getId() == Id.blueCrystal) {
-      if (this.height < PLAYER_DEFAULT_SIZE * 2) {
-        if (getBounds().intersects(entity.getBounds())) {
-          this.height = this.height + this.GROWTH_MODIFIER;
-          this.width = this.width + this.GROWTH_MODIFIER;
-          this.y = this.y - this.GROWTH_MODIFIER;
+      if (this.height < PLAYER_DEFAULT_SIZE * 2 && !this.isGrowing) {
+        if (getBounds().intersects(entity.getBounds())) {          
+          this.isGrowing = true;
           entity.die();
         }
       }
@@ -179,7 +219,6 @@ public class Player extends Entity {
     this.handler.removePlayer(this);
   }
 
-  
   @Override
   protected void handleGravityAndMovement(int speedModifier) {
     this.movement.handlePlayerJumping();
@@ -273,7 +312,7 @@ public class Player extends Entity {
       log.debug("Top Hit! player.x: " + this.x + " tile.x (right corner) " + (tile.getX() + tile.getWidth()));
       log.debug("Top Hit! player.y: " + this.y + " tile.y (bottum) " + (tile.getY() + tile.getHeight()));
       hitTop = true;
-      this.y = tile.getY() + tile.getHeight(); // reset height, looks cleaner
+      this.y = tile.getY() + tile.getHeight() - this.boundsInsetY; // reset height, looks cleaner
       log.debug("Top Reposition! player.x: " + this.x + " tile.x (right corner) " + (tile.getX() + tile.getWidth()));
       log.debug("Top Reposition! player.y: " + this.y + " tile.y (bottum) " + (tile.getY() + tile.getHeight()));
       this.movement.setVelocityY(0);
@@ -290,7 +329,7 @@ public class Player extends Entity {
         this.movement.setGravity(1.0);
       }
       this.jumpCount = 0;
-      this.y = tile.getY() - this.height; // reset height, looks cleaner
+      this.y = tile.getY() - this.height + this.boundsInsetY; // reset height, looks cleaner
       this.jumpStartY = this.y;
       if (this.movement.isFalling()) {
         this.movement.setFalling(false);
@@ -299,12 +338,12 @@ public class Player extends Entity {
     if (getBoundsLeft().intersects(tile.getBounds())) {
       log.debug("Left Hit! player.x: " + this.x + " tile.x (right corner) " + (tile.getX() + tile.getWidth()));
       this.movement.setVelocityY(0);
-      this.x = tile.getX() + tile.getWidth();
+      this.x = tile.getX() + tile.getWidth() - this.boundsInsetX;
     }
     if (getBoundsRight().intersects(tile.getBounds())) {
       log.debug("Right Hit player.x: " + (this.x + this.width) + " tile.x (right corner) " + tile.getX());
       this.movement.setVelocityY(0);
-      this.x = tile.getX() - this.width;
+      this.x = tile.getX() - this.width + this.boundsInsetX;
     }
     return hitTop;
   }
@@ -368,11 +407,10 @@ public class Player extends Entity {
     camera.releaseGraphicsFromCamera(graphics2D);
   }
 
-
   @Override
   public void tick(int speedModifier) throws Exception {
     // TODO Auto-generated method stub
-    
+
   }
 
 }

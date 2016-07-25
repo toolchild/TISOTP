@@ -24,16 +24,13 @@ public abstract class GameObject {
 
   public abstract void render(Graphics2D graphics2D);
 
-  protected Handler handler;
-
-  public GameObject(int x, int y, int width, int height, Id id, Handler handler, BufferedImage[] bufferedImages) {
+  public GameObject(int x, int y, int width, int height, Id id, BufferedImage[] bufferedImages) {
     super();
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
     this.id = id;
-    this.handler = handler;
     this.bufferedImages = bufferedImages;
 
   }

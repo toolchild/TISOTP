@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.toolchild.suffering.Game;
 import org.toolchild.suffering.Handler;
 import org.toolchild.suffering.Id;
 import org.toolchild.suffering.gameobject.GameObject;
@@ -21,12 +20,16 @@ import org.toolchild.suffering.gameobject.tile.Tile;
  */
 public abstract class Entity extends GameObject {
   private static final Logger log         = LogManager.getLogger(Entity.class);
-  protected int               facing      = 0;                                                                                                                                                                                                                 // 0 = left; 1 = right
+  protected int               facing      = 0;                                                                                                                                                                                                                                                                                                                                                     // 0 = left;
+                                                                                                                                                                                                                                                                                                                                                                                                   // 1 = right
   protected Movement          movement;
 
-  private int                 boundsTrim  = 8;
-  private int                 boundsInset = 0;
-  private int                 boundsWidth = 1;
+  protected int                 boundsTrim  = 8;
+  protected int               boundsInsetX = 0;
+  protected int               boundsInsetY = 0;
+  protected int                 boundsWidth = 1;
+
+  protected Handler           handler;
 
   /**
    * 
@@ -40,26 +43,28 @@ public abstract class Entity extends GameObject {
    * @return
    */
   public Entity(int x, int y, int width, int height, Id id, Handler handler, BufferedImage[] bufferedImages) {
-    super(x, y, width, height, id, handler, bufferedImages);
+    super(x, y, width, height, id, bufferedImages);
+    this.handler = handler;
     this.movement = new Movement();
+
   }
 
   public Rectangle getBoundsTop() {
-    return new Rectangle(this.x + this.boundsTrim, this.y, this.width - 2 * this.boundsTrim, this.boundsWidth);
+    return new Rectangle(this.x + this.boundsTrim + this.boundsInsetX, this.y+this.boundsInsetY, this.width - 2 * (this.boundsTrim + this.boundsInsetX), this.boundsWidth);
   }
 
   public Rectangle getBoundsBottom() {
-    return new Rectangle(this.x + this.boundsTrim, this.y + this.height - this.boundsWidth, this.width - 2 * this.boundsTrim, this.boundsWidth);
+    return new Rectangle(this.x + this.boundsTrim + this.boundsInsetX, this.y + this.height - this.boundsWidth - this.boundsInsetY, this.width - 2 * (this.boundsTrim + this.boundsInsetX), this.boundsWidth);
   }
 
   public Rectangle getBoundsLeft() {
-    return new Rectangle(this.x, this.y + this.boundsTrim, this.boundsWidth, this.height - 2 * this.boundsTrim);
+    return new Rectangle(this.x + this.boundsInsetX, this.y + this.boundsTrim + this.boundsInsetY, this.boundsWidth, this.height - 2 * (this.boundsTrim + this.boundsInsetY));
   }
 
   public Rectangle getBoundsRight() {
-    return new Rectangle(this.x + this.width - this.boundsWidth, this.y + this.boundsTrim, this.boundsWidth, this.height - 2 * this.boundsTrim);
+    return new Rectangle(this.x - this.boundsInsetX + this.width - this.boundsWidth, this.y + this.boundsTrim + this.boundsInsetY, this.boundsWidth, this.height - 2 * (this.boundsTrim + this.boundsInsetY));
   }
-  
+
   protected boolean updatePosition() {
     this.x = this.x + this.movement.getVelocityX();
     this.y = this.y + this.movement.getVelocityY();
@@ -165,7 +170,7 @@ public abstract class Entity extends GameObject {
     statusMessage = "tile interaction: hitBottom";
     this.movement.setVelocityY(0);
     this.movement.setJumping(false);
-    this.y = tile.getY() - this.height; // reset height, looks cleaner
+    this.y = tile.getY() - this.height + this.boundsInsetY; // reset height, looks cleaner
     if (this.movement.isFalling()) {
       this.movement.setFalling(false);
     }
@@ -175,7 +180,7 @@ public abstract class Entity extends GameObject {
   private String tileInteractionHitTop(Tile tile) {
     String statusMessage;
     statusMessage = "tile interaction: hitTop";
-    this.y = tile.getY() + tile.getHeight();
+    this.y = tile.getY() + tile.getHeight() - this.boundsInsetY;
     if (this.movement.isJumping()) {
       this.movement.setGravity(0.0);
       this.movement.setFalling(true);
@@ -258,7 +263,7 @@ public abstract class Entity extends GameObject {
     }
     return statusMessage;
   }
-  
+
   protected void handleGravityAndMovement(int speedModifier) {
     this.movement.handleFalling(speedModifier);
     this.movement.handleFloating();

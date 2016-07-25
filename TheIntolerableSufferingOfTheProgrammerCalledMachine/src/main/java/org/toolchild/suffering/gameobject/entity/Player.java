@@ -44,7 +44,7 @@ public class Player extends Entity {
   }
 
   public void init(int speedModifier) {
-    this.movement.setMoveSpeed((int) ((8.0) * speedModifier));
+    this.movement.setMoveSpeed((int) ((7.0) * speedModifier));
   }
 
   @Override
@@ -65,9 +65,9 @@ public class Player extends Entity {
   }
   
   public Rectangle getBiggerBoundsBottom() {
-    this.boundsTrim = 8 * this.width / 64;
-    this.boundsInsetX = this.width / 3;
-    this.boundsInsetY = this.height / 10;
+    this.boundsTrim = (int) (9 * this.width / 64.0);
+    this.boundsInsetX = (int) (this.width / 4.0);
+    this.boundsInsetY = (int) (this.height / 10.0);
     return new Rectangle(this.x + this.boundsTrim + this.boundsInsetX, this.y + this.height - this.boundsWidth - this.boundsInsetY, this.width - 2 * (this.boundsTrim + this.boundsInsetX), this.boundsWidth);
   }
 
@@ -84,9 +84,11 @@ public class Player extends Entity {
   }
 
   private void updateBoundsModifier() {
-    this.boundsTrim = 9 * this.width / 64;
-    this.boundsInsetX = this.width / 3;
-    this.boundsInsetY = this.height / 10;
+//    this.width = this.PLAYER_DEFAULT_SIZE;
+//    this.height = this.PLAYER_DEFAULT_SIZE;
+    this.boundsTrim = (int) (10 * this.width / 64.0);
+    this.boundsInsetX = (int) (this.width / 4.0);
+    this.boundsInsetY = (int) (this.height / 10.0);
   }
 
   public void handleJumpKeyEvent(boolean isActive, int speedModifier) {
@@ -216,7 +218,7 @@ public class Player extends Entity {
         this.height = this.height - this.GROWTH_MODIFIER;
         this.width = this.width - this.GROWTH_MODIFIER;
         this.isValnurable = false;
-        if (this.height < 30) {
+        if (this.height < 48) {
           die();
         }
         log.debug("mob1 interaction");

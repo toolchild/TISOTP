@@ -282,7 +282,7 @@ public class Player extends Entity {
       }
     }
     for (Tile tile : tilesInteracting) {
-      this.y = tile.getY() + tile.getHeight();
+      this.y = tile.getY() + tile.getHeight() - this.boundsInsetY;
     }
   }
 
@@ -333,12 +333,12 @@ public class Player extends Entity {
   private boolean handleLevelTileInteraction(Tile tile) {
     boolean hitTop = false;
     if (getBoundsTop().intersects(tile.getBounds())) {
-      log.debug("Top Hit! player.x: " + this.x + " tile.x (right corner) " + (tile.getX() + tile.getWidth()));
-      log.debug("Top Hit! player.y: " + this.y + " tile.y (bottum) " + (tile.getY() + tile.getHeight()));
+      log.trace("Top Hit! player.x: " + this.x + " tile.x (right corner) " + (tile.getX() + tile.getWidth()));
+      log.trace("Top Hit! player.y: " + this.y + " tile.y (bottum) " + (tile.getY() + tile.getHeight()));
       hitTop = true;
-      this.y = tile.getY() + tile.getHeight() - this.boundsInsetY; // reset height, looks cleaner
-      log.debug("Top Reposition! player.x: " + this.x + " tile.x (right corner) " + (tile.getX() + tile.getWidth()));
-      log.debug("Top Reposition! player.y: " + this.y + " tile.y (bottum) " + (tile.getY() + tile.getHeight()));
+//      this.y = tile.getY() + tile.getHeight() - this.boundsInsetY; // do not reset height, this collisions are collected and then hight is reset.
+      log.trace("Top Reposition! player.x: " + this.x + " tile.x (right corner) " + (tile.getX() + tile.getWidth()));
+      log.trace("Top Reposition! player.y: " + this.y + " tile.y (bottum) " + (tile.getY() + tile.getHeight()));
       this.movement.setVelocityY(0);
       if (this.movement.isJumping()) {
         this.movement.setGravity(1.0);
@@ -349,7 +349,7 @@ public class Player extends Entity {
       this.movement.setVelocityY(0);
       this.movement.setJumping(false);
       if (this.movement.getGravity() > this.movement.getMoveSpeed()) {
-        log.debug("gravity set to 0");
+        log.trace("gravity set to 0");
         this.movement.setGravity(1.0);
       }
       this.jumpCount = 0;
@@ -360,12 +360,12 @@ public class Player extends Entity {
       }
     }
     if (getBoundsLeft().intersects(tile.getBounds())) {
-      log.debug("Left Hit! player.x: " + this.x + " tile.x (right corner) " + (tile.getX() + tile.getWidth()));
+      log.trace("Left Hit! player.x: " + this.x + " tile.x (right corner) " + (tile.getX() + tile.getWidth()));
       this.movement.setVelocityY(0);
       this.x = tile.getX() + tile.getWidth() - this.boundsInsetX;
     }
     if (getBoundsRight().intersects(tile.getBounds())) {
-      log.debug("Right Hit player.x: " + (this.x + this.width) + " tile.x (right corner) " + tile.getX());
+      log.trace("Right Hit player.x: " + (this.x + this.width) + " tile.x (right corner) " + tile.getX());
       this.movement.setVelocityY(0);
       this.x = tile.getX() - this.width + this.boundsInsetX;
     }

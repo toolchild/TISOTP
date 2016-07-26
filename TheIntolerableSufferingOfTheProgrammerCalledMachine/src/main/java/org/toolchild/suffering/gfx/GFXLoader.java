@@ -26,7 +26,12 @@ public class GFXLoader {
   protected BufferedImage       menuBackgroundImage;
   protected BufferedImage       level1Image;
   protected BufferedImage       level2Image;
+  protected BufferedImage       level3Image;
   
+
+  public BufferedImage getLevel3Image() {
+    return this.level3Image;
+  }
 
   protected Sprite[]            grass;
   protected Sprite[]            powerUpBlock;
@@ -51,6 +56,8 @@ public class GFXLoader {
     try {
       this.level1Image = ImageIO.read(getClass().getResource("/level1.png"));
       this.level2Image = ImageIO.read(getClass().getResource("/level2.png"));
+      this.level3Image = ImageIO.read(getClass().getResource("/level3.png"));
+      
     }
     catch (IOException e) {
       log.error("LevelImage not found: '" + e.getMessage() + "'");

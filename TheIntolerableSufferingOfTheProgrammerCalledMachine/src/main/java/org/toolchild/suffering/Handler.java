@@ -201,6 +201,12 @@ public class Handler {
         this.levelHeight = levelImage.getHeight();
         break;
       }
+      case 3: {
+        levelImage = this.imageExtractor.getLevel3Image();
+        this.levelWidth = levelImage.getWidth();
+        this.levelHeight = levelImage.getHeight();
+        break;
+      }
       default: {
         levelImage = null;
         log.error("LevelImage was not loaded.");

@@ -3,7 +3,9 @@ package org.toolchild.suffering;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +36,8 @@ public class Handler {
   private LinkedList<GameObject> players  = new LinkedList<>();
   private Menu                   menu;
   private ImageExtractor         imageExtractor;
+  Quadtree                       playersQuad;
+  Quadtree                       entitiesQuad;
 
   private boolean                isPaused;
   private int                    level    = 1;
@@ -70,11 +74,12 @@ public class Handler {
     for (GameObject gameObject : this.entities) {
       Entity entity = (Entity) gameObject;
     }
-    ((Player)(this.players.getFirst())).init(game.SPEED_MODIFIER);
-  
+    ((Player) (this.players.getFirst())).init(game.SPEED_MODIFIER);
+
   }
 
   public void tick(Game game, KeyInputManager keyInputManager) throws Exception {
+
     keyInputManager.updateKeyEvents(null, this, game.SPEED_MODIFIER);
     if (!this.isPaused) {
       for (GameObject player : this.players) {
@@ -83,17 +88,29 @@ public class Handler {
         }
       }
 
-      for (int e = 0; e < this.players.size(); e++) {
-        Player player = (Player) this.players.get(e);
-        player.tick(keyInputManager, game, game.SPEED_MODIFIER);
+      this.entitiesQuad.clear();
+      for (int i = 0; i < this.entities.size(); i++) {
+        this.entitiesQuad.insert((Entity) this.entities.get(i));
       }
 
       this.entitiesTicked = 0;
       for (int e = 0; e < this.entities.size(); e++) {
         Entity entity = (Entity) this.entities.get(e);
-        entity.tick(game.SPEED_MODIFIER);
+        List<Entity> relevantEntities = new ArrayList<Entity>();
+        for (int i = 0; i < this.entities.size(); i++) {
+          relevantEntities.clear();
+          this.entitiesQuad.retrieve(relevantEntities, (Entity) this.entities.get(i));
+        }
+        entity.tick(game.SPEED_MODIFIER, relevantEntities);
         this.entitiesTicked++;
+
+        for (int p = 0; p < this.players.size(); p++) {
+          Player player = (Player) this.players.get(p);
+          player.tick(keyInputManager, game, game.SPEED_MODIFIER, relevantEntities);
+        }
+
       }
+
       this.tilesTicked = 0;
       for (GameObject tile : this.tiles) {
         if (tile.getId() == Id.powerUpBlock) {
@@ -248,6 +265,8 @@ public class Handler {
   public void addPlayer(Player player) {
     log.debug("entity added : " + player.getId());
     this.players.add(player);
+    this.entitiesQuad = new Quadtree(0, player);
+
   }
 
   public void removeEntity(Entity entity) {

@@ -2,6 +2,7 @@ package org.toolchild.suffering.gameobject.entity.powerup;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.List;
 import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +32,7 @@ public class BlueCrystal extends Entity {
   }
 
   @Override
-  public void tick(int speedModifier) {
+  public void tick(int speedModifier, List<Entity> relevantEntities) {
     log.trace("update position: " + updatePosition() + " x: " + this.x + " y: " + this.y);
     this.frameDelay++;
     if (this.frameDelay >= 3) {
@@ -41,7 +42,7 @@ public class BlueCrystal extends Entity {
       }
       this.frameDelay = 0;
     }
-    handleAllInteraction();
+    handleAllInteraction(relevantEntities);
     handleGravityAndMovement(speedModifier);
   }
 

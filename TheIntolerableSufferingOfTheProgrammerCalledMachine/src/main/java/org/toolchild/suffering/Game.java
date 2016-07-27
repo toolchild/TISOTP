@@ -17,7 +17,7 @@ public class Game extends Canvas implements Runnable {
   private static final long     serialVersionUID = 5680154129348532365L;
   private static final Logger   log              = LogManager.getLogger(Game.class);
 
-  public final int              TICKS_PER_SECOND = 60;                                                                                                                                                                                                                                                                                             // multiple of 60
+  public final int              TICKS_PER_SECOND = 1;                                                                                                                                                                                                                                                                                             // multiple of 60
   public final int              SPEED_MODIFIER   = 1;//60 / this.TICKS_PER_SECOND;                                                                                                                                                                                                                                                                                                // not done yet
 
   public final int              GAME_WIDTH       = 64;

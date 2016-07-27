@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,15 +20,15 @@ import org.toolchild.suffering.gameobject.tile.Tile;
  *
  */
 public abstract class Entity extends GameObject {
-  private static final Logger log         = LogManager.getLogger(Entity.class);
-  protected int               facing      = 0;                                                                                                                                                                                                                                                                                                                                                     // 0 = left;
-                                                                                                                                                                                                                                                                                                                                                                                                   // 1 = right
+  private static final Logger log          = LogManager.getLogger(Entity.class);
+  protected int               facing       = 0;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          // 0
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         // right
   protected Movement          movement;
 
-  protected int                 boundsTrim  = 8;
+  protected int               boundsTrim   = 8;
   protected int               boundsInsetX = 0;
   protected int               boundsInsetY = 0;
-  protected int                 boundsWidth = 1;
+  protected int               boundsWidth  = 1;
 
   protected Handler           handler;
 
@@ -50,7 +51,7 @@ public abstract class Entity extends GameObject {
   }
 
   public Rectangle getBoundsTop() {
-    return new Rectangle(this.x + this.boundsTrim + this.boundsInsetX, this.y+this.boundsInsetY, this.width - 2 * (this.boundsTrim + this.boundsInsetX), this.boundsWidth);
+    return new Rectangle(this.x + this.boundsTrim + this.boundsInsetX, this.y + this.boundsInsetY, this.width - 2 * (this.boundsTrim + this.boundsInsetX), this.boundsWidth);
   }
 
   public Rectangle getBoundsBottom() {
@@ -73,10 +74,11 @@ public abstract class Entity extends GameObject {
 
   /**
    * handles the logic
+   * @param relevantEntities 
    * 
    * @throws Exception
    */
-  public abstract void tick(int speedModifier) throws Exception;
+  public abstract void tick(int speedModifier, List<Entity> relevantEntities) throws Exception;
 
   /**
    * Renders this Entity.
@@ -93,8 +95,8 @@ public abstract class Entity extends GameObject {
 
   protected abstract void handleAnimationRendering(Graphics2D graphics2D);
 
-  protected boolean handleAllInteraction() {
-    handleAllEntityInteraction();
+  protected boolean handleAllInteraction(List<Entity> relevantEntities) {
+    handleAllEntityInteraction(relevantEntities);
     handleAllTileInteraction();
     return true;
   }
@@ -188,8 +190,8 @@ public abstract class Entity extends GameObject {
     return statusMessage;
   }
 
-  private void handleAllEntityInteraction() {
-    for (GameObject entity : this.handler.getEntities()) {
+  private void handleAllEntityInteraction(List<Entity> relevantEntities) {
+    for (GameObject entity : relevantEntities) {
       if (isAroundPlayer(entity)) {
         Entity entityInstance = (Entity) entity;
         String singleTileInteractionStatusMessage = handleSingleEntityInteraction(entityInstance);

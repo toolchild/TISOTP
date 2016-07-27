@@ -2,6 +2,7 @@ package org.toolchild.suffering.gameobject.entity.mob;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.List;
 import java.util.Random;
 
 import org.toolchild.suffering.Handler;
@@ -29,7 +30,7 @@ public class Mob1 extends Entity {
   }
 
   @Override
-  public void tick(int speedModifier) {
+  public void tick(int speedModifier, List<Entity> relevanEntities) {
     if (this.movement.getVelocityX() < 0) {
       this.facing = 0;
     }
@@ -38,7 +39,7 @@ public class Mob1 extends Entity {
     }
     handleAnimationCycle();
     updatePosition();
-    handleAllInteraction();
+    handleAllInteraction(relevanEntities);
     handleGravityAndMovement(speedModifier);
   }
 

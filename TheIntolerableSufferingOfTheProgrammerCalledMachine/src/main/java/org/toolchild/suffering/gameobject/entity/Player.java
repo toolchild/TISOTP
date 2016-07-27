@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -153,7 +154,7 @@ public class Player extends Entity {
     renderDebug(graphics2D, camera, game); // renders the debug messages relative to player
   }
 
-  public void tick(KeyInputManager keyInputManager, Game game, int speedModifier) throws Exception {
+  public void tick(KeyInputManager keyInputManager, Game game, int speedModifier, List<Entity> relevantEntities) throws Exception {
     keyInputManager.updateKeyEvents(this, this.handler, speedModifier);
     handleGravityAndMovement(speedModifier);
     handleJumpCount();
@@ -162,7 +163,7 @@ public class Player extends Entity {
     handleAnimationCycle();
     handlerValnurable();
     handleGrowing();
-    handleAllEntityInteraction();
+    handleAllEntityInteraction(relevantEntities);
   }
 
   private void handleGrowing() {
@@ -196,9 +197,9 @@ public class Player extends Entity {
     }
   }
 
-  private void handleAllEntityInteraction() {
-    for (int e = 0; e < this.handler.getEntities().size(); e++) { // need to use this for loop and
-      Entity entity = (Entity) this.handler.getEntities().get(e); // get the entity to avoid an UnconcurrentModificationException
+  private void handleAllEntityInteraction(List<Entity> relevantEntities) {
+    for (int e = 0; e < relevantEntities.size(); e++) { // need to use this for loop and
+      Entity entity = (Entity) relevantEntities.get(e); // get the entity to avoid an UnconcurrentModificationException
       handleSingleEntityInteraction(entity);
     }
   }
@@ -439,10 +440,11 @@ public class Player extends Entity {
     camera.releaseGraphicsFromCamera(graphics2D);
   }
 
-  @Override
-  public void tick(int speedModifier) throws Exception {
-    // TODO Auto-generated method stub
 
+  @Override
+  public void tick(int speedModifier, List<Entity> relevantEntities) throws Exception {
+    // TODO Auto-generated method stub
+    
   }
 
 }

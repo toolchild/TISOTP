@@ -24,7 +24,7 @@ public abstract class Entity extends GameObject {
                                                                                                                                                                                                                                                                                                                                                                                                    // 1 = right
   protected Movement          movement;
 
-  protected int                 boundsTrim  = 8;
+  protected int                 boundsTrim;
   protected int               boundsInsetX = 0;
   protected int               boundsInsetY = 0;
   protected int                 boundsWidth = 1;
@@ -46,6 +46,7 @@ public abstract class Entity extends GameObject {
     super(x, y, width, height, id, bufferedImages);
     this.handler = handler;
     this.movement = new Movement();
+    
 
   }
 
@@ -56,6 +57,7 @@ public abstract class Entity extends GameObject {
   public Rectangle getBoundsBottom() {
     return new Rectangle(this.x + this.boundsTrim + this.boundsInsetX, this.y + this.height - this.boundsWidth - this.boundsInsetY, this.width - 2 * (this.boundsTrim + this.boundsInsetX), this.boundsWidth);
   }
+  
 
   public Rectangle getBoundsLeft() {
     return new Rectangle(this.x + this.boundsInsetX, this.y + this.boundsTrim + this.boundsInsetY, this.boundsWidth, this.height - 2 * (this.boundsTrim + this.boundsInsetY));
@@ -88,7 +90,7 @@ public abstract class Entity extends GameObject {
   public void render(Graphics2D graphics2D) {
     handleAnimationRendering(graphics2D);
     graphics2D.setColor(Color.BLUE);
-    drawBounds(graphics2D);
+    renderCollisionBoxes(graphics2D);
   }
 
   protected abstract void handleAnimationRendering(Graphics2D graphics2D);
@@ -98,10 +100,11 @@ public abstract class Entity extends GameObject {
     handleAllTileInteraction();
     return true;
   }
-
-  private void drawBounds(Graphics2D graphics2D) {
-    graphics2D.draw(getBoundsTop());
+  
+  private void renderCollisionBoxes(Graphics2D graphics2D) {
+    graphics2D.setColor(Color.RED);
     graphics2D.draw(getBoundsBottom());
+    graphics2D.draw(getBoundsTop());
     graphics2D.draw(getBoundsLeft());
     graphics2D.draw(getBoundsRight());
   }
@@ -110,158 +113,114 @@ public abstract class Entity extends GameObject {
     for (GameObject tile : this.handler.getTiles()) {
       if (isAroundPlayer(tile)) {
         Tile tileInstance = (Tile) tile;
-        String singleTileInteractionStatusMessage = handleSingleTileInteraction(tileInstance);
-        if (singleTileInteractionStatusMessage != null) {
-          log.trace("single tile interaction: " + singleTileInteractionStatusMessage);
-        }
+        handleSingleTileInteraction(tileInstance);
       }
     }
   }
 
-  private boolean isAroundPlayer(GameObject entity) {
+  public boolean isAroundPlayer(GameObject entity) {
     return entity.getX() >= this.x - 64 && entity.getX() <= this.x + 64 && entity.getY() >= this.y - 64 && entity.getY() <= this.y + 64;
   }
 
-  private String handleSingleTileInteraction(Tile tile) {  // handleAllTileInteraction sub-method
-    String statusMessage;
+  private void handleSingleTileInteraction(Tile tile) {  // handleAllTileInteraction sub-method
     if (!tile.isSolid()) {
-      statusMessage = "false, tile not solid";
     } else if (tile.getId() == Id.wall || tile.getId() == Id.powerUpBlock) {
-      statusMessage = handleLevelInteraction(tile);
-    } else {
-      statusMessage = "false, tile id not recognized";
-    }
-
-    return statusMessage;
+      handleLevelInteraction(tile);
+    } 
   }
 
-  private String handleLevelInteraction(Tile tile) {
-    String statusMessage = null;
+  private void handleLevelInteraction(Tile tile) {
     if (getBoundsTop().intersects(tile.getBounds())) {
-      statusMessage = tileInteractionHitTop(tile);
+      tileInteractionHitTop(tile);
     } else if (getBoundsBottom().intersects(tile.getBounds())) {
-      statusMessage = tileInteractionHitBottom(tile);
+      tileInteractionHitBottom(tile);
     } else if (getBoundsLeft().intersects(tile.getBounds())) {
       tileInteractionHitLeft(tile);
     } else if (getBoundsRight().intersects(tile.getBounds())) {
-      statusMessage = tileInteractionHitRight(tile);
+      tileInteractionHitRight(tile);
     }
-    return statusMessage;
   }
 
-  private String tileInteractionHitRight(Tile tile) {
-    String statusMessage;
-    statusMessage = "wall interaction: hitRight";
+  private void tileInteractionHitRight(Tile tile) {
     this.movement.setVelocityX(-this.movement.getMoveSpeed());
     this.x = tile.getX() - this.width; // reset width, looks cleaner
-    return statusMessage;
   }
 
-  private String tileInteractionHitLeft(Tile tile) {
-    String statusMessage;
-    statusMessage = "tile interaction : hitLeft";
+  private void tileInteractionHitLeft(Tile tile) {
     this.movement.setVelocityX(this.movement.getMoveSpeed());
     this.x = tile.getX() + tile.getWidth();
-    return statusMessage;
   }
 
-  private String tileInteractionHitBottom(Tile tile) {
-    String statusMessage;
-    statusMessage = "tile interaction: hitBottom";
+  private void tileInteractionHitBottom(Tile tile) {
     this.movement.setVelocityY(0);
     this.movement.setJumping(false);
     this.y = tile.getY() - this.height + this.boundsInsetY; // reset height, looks cleaner
     if (this.movement.isFalling()) {
       this.movement.setFalling(false);
     }
-    return statusMessage;
   }
 
-  private String tileInteractionHitTop(Tile tile) {
-    String statusMessage;
-    statusMessage = "tile interaction: hitTop";
+  private void tileInteractionHitTop(Tile tile) {
     this.y = tile.getY() + tile.getHeight() - this.boundsInsetY;
     if (this.movement.isJumping()) {
       this.movement.setGravity(0.0);
       this.movement.setFalling(true);
     }
-    return statusMessage;
   }
 
   private void handleAllEntityInteraction() {
     for (GameObject entity : this.handler.getEntities()) {
       if (isAroundPlayer(entity)) {
         Entity entityInstance = (Entity) entity;
-        String singleTileInteractionStatusMessage = handleSingleEntityInteraction(entityInstance);
-        if (singleTileInteractionStatusMessage != null) {
-          log.trace("single tile interaction: " + singleTileInteractionStatusMessage);
-        }
+        handleSingleEntityInteraction(entityInstance);
       }
     }
   }
 
-  private String handleSingleEntityInteraction(Entity entity) {  // handleAllTileInteraction sub-method
-    String statusMessage;
+  private void handleSingleEntityInteraction(Entity entity) {  // handleAllTileInteraction sub-method
     if (entity != this && (entity.getId() == Id.mob1 || entity.getId() == Id.blueCrystal)) {
-      statusMessage = handleEntityInteraction(entity);
-    } else {
-      statusMessage = "false, tile id not recognized";
-    }
-    return statusMessage;
+      handleEntityInteraction(entity);
+    } 
   }
 
-  private String handleEntityInteraction(Entity entity) {
-    String statusMessage = null;
-    if (getBoundsTop().intersects(entity.getBounds())) {
-      statusMessage = entityInteractionHitTop(entity);
-    } else if (getBoundsBottom().intersects(entity.getBounds())) {
-      statusMessage = entityInteractionHitBottom(entity);
+  private void handleEntityInteraction(Entity entity) {
+    if (getBoundsBottom().intersects(entity.getBounds())) {
+      entityInteractionHitBottom(entity);
+    } else if (getBoundsTop().intersects(entity.getBounds())) {
+      entityInteractionHitTop(entity);
     } else if (getBoundsLeft().intersects(entity.getBounds())) {
-      statusMessage = entityInteractionHitLeft(entity);
+     entityInteractionHitLeft(entity);
     } else if (getBoundsRight().intersects(entity.getBounds())) {
-      statusMessage = entityInteractionHitRight(entity);
+     entityInteractionHitRight(entity);
     }
-    return statusMessage;
   }
 
-  private String entityInteractionHitRight(Entity entity) {
-    String statusMessage;
-    statusMessage = "wall interaction: hitRight";
+  private void entityInteractionHitRight(Entity entity) {
     this.movement.setVelocityX(-this.movement.getMoveSpeed());
     this.x = entity.getX() - this.width; // reset width, looks cleaner
-    return statusMessage;
   }
 
-  private String entityInteractionHitLeft(Entity entity) {
-    String statusMessage;
-    statusMessage = "wall interaction: hitLeft";
+  private void entityInteractionHitLeft(Entity entity) {
     this.movement.setVelocityX(this.movement.getMoveSpeed());
     this.x = entity.getX() + entity.getWidth();
-    return statusMessage;
   }
 
-  private String entityInteractionHitBottom(Entity entity) {
-    String statusMessage;
-    statusMessage = "entity interaction: hitBottom";
+  private void entityInteractionHitBottom(Entity entity) {
     this.movement.setVelocityY(0);
     this.movement.setJumping(false);
     this.y = entity.getY() - this.height; // reset height, looks cleaner
     if (this.movement.isFalling()) {
       this.movement.setFalling(false);
     }
-    return statusMessage;
   }
 
-  private String entityInteractionHitTop(Entity entity) {
-    String statusMessage;
-    statusMessage = "entity interaction: hitTop";
+  private void entityInteractionHitTop(Entity entity) {
     this.y = entity.getY() + entity.getHeight();
     this.movement.setVelocityY(0);
     if (this.movement.isJumping()) {
       this.movement.setGravity(0.0);
       this.movement.setFalling(true);
     }
-    return statusMessage;
   }
 
   protected void handleGravityAndMovement(int speedModifier) {

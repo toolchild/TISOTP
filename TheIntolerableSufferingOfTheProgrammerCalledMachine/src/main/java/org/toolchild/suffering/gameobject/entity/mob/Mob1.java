@@ -26,6 +26,7 @@ public class Mob1 extends Entity {
     // movement.setVelocityX(-1);
     this.movement.setMoveSpeed(3);
     this.movement.setMoving(true);
+    this.boundsTrim = this.movement.getMoveSpeed();
   }
 
   @Override

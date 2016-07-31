@@ -28,6 +28,8 @@ public class BlueCrystal extends Entity {
     int direction = this.random.nextInt(2); // direction: 0 = left ; 1 = right
     this.movement.setVelocityX(direction == 0 ? -3 : +3);
     this.movement.setMoveSpeed(3);
+    this.boundsTrim = this.movement.getMoveSpeed();
+
   }
 
   @Override

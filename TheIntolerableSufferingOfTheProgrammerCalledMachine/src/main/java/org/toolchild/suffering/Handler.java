@@ -70,8 +70,8 @@ public class Handler {
     for (GameObject gameObject : this.entities) {
       Entity entity = (Entity) gameObject;
     }
-    ((Player)(this.players.getFirst())).init(game.SPEED_MODIFIER);
-  
+    ((Player) (this.players.getFirst())).init(game.SPEED_MODIFIER);
+
   }
 
   public void tick(Game game, KeyInputManager keyInputManager) throws Exception {
@@ -125,7 +125,7 @@ public class Handler {
       graphics2d.drawImage(this.imageExtractor.getMenuBackgroundImage(), 0, 0, this.levelWidth * 64, this.levelHeight * 64, null);
 
       int tilesRendered = renderTiles(graphics2d, game);
-      int entitiesRendered = renderEntities(graphics2d);
+      int entitiesRendered = renderEntities(graphics2d,game);
 
       for (GameObject player : this.players) { // more than 1 player compatible
         ((Player) player).render(graphics2d, this.camera, game);
@@ -143,11 +143,16 @@ public class Handler {
     }
   }
 
-  private int renderEntities(Graphics2D graphics2d) {
+  private int renderEntities(Graphics2D graphics2d, Game game) {
     int entitiesRendered = 0;
-    for (GameObject entity : this.entities) {
-      entity.render(graphics2d);
-      entitiesRendered++;
+    for (GameObject gameObject : this.entities) {
+      Entity entity = (Entity) gameObject;
+      if (entity.getX() >= this.players.getFirst().getX() - game.getFrameWidth() - 64 && entity.getX() <= this.players.getFirst().getX() + game.getFrameWidth() + 64) { // only render visible tiles, relative to top left edge of the shown screen -64
+        if (entity.getY() >= this.players.getFirst().getY() - game.getFrameHeight() - 64 && entity.getY() <= this.players.getFirst().getY() + game.getFrameHeight() + 64) {
+          entity.render(graphics2d);
+          entitiesRendered++;
+        }
+      }
     }
     return entitiesRendered;
   }
